@@ -84,7 +84,7 @@ import DeductionFilter from '../MonthlyDeductions/Deductions/DeductionFilter';
 import LeaveFilter from '../LeaveManagement/LeaveFilter';
 import { LoadingScreen } from 'src/components/loading-screen';
 import ExpenseClaimFilters from '../configaration/expenseclaimconfiguration/ExpenseClaimFilters';
-import PayScheduleFilters from '../Payroll/payschedule/PayScheduleFilters';
+
 import ShiftConfigurationFilters from '../configaration/shiftconfiguration/ShiftConfigurationFilters';
 import LeavePeriodFilters from '../configaration/leaveconfiguration/leaveperiod/LeavePeriodFilters';
 import LeaveTypeFilters from '../configaration/leaveconfiguration/leavetype/LeaveTypeFilters';
@@ -129,12 +129,17 @@ import AddRoleFilter from '../configaration/roleconfiguration/searchfilter/AddRo
 import AdditionsFilterSearch from '../MonthlyDeductions/Additions/AdditionsFilterSearch';
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
-import SettingsHead from '../settings/SettingsHeader';
+import SettingsHead from '../accountsettings/SettingsHeader';
+import GstSettingsHead from '../gstsettings/GstSettingsHeader';
 import CreatePayRunFilter from '../Payroll/CreatePayRun/CreatePayRunFilter';
 import FuelFilter from '../expenses/FuelFilter';
 import VehicleFilter from '../expenses/VehicleFilter';
 import OtherFIlter from '../expenses/OtherFIlter';
 import EarningAndDeductionFilter from '../Payroll/CreatePayRun/EarningAndDeductionFilter';
+import PayScheduleHistoryFilter from '../Payroll/CalculateEarningsAndDeductions/PayScheduleHistoryFilter';
+import ApproveTimeSheetSearch from '../timesheet/monthlyTimeSheet/Calendar/approveTimeSheetSearch';
+// import PayScheduleFilters from '../Payroll/payschedule/PayScheduleFilters';
+import PayScheduleFilters from '../configaration/PayRoll/payScheduleConfig/PayScheduleFilters';
 
 const defaultFilters = {
   name: '',
@@ -229,9 +234,9 @@ const token  =  (user?.accessToken)?user?.accessToken:''
       // url: `http://192.168.1.192:3001/erp/${endpoint}`,
       // url:`http://192.168.1.79:8080/appTest/GetMycompoffdetails`,
       // url: `https://898vmqzh-3001.inc1.devtunnels.ms/erp/hrapprovals`,
-   
+
       url: baseUrl + `${endpoint}`,
-      // url:'https://vshhg43l-3001.inc1.devtunnels.ms/erp'+`${endpoint}`,
+      // url:'https://kz7mdxrb-3001.inc1.devtunnels.ms/erp'+`${endpoint}`,
       // url:`https://xql1qfwp-3001.inc1.devtunnels.ms/erp`+`${endpoint}`,
       // url:`https://vshhg43l-3001.inc1.devtunnels.ms/erp/searchSalaryAdvance`,
       // url:`https://vshhg43l-3001.inc1.devtunnels.ms/erp/searchSalaryAdvance`,
@@ -294,7 +299,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
         //   }))
         // }
         if(updateTotalState){
-          
+
             updateTotalState(response?.data)
         }
       })
@@ -473,7 +478,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
 
   const getRowActionsBasedOnStatus = (row) => {
     let rowValues = null;
-  
+
     if (
       [
         'pending',
@@ -495,7 +500,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
     } else if (row?.status === 'Approved' || row?.status.toLowerCase() === 'approved') {
       rowValues = null;
     }
-  
+
     return rowValues;
   };
   // table expanded
@@ -515,12 +520,20 @@ const [index, setIndex]=useState(""); // index setting
         <LoadingScreen sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} />
       ) : (
         <Container
+        sx={{padding:'10px'}}
           className={Style.MuiContainerRoot}
           maxWidth={settings.themeStretch ? false : 'lg'}
         >
           {filterName === 'SwapRequestSearchFilter' && (
             <SwapRequestSearchFilter
               filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              getTableData={getTableData}
+            />
+          )}
+          {filterName === 'TimeSearchFilterCalendar' && (
+            <ApproveTimeSheetSearch
+            filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
               getTableData={getTableData}
             />
@@ -615,8 +628,24 @@ const [index, setIndex]=useState(""); // index setting
               getTableData={getTableData}
             />
           )}
+          {filterName === 'PayScheduleCongifFilterSearch' && (
+            <PayScheduleFilters
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              searchData={handleFilterSearch}
+              getTableData={getTableData}
+            />
+          )}
           {filterName === 'PayScheduleFilterSearch' && (
             <PayScheduleFilters
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              searchData={handleFilterSearch}
+              getTableData={getTableData}
+            />
+          )}
+           {filterName === 'PayScheduleHistoryFilter' && (
+            <PayScheduleHistoryFilter
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
               searchData={handleFilterSearch}
@@ -643,7 +672,7 @@ const [index, setIndex]=useState(""); // index setting
             <LeaveTypeFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions}
             getTableData={getTableData} searchData={handleFilterSearch}/>
             // // <LeaveTypeForm getTableData={getTableData}
-            
+
             // />
           )}
           {filterName === 'SwapSearchFilter' && (
@@ -662,7 +691,7 @@ const [index, setIndex]=useState(""); // index setting
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
               searchData={handleFilterSearch}
-              getTableData={getTableData} 
+              getTableData={getTableData}
             />
           )}
           {filterName === 'CompoffFilterSearch' && (
@@ -670,7 +699,7 @@ const [index, setIndex]=useState(""); // index setting
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
               searchData={handleFilterSearch}
-              getTableData={getTableData} 
+              getTableData={getTableData}
             />
           )}
           {filterName === 'holidaysFilterSearch' && (
@@ -678,7 +707,7 @@ const [index, setIndex]=useState(""); // index setting
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
               searchData={handleFilterSearch}
-              getTableData={getTableData} 
+              getTableData={getTableData}
             />
           )}
 
@@ -691,6 +720,9 @@ const [index, setIndex]=useState(""); // index setting
           )}
           {filterName === 'SettingsHead' && (
             <SettingsHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} getTableData={getTableData} />
+          )}
+          {filterName === 'GstSettingsHead' && (
+            <GstSettingsHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} getTableData={getTableData} />
           )}
           {filterName === 'VendorHead' && (
             <VendorHead
@@ -839,14 +871,14 @@ const [index, setIndex]=useState(""); // index setting
 {filterName === 'CreatePayRunFilter' && (
             <CreatePayRunFilter isShowHandle={isShowHandle} filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} getTableData={getTableData} />
           )}
-          
+
 {filterName === 'EarningAndDeductionFilter' && (
             <EarningAndDeductionFilter isShowHandle={isShowHandle} filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} getTableData={getTableData} />
           )}
           {/* accounts  */}
-          <Card>
+          <Card >
             <TableContainer
-             component={Paper} sx={{position:"sticky",top: 0, overflow: "unset", padding:'0px !important' ,  width: '100%',minHeight:100, height:300,  }}
+             component={Paper} sx={{top: 0, overflow: "unset", padding:'0px !important' ,  width: '100%', minheight:100,  }}
             >
               <TableSelectedAction
                 dense={table.dense}
@@ -868,7 +900,7 @@ const [index, setIndex]=useState(""); // index setting
               />
 
               <Scrollbar>
-                <Table size={table.dense ? 'medium' : 'small'}  stickyHeader={true}>
+                <Table size={table.dense ? 'medium' : 'small'}  >
                   {TABLE_HEAD && (
                     <TableHeadCustom
                       order={table.order}
@@ -886,7 +918,7 @@ const [index, setIndex]=useState(""); // index setting
                       rowActions={rowActions || []}
                     />
                   )}
-                 
+
 
                   <TableBody  >
                     {console.log(tableData)}
@@ -896,19 +928,19 @@ const [index, setIndex]=useState(""); // index setting
                       tableData.map((row, index) => (
                         <>
                           <UserTableRow
-                         
+
                             key={row.id}
                             row={row}
                             rowActions={getRowActionsBasedOnStatus(row)}
-                            // onHandleEditRow={(id) => 
+                            // onHandleEditRow={(id) =>
                             //   {
                             //     if(handleEditRowParent)
-                              
+
                             //   handleEditRowParent(id)
                             //   }
                             // }
                             onHandleEditRow={(row, clickedElementId) => {
-                              
+
                               if (handleEditRowParent) {
                                 handleEditRowParent(row)
                               }
@@ -921,7 +953,7 @@ const [index, setIndex]=useState(""); // index setting
                                 handleExpandClick(row.projectId, null, index)
                                 // console.log(row, "iddd");
                               }
-                             
+
                             }}
                             selected={table.selected.includes(row.id)}
                             onSelectRow={() => table.onSelectRow(row.id)}
@@ -935,14 +967,14 @@ const [index, setIndex]=useState(""); // index setting
 
 {expandedRowId === index && (
                     <TableRow>
-                      
+
                       <TableCell colSpan={TABLE_HEAD.length + 1}>
                       {/* <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-between" margin={1}> */}
                       {Object.entries(row).map(([day, details]) => (
             (day === "monday" || day === "tuesday" || day === "wednesday" || day === "thursday" || day === "friday" || day === "saturday" || day === "sunday"  ) && ( // Exclude status from the loop
             <Box key={day} display="flex" flexDirection="row" alignItems="center" justifyContent="space-between" margin={1}>
             <div>
-              
+
               <Typography variant="h6" gutterBottom component="div">
                 {day}
               </Typography>
@@ -957,7 +989,7 @@ const [index, setIndex]=useState(""); // index setting
                  </Typography>
               </Box>
 
-              
+
               </Grid>
               <Grid item >
               <Typography>
@@ -985,7 +1017,7 @@ const [index, setIndex]=useState(""); // index setting
                     <TableNoData notFound={notFound} />
                     {/* </Scrollbar>  */}
                   </TableBody>
-                  
+
                 </Table>
               </Scrollbar>
             </TableContainer>

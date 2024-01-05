@@ -216,7 +216,7 @@ const handleApply=()=>{
 console.log(selectedFields,"selectedFields 2nd method")
     return (
         <>
-          <Grid container alignItems="center" paddingBottom="10px">
+          <Grid container alignItems="center" paddingBottom="10px" marginTop={1}>
             <Grid sm={8} xs={12} item>
 
             <TextField placeholder='Search....' 
@@ -326,7 +326,7 @@ console.log(selectedFields,"selectedFields 2nd method")
       <Button sx={{margin:"2px"}} variant="outlined" onClick={handleReset}>
             Reset
           </Button>
-      <Button variant='outlined' sx={{margin:"2px"}} onClick={handleApply}>apply</Button>
+      <Button variant='contained'  color="primary" sx={{margin:"2px"}} onClick={handleApply}>Apply</Button>
       {/* </Badge> */}
 
       </Grid >

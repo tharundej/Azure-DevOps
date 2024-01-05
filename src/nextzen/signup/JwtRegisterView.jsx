@@ -62,7 +62,7 @@ import axiosInstance from 'src/utils/axios';
 import Textfield from 'src/sections/_examples/mui/textfield-view/textfield';
 import SignUpDialog from './SignUpDialog';
 import { color } from '@mui/system';
-import { baseImageUrl, baseUrl } from '../global/BaseUrl';
+import baseImageUrl, { baseUrl } from '../global/BaseUrl';
 
 export default function JwtRegisterView({ onHandleNextIncrement }) {
   console.log(onHandleNextIncrement, 'onHandleNextIncrement');
@@ -347,7 +347,7 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
    
 
      
-
+    
       // router.push(returnTo || PATH_AFTER_LOGIN);
       // router.push(returnTo || PATH_FOR_VERIFY);
     } catch (error) {
@@ -542,13 +542,13 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
 
   const renderHead = (
     <>
-      {/* <Logo
+      <Logo
         sx={{
           zIndex: 9,
           position: 'absolute',
           m: { xs: 2, md: 5 },
         }}
-      /> */}
+      />
     </>
   );
 
@@ -904,44 +904,66 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
             </div>
             <div
               style={{
-                display: 'flex',
-                flexDirection: 'column',
+                ddisplay: 'flex',
+                flexDirection: 'row',
                 alignItems: 'flex-end',
                 justifyContent: 'flex-end',
-                flex: 1,
+                
               }}
             >
               {button ? (
+                <>
+                 <Button
+                 component={RouterLink}
+                 to="/"
+                 color="inherit"
+                 size="large"
+                 variant="outlined"
+               >
+                 Cancel
+               </Button>
                 <Button
                   color="inherit"
                   size="large"
                   type="submit"
                   variant="contained"
                   onClick={onSubmit}
-                  style={{ backgroundColor: '#3B82F6' }}
+                  style={{ backgroundColor: '#3B82F6', marginLeft: '10px' }}
                 >
                   Create Account
                 </Button>
+                </>
               ) : (
+                <>
+                <Button
+                component={RouterLink}
+                to="/"
+                color="inherit"
+                size="large"
+                variant="outlined"
+              >
+                Cancel
+              </Button>
                 <Button
                   color="inherit"
                   size="large"
                   type="submit"
                   variant="contained"
                   onClick={onSubmit1}
-                  style={{ backgroundColor: '#3B82F6' }}
+                  style={{ backgroundColor: '#3B82F6', marginLeft: '10px' }}
                 >
                   Update Account
                 </Button>
+                </>
               )}
               <Stack direction="column" alignItems="center" spacing={1}>
-                <Typography variant="subtitle2" style={{ color: 'black' }}>
-                  Already have an account?{' '}
+                <Typography variant="subtitle2" style={{ color: 'black' ,marginTop:'10px'}}>
+                  Already have an account ?
                   <Link
                     href={paths.auth.jwt.login}
                     component={RouterLink}
                     variant="subtitle1"
-                    style={{ textDecoration: 'none', color: '#3B82F6' }}
+                    style={{ textDecoration: 'none', color: '#3B82F6',marginLeft:'5px' }}
                   >
                     Sign In
                   </Link>
@@ -965,9 +987,10 @@ export default function JwtRegisterView({ onHandleNextIncrement }) {
   return (
     <StyledContainer>
       <div style={{ backgroundColor: '' }}>
+      {/* {renderHead} */}
         {renderForm}
 
-        {/* {renderHead} */}
+       
 
         {renderTerms}
         <Snackbar

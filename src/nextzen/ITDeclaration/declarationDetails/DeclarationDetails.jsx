@@ -76,8 +76,8 @@ const DeclarationDetails = () => {
     }
   }
 
-  const [selectedYear, setSelectedYear] = useState(null);
-  const [financialYears, setFinancialYears] = useState([]);
+    const [selectedYear, setSelectedYear] = useState(null);
+    const [financialYears, setFinancialYears] = useState([]);
   const handleYearChange = (_, value) => {
     setSelectedYear(value);
     localStorage.setItem('selectedYear', JSON.stringify(value));
@@ -392,7 +392,7 @@ setSelectedFiles(selectedFiles)
   };
   
 
-
+  console.log('financialYears:', financialYears);
   console.log(selectedFiles  ,selectedYear,"file uploaded inselectedFiles")
   return (
     <div>
@@ -405,7 +405,13 @@ setSelectedFiles(selectedFiles)
           <Grid item xs={12} style={{ marginBottom: '0.9rem', marginTop: '0.9rem' }}>
             <Autocomplete
               id="financialYear"
-              options={financialYears || []}
+              // options={financialYears || []}
+              options={
+                financialYears && financialYears.length > 0 && financialYears[0].financialYear !== ''
+                  ? financialYears
+                  : ['No financial years available']
+              }
+              
               getOptionLabel={(option) =>
                 option?.financialYear ?? 'There Is No Financial Year Alloted! Please Connect To HR'
               }
@@ -428,15 +434,15 @@ setSelectedFiles(selectedFiles)
                 style={{ marginBottom: '0.9rem', marginTop: '0.9rem' }}
               >
                 <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Tax Section</TableCell>
-                      <TableCell>Tax Scheme</TableCell>
-                      <TableCell>Limit</TableCell>
-                      <TableCell>Declared</TableCell>
-                      <TableCell>File Upload</TableCell>
-                    </TableRow>
-                  </TableHead>
+               <TableHead>
+      <TableRow>
+        <TableCell style={{ backgroundColor: '#c5dbff', color: '#3B82F6' }}>Tax Section</TableCell>
+        <TableCell style={{ backgroundColor: '#c5dbff', color: '#3B82F6' }}>Tax Scheme</TableCell>
+        <TableCell style={{ backgroundColor: '#c5dbff', color: '#3B82F6' }}>Limit</TableCell>
+        <TableCell style={{ backgroundColor: '#c5dbff', color: '#3B82F6' }}>Declared</TableCell>
+        <TableCell style={{ backgroundColor: '#c5dbff', color: '#3B82F6' }}>File Upload</TableCell>
+      </TableRow>
+    </TableHead>
                   <TableBody>
                     {data &&
                       data

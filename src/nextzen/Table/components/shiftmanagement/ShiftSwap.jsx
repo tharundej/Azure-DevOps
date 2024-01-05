@@ -58,7 +58,7 @@ export default function ShiftSwap() {
       "approver_id":(user?.employeeID)?user?.employeeID:'',
       "page":0,
       "Search":"",
-      "count": 5,
+      "count": 10,
       "externalFilters":{
         "status": "",
         "from_shift_group":"",

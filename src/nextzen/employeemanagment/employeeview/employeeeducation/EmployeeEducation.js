@@ -12,6 +12,7 @@ import { bgGradient } from 'src/theme/css';
 import { formatDate } from 'src/nextzen/global/GetDateFormat';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { useSnackbar } from 'src/components/snackbar';
+import { BasicTable } from 'src/nextzen/Table/BasicTable';
 
 
 const employeeData=[ {
@@ -46,11 +47,12 @@ const EmployeeEducation = ({employeeIDForApis,handleCallSnackbar}) => {
   const docType=["Marks Memo","Ssc Cards",'Provisional']
   const [employeeDataToEditOrCreate,setEmployeeDataToEditOrCreate]=useState([])
   const [endpoint,setEndpoint]=useState("");
-
+  const [count,setCount] = useState(0)
   const [open,setOpen]=useState(false);
   const handleAddEducation = (data,endpoint) => {
     setEndpoint(endpoint)
     setEmployeeDataToEditOrCreate(prev=>(data));
+ 
   };
   
   useEffect(() => {
@@ -65,7 +67,9 @@ const EmployeeEducation = ({employeeIDForApis,handleCallSnackbar}) => {
     setEmployeeDataToEditOrCreate([])
   }
   
-
+const handleCount =()=>{
+  setCount(count+1)
+}
     const dataFiltered=[
         {
             fileName:'pdf',
@@ -103,7 +107,7 @@ const EmployeeEducation = ({employeeIDForApis,handleCallSnackbar}) => {
       method: 'post',
       maxBodyLength: Infinity,
       // url: 'https://2d56hsdn-3001.inc1.devtunnels.ms/erp/getEducationDetails',
-      url: `${baseUrl}/getEducationDetails`,
+      // url: `${baseUrl}/getEducationDetails`,
       headers: { 
         'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE', 
         'Content-Type': 'application/json'
@@ -160,10 +164,35 @@ const EmployeeEducation = ({employeeIDForApis,handleCallSnackbar}) => {
     
    }
    
+   const defaultPayload={
+    "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+    "employeeId": employeeIDForApis
+   }
+
+   const [Table_Head,setTableHead]=useState([
+    {id:'nameOfTheDegree',label:"Degree",type:'object',minWidth:"10pc"},
+    {id:'universityName',label:"University Name",type:"text",minWidth:"10pc"},
+    {id:'stream',label:"Stream",type:"text",minWidth:"10pc"},
+    {id:'startDate',label:"From",type:'date',minWidth:"8pc"},
+    {id:'endDate',label:"To",type:"date",minWidth:"8pc"},
+    {id:'gradeType',label:"Grade Type",type:'text',minWidth:"7pc"},
+    {id:'grade',label:"Grade Points",type:"text",minWidth:"9pc"},
+
+
+   ])
+
+   const rowActions=[
+    {name : "Edit",icon:"solar:pen-bold"},
+   ]
+
+   const onClickActions=(rowdata,event)=>{
+    handleAddEducation([rowdata], "updateEducationDetails");
+   }
+   
   return (
     <>
     
-      <CreateEducation handleCallSnackbar={handleCallSnackbarP} callApi={ApiHit} open={open} onhandleClose={handleClose} employeeData={employeeDataToEditOrCreate} endpoint={endpoint} employeeIDForApis={employeeIDForApis}/>
+      <CreateEducation handleCallSnackbar={handleCallSnackbarP} callApi={ApiHit} open={open} onhandleClose={handleClose} employeeData={employeeDataToEditOrCreate} endpoint={endpoint} employeeIDForApis={employeeIDForApis} handleCount={handleCount}/>
         {/* <Grid container alignItems="center" justifyContent="flex-end" >
           <Grid alignSelf='flex-end' item>
           <Button onClick={()=>{handleAddEducation(employeeData,"addEducation")}} sx={{backgroundColor:'#3B82F6'}} >+Add Education</Button>
@@ -201,6 +230,7 @@ const EmployeeEducation = ({employeeIDForApis,handleCallSnackbar}) => {
                     }}
                   >
                     <>
+                    {localStorage.getItem("employeeID")!==employeeIDForApis &&
                     <Grid container alignItems="flex-end" justifyContent="flex-end" flexDirection="row">
                             <IconButton onClick={() => {
                               const item = itm;
@@ -214,7 +244,7 @@ const EmployeeEducation = ({employeeIDForApis,handleCallSnackbar}) => {
                             }} sx={{ marginLeft: 1 }}>
                               <Iconify icon="material-symbols:delete" />
                             </IconButton>
-                          </Grid>
+                          </Grid>}
                       <Grid container alignItems="center" justifyContent="center" flexDirection="column">
                         <Typography variant='h5'>
                           {itm?.nameOfTheDegree?.label}
@@ -237,7 +267,7 @@ const EmployeeEducation = ({employeeIDForApis,handleCallSnackbar}) => {
                   )
                }
 
-    <Grid  
+    {/* <Grid  
 lg={5}
 md={5}
 xs={12}
@@ -267,10 +297,36 @@ xs={12}
     >
       <AddCircleIcon sx={{ fontSize: 60 }} />
      
-    </Grid>
-        
+    </Grid> */}
+       
       </>}
+
+     
       </Grid>
+      <Grid sx={{display:'flex',flexDirection:'row',justifyContent:'flex-end',alignContent:'flex-end'}}>
+      {localStorage.getItem("employeeID")!==employeeIDForApis &&  
+   <Button
+                // color="inherit"
+                //disabled={activeStep === 0}
+                onClick={()=>{handleAddEducation(employeeData,"addEducation")}}
+                sx={{ backgroundColor:'#3B82F6', mb: 1, color:'white',
+                '&:hover': {
+                  backgroundColor: '#1565C0', // Change this to the desired hover color
+                },
+              }}
+              >
+               Add Education
+              </Button>
+}</Grid>
+      {/* <Button sx={{float:"right",marginBottom:2}} variant="contained" color="primary" onClick={()=>{handleAddEducation(employeeData,"addEducation")}}> Add Education</Button> */}
+      <BasicTable
+      defaultPayload={defaultPayload}
+      endpoint='/getEducationDetails'
+      headerData={Table_Head}
+      rowActions={rowActions}
+      count={count}
+      onClickActions={onClickActions}
+      />
     </>
   )
 }

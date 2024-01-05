@@ -82,18 +82,18 @@ function Payrun( {handleCreatePayrun ,handleEmpType} ) {
   console.log(payRunDetails ,"detailsResult")
 // https://vshhg43l-3001.inc1.devtunnels.ms/erp/getPayRunDetails
 const handleCreate = async (data) => {
-  handleEmpType(data)
-  handleCreatePayrun()
+
   // setLoading(true)
   const payload = {
    companyID : cmpId,
+   employementType : data
   };
 
   const config = {
     method: 'post',
     maxBodyLength: Infinity,
     // url: baseUrl +'getSingleLicPremium',
-    // url: baseUrl + '/getRentDeclarationDetails',
+    url: baseUrl + '/createPayRunDetails',
     // url:"https://vshhg43l-3001.inc1.devtunnels.ms/erp/createPayRunDetails",
     headers: {
       Authorization: token,
@@ -109,6 +109,9 @@ const handleCreate = async (data) => {
         const rowsData = response?.data?.data;
         handleCreatePayrun()
         handleEmpType(data)
+        // handleEmpType(data)
+        // console.log(data , "data")
+        // handleCreatePayrun()
         console.log(JSON.stringify(response?.data?.data), 'result');
       }
     })
@@ -156,10 +159,10 @@ React.useEffect(()=>{
     return formattedDate;
   };
   return (
-    <div>
+    <div  style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}> 
 
- {payRunDetails && payRunDetails?.map((item ,index) =>(
-  <Card sx={{ minWidth: 275 ,marginTop: 5 ,width:"75%" }}>
+ {payRunDetails?.data && payRunDetails?.data?.map((item ,index) =>(
+  <Card sx={{ minWidth: 275 ,marginTop: 5 ,width:"75%" ,alignItems:"center" ,paddingLeft:"2rem" }}>
       <CardContent style={{padding:"16px !important"}}>
         <Grid container spacing={0} alignItems="center">
           {/* Heading Text */}
@@ -170,14 +173,28 @@ React.useEffect(()=>{
             </Typography>
           </Grid>
           <Grid item xs={8} style={{paddingLeft:'0.25rem'}}>
-            <span style={{ color: 'rgb(125, 120, 120)', fontWeight: 600, fontSize:'0.75rem',  }}>
-              ( {formatDate(item?.fromDate)} to  {formatDate(item.toDate)})
-            </span>
+            {/* <span style={{ color: 'rgb(125, 120, 120)', fontWeight: 600, fontSize:'0.75rem',  }}>
+              (Month: {item?.financialMonth} ) (Working Days :{item?.daysInFinancialMonth})
+            </span> */}
+            <Grid container spacing={2} alignItems="center">
+  <Grid item>
+    <span style={{ color: 'rgb(125, 120, 120)', fontWeight: 600, fontSize: '0.75rem' }}>
+      Month: {item?.financialMonth}
+    </span>
+    <div>{/* Additional month-related content or values */}</div>
+  </Grid>
+  <Grid item>
+    <span style={{ color: 'rgb(125, 120, 120)', fontWeight: 600, fontSize: '0.75rem' }}>
+      Working Days: {item?.daysInFinancialMonth}
+    </span>
+    <div>{/* Additional day-related content or values */}</div>
+  </Grid>
+</Grid>
 
-            <span style={shapeStyles}>
+            {/* <span style={shapeStyles}>
               <Brightness1Icon style={{width:'0.5em',paddingTop:'0.5em'} }/>
               Ready
-            </span>
+            </span> */}
           </Grid>
 
         
@@ -187,29 +204,19 @@ React.useEffect(()=>{
         <Grid container spacing={2} alignItems="center">
           {/* Heading Text */}
 
-          <Grid item xs={3}>
-            <Grid container direction="column" spacing={2}>
-              {/* Heading Text */}
-              <Grid item>
-                <Typography style={{ color: '#7D7878' , fontSize: '0.9rem' }}>EMPLOYEE`S NET PAY</Typography>
-              </Grid>
-              <Grid item>
-                <Typography style={{ color: '#000000', fontSize: '0.9rem' }}>YET TO PROCESS</Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item xs={3}>
+        
+          <Grid item xs={4}>
             <Grid container direction="column" spacing={2}>
               {/* Heading Text */}
               <Grid item>
                 <Typography style={{ color: '#7D7878', fontSize: '0.9rem' }}>PAYMENT DATE</Typography>
               </Grid>
               <Grid item>
-                <Typography style={{ color: '#000000' , fontSize: '0.9rem'}}> {formatDate(item?.paymentDate)}</Typography>
+                <Typography style={{ color: '#000000' , fontSize: '0.9rem'}}> {formatDate(item?.date)}</Typography>
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={4}>
             <Grid container direction="column" spacing={2}>
               {/* Heading Text */}
               <Grid item>
@@ -222,7 +229,7 @@ React.useEffect(()=>{
           </Grid>
 
           {/* Badge */}
-          <Grid item xs={3} container justifyContent="flex-start">
+          <Grid item xs={4} container alignItems="center">
             <Button
               style={{ backgroundColor: '#007AFF', color: 'white' }}
               onClick={()=>handleCreate(item?.type)}
@@ -232,17 +239,13 @@ React.useEffect(()=>{
           </Grid>
         </Grid>
       </CardContent>
-      <CardContent style={{ display: 'flex' }}>
-        <InfoIcon style={{ color: '#7D7878', marginRight: '7px' }} />
-        <Typography style={{ color: '#7D7878' , fontSize: '0.9rem' }}>
-          You haven&apos;t processed this pay run and it&apos;s past the pay day
-        </Typography>
-      </CardContent>
+     
     </Card>
  ))
 
  
     }
+    {!payRunDetails?.data && <p>No Pay Schedule is avialable</p> }
     </div>
   );
 }

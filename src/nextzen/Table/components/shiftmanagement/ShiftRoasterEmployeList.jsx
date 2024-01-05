@@ -68,7 +68,7 @@ const ShiftRoasterEmployeList = ({roasterRowData,onClose}) => {
         }
         action={
           <IconButton aria-label="settings">
-            <MoreVertIcon />
+            {/* <MoreVertIcon /> */}
           </IconButton>
         }
         title={item.firstName + item.lastName}

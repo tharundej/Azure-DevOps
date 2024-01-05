@@ -17,7 +17,7 @@ export default function Approveleave(){
       "role_id": (user?.roleID)?user?.roleID:'',
       "company_id": (user?.companyID)?user?.companyID:'',
       "page": 0,
-      "count": 5,
+      "count": 10,
       "search": "",
       "externalFilters": {
           "leaveTypeName": "",
@@ -127,7 +127,7 @@ console.log(count,"countt")
         onConfirm={handleApproveConfirmed}
         itemName={(approveData?.status=="1")?"Approve Leave":"Reject Leave"}
         confirmButtonText={(approveData?.status=="1")?"Approve":"Reject"}
-        message={(approveData?.status=="1")?"Are you sure want to Approve Leave?":"Are you sure want to Reject Leave?"}
+        message={(approveData?.status=="1")?"Are you sure you want to Approve Leave?":"Are you sure you want to Reject Leave?"}
       />
   
   </>

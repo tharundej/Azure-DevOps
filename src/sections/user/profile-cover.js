@@ -20,7 +20,7 @@ import FormProvider, {
   RHFAutocomplete,
 } from 'src/components/hook-form';
 
-import { baseImageUrl } from 'src/nextzen/global/BaseUrl';
+import baseImageUrl from 'src/nextzen/global/BaseUrl';
 
 // ----------------------------------------------------------------------
 
@@ -182,7 +182,7 @@ export default function ProfileCover({ name, avatarUrl, role, coverUrl }) {
       style={{ position: 'relative', cursor: 'pointer', display: 'inline-block' }}
     >
       <Avatar
-        src={baseImageUrl+avatarUrl}
+        src={newAvatarUrl}
         alt={name}
         sx={{
           mx: 'auto',

@@ -96,7 +96,7 @@ export default function ShiftConfigView({currentUser}) {
 
   const defaultPayload = {
     companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
-    count: 5,
+    count: 10,
     search: '',
     page: 0,
     externalFilters: {

@@ -5,6 +5,8 @@ import { Helmet } from 'react-helmet-async';
 import axios from 'axios';
 
 import { _userList } from '../../../_mock';
+import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
+import SnackBarComponent from 'src/nextzen/global/SnackBarComponent';
 
 import { BasicTable } from '../../Table/BasicTable';
 import { getPurchaseOrderAPI } from 'src/api/Accounts/PurchaseOrder';
@@ -12,7 +14,8 @@ import { Dialog } from '@mui/material';
 import ViewPurchaseOrder from './ViewPurchaseOrder';
 import UserContext from 'src/nextzen/context/user/UserConext';
 import OrderPreview from './OrderPreview';
-
+import { baseUrl } from '../../global/BaseUrl';
+import CreatePurchaseOrder from './CreatePurchaseOrder';
 const PurchaseOrderTable = () => {
   const { user } = useContext(UserContext);
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -49,6 +52,13 @@ const PurchaseOrderTable = () => {
       type: 'serviceCall',
       endpoint: '',
     },
+    {
+      name: 'Download',
+      icon: 'mingcute:pdf-fill',
+      id: 'download',
+      type: 'serviceCall',
+      endpoint: '',
+    },
   ];
   const [editShowForm, setEditShowForm] = useState(false);
   const [editModalData, setEditModalData] = useState({});
@@ -56,6 +66,9 @@ const PurchaseOrderTable = () => {
   const [deleteData, setDeleteData] = useState(null);
   const [viewShowForm, setViewShowForm] = useState(false);
   const [previewShowForm, setPreviewShowForm] = useState(false);
+  const handleCountChange = () => {
+    setCount(count + 1);
+  };
   const onClickActions = (rowdata, event) => {
     if (event?.name === 'Edit') {
       setEditShowForm(true);
@@ -71,7 +84,40 @@ const PurchaseOrderTable = () => {
     } else if (event?.name === 'Preview') {
       setPreviewShowForm(true);
       setEditModalData(rowdata);
+    }else if(event?.name === 'Download'){
+      getPoGenarator(rowdata.poNumber)
     }
+  };
+  const getPoGenarator = async (poNumber) => {
+    const options = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'User-Agent': 'insomnia/8.5.1' },
+      body: JSON.stringify({
+        companyID: user?.companyID || '',
+        poNumber: poNumber || '',
+      }),
+    };
+
+    fetch(baseUrl +'/getPoGenarator', options)
+    .then((resp) => resp.blob())
+    .then((myBlob) => {
+      const url = window.URL.createObjectURL(
+        new Blob([myBlob], {
+          type: 'application/pdf',
+          encoding: 'UTF-8'
+        })
+      );
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `PO_${poNumber}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+    })
+    .catch((err) => {
+      console.log(err);
+    });
   };
   const handleCancelDelete = () => {
     setDeleteData(null);
@@ -115,7 +161,7 @@ const PurchaseOrderTable = () => {
     ApiHit();
   }, []);
   const defaultPayload = {
-    count: 5,
+    count: 10,
     page: 0,
     search: '',
     roleid: 1,
@@ -187,6 +233,38 @@ const PurchaseOrderTable = () => {
   };
   return (
     <>
+     <SnackBarComponent
+        open={openSnackbar}
+        severity={severity}
+        onHandleCloseSnackbar={HandleCloseSnackbar}
+        snacbarMessage={snacbarMessage}
+      />
+      <ConfirmationDialog
+        open={confirmDeleteOpen}
+        onClose={handleCancelDelete}
+        onConfirm={handleDeleteConfirmed}
+        itemName="Delete Settings"
+        message={`Are you sure you want to delete ${deleteData?.title}?`}
+      />
+    {editShowForm && (
+        <Dialog
+          fullWidth
+          maxWidth={false}
+          open={editShowForm}
+          onClose={handleClose}
+          PaperProps={{
+            sx: { maxWidth: 1000 },
+          }}
+          className="custom-dialog"
+        >
+
+          <CreatePurchaseOrder
+            currentData={editModalData}
+            handleClose={handleClose}
+            handleCountChange={handleCountChange}
+          />
+        </Dialog>
+      )}
       {viewShowForm && (
         <Dialog
           fullWidth
@@ -198,7 +276,7 @@ const PurchaseOrderTable = () => {
           }}
           className="custom-dialog"
         >
-          <ViewPurchaseOrder currentData={editModalData} handleClose={handleClose} />
+          <ViewPurchaseOrder currentData={editModalData} handleClose={handleClose} getPoGenarator={getPoGenarator} />
         </Dialog>
       )}
       {previewShowForm && (

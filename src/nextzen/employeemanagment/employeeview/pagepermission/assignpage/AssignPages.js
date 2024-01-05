@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useCallback } from 'react';
+import React, { useState, useEffect,useCallback,useRef,forwardRef,useImperativeHandle } from 'react';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
@@ -26,7 +26,14 @@ import SnackBarComponent from 'src/nextzen/global/SnackBarComponent';
 
 import {Box} from '@mui/material'
 
-const AssignPages = ({open,type,data,employeeId}) => {
+const AssignPages = forwardRef(({open,type,data,employeeId,handleLoader,handleLoaderClose,nextStep},ref) => {
+
+
+  useImperativeHandle(ref, () => ({
+    childFunctionAssignPages() {
+      ApiHitSavePages();
+    },
+  }));
   const [userdropDownOptions, setUserDropDownOptions] = useState('');
   const [userdropDownvalue, setUserDropDownValue] = useState('');
   const [groupname, setGroupname] = useState('');
@@ -174,7 +181,14 @@ dropdowns:[
     }));
   };
 
-  const ApiHitSavePages = (obj) => {
+  const ApiHitSavePages = () => {
+    const obj = {
+      groupName: groupname,
+      companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+      pages: checkedState,
+      employeeId:employeeId
+    };
+    handleLoader()
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
@@ -193,11 +207,14 @@ dropdowns:[
         console.log(JSON.stringify(response.data));
         // setGroupname('');
         //setCheckedState("")
+        nextStep();
         handleCallSnackbar(response.data.message,"success")
         handleModalClose()
+        
       })
       .catch((error) => {
         console.log(error);
+        handleLoaderClose()
       });
   };
 
@@ -338,16 +355,16 @@ dropdowns:[
       </Button> */}
       
       </Grid>
-      <Grid item>
+      {/* <Grid item>
       <Button variant="contained" color="primary" onClick={handleSave}>
         Save
-      </Button></Grid>
+      </Button></Grid> */}
       </Grid>
       </DialogContent>
 
       </Box>
     </div>
   );
-};
+});
 
 export default AssignPages;

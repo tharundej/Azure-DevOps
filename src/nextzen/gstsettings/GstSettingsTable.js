@@ -5,15 +5,16 @@ import { Helmet } from 'react-helmet-async';
 import { _userList } from '../../_mock';
 
 import { BasicTable } from '../Table/BasicTable';
-import CreateSettings from './CreateSettings';
+import CreateGstSettings from './CreateGstSettings';
 import { Dialog } from '@mui/material';
 import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
 import SnackBarComponent from '../global/SnackBarComponent';
 import { DeleteFactoryAPI } from 'src/api/Accounts/Factory';
 import UserContext from '../context/user/UserConext';
 import { DeleteAccountInformationAPI } from 'src/api/Accounts/Settings';
+import { DeleteGstInformationAPI } from 'src/api/Accounts/Settings';
 
-const SettingsTable = () => {
+const GstSettingsTable = () => {
   const { user } = useContext(UserContext);
   console.log('sdsdsd', user);
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -55,6 +56,7 @@ const SettingsTable = () => {
         locationID: rowdata?.locationID || 0,
         companyID: rowdata?.companyID || user?.companyID ? user?.companyID : '',
         title: rowdata?.locationName || '',
+        gstInformationID: rowdata?.gstInformationID || 0,
       };
       setDeleteData(deleteData);
       setConfirmDeleteOpen(true);
@@ -77,7 +79,7 @@ const SettingsTable = () => {
   };
   const handleDeleteApiCall = async (deleteData) => {
     try {
-      const response = await DeleteAccountInformationAPI(deleteData);
+      const response = await DeleteGstInformationAPI(deleteData);
       console.log('Delete Api Call', response);
       handleCallSnackbar(response.message, 'success');
       handleCountChange();
@@ -92,30 +94,21 @@ const SettingsTable = () => {
     page: 0,
     search: '',
     companyId: user?.companyID ? user?.companyID : '',
-    externalFilters: {
-      locationName: '',
-      locationPhone: '',
-      locationEmailid: '',
-      locationCity: '',
-      locationPincode: '',
-      locationState: '',
-      locationStateCode: '',
-      locationCountry: '',
-    },
+
     sort: {
-      key: 1,
-      orderBy: 'location_id',
+      key: null,
+      orderBy: "",
     },
   };
   const [TABLE_HEAD, setTableHead] = useState([
     { id: 'SNo', label: 'Sl.No', type: 'text', minWidth: '180px' },
-    { id: 'bankName', label: 'Bank Name', type: 'text', minWidth: '190px' },
-    { id: 'bankAccountNo', label: 'Bank Account Number', type: 'text', minWidth: '200px' },
-    { id: 'accountHolderName', label: 'Account Holder Name', type: 'text', minWidth: '180px' },
-    { id: 'ifscCode', label: 'IFSC Code', type: 'text', minWidth: '180px' },
-    { id: 'bankBranch', label: 'Bank Branch', type: 'text', minWidth: '180px' },
-    { id: 'businessEmailId', label: 'Business Email ID', type: 'text', minWidth: '180px' },
-    { id: 'msmeUamNo', label: 'MSME UAM Number', type: 'text', minWidth: '180px' },
+    // { id: 'bankName', label: 'Bank Name', type: 'text', minWidth: '190px' },
+    // { id: 'bankAccountNo', label: 'Bank Account Number', type: 'text', minWidth: '200px' },
+    { id: 'locationID', label: 'Location ID', type: 'text', minWidth: '180px' },
+    { id: 'GSTNo', label: 'GST no.', type: 'text', minWidth: '180px' },
+    { id: 'PanNo', label: 'Pan no.', type: 'text', minWidth: '180px' },
+    { id: 'TanNo', label: 'Tan no.', type: 'text', minWidth: '180px' },
+    // { id: 'msmeUamNo', label: 'MSME UAM Number', type: 'text', minWidth: '180px' },
   ]);
   return (
     <>
@@ -143,11 +136,12 @@ const SettingsTable = () => {
           }}
           className="custom-dialog"
         >
-          <CreateSettings
+          <CreateGstSettings
             currentData={editModalData}
             handleClose={handleClose}
             handleCountChange={handleCountChange}
           />
+
         </Dialog>
       )}
       <Helmet>
@@ -155,11 +149,11 @@ const SettingsTable = () => {
       </Helmet>
       <BasicTable
         headerData={TABLE_HEAD}
-        endpoint="/GetAccountInformation"
+        endpoint="/GetGstInformation"
         defaultPayload={defaultPayload}
         filterOptions={filterOptions}
         rowActions={actions}
-        filterName="SettingsHead"
+        filterName="GstSettingsHead"
         onClickActions={onClickActions}
         handleEditRowParent={() => {}}
         count={count}
@@ -167,4 +161,4 @@ const SettingsTable = () => {
     </>
   );
 };
-export default SettingsTable;
+export default GstSettingsTable;

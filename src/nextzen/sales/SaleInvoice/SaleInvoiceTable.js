@@ -18,7 +18,7 @@ const SaleInvoiceTable = () => {
   const [filterOptions, setFilterOptions] = useState({});
   const [bodyContent, setBodyContent] = useState([]);
   const [body_for_employee, setBody] = useState({
-    count: 5,
+    count: 10,
     page: 1,
   });
   const ApiHit = () => {};
@@ -27,7 +27,7 @@ const SaleInvoiceTable = () => {
     ApiHit();
   }, []);
   // const defaultPayload = {
-  //   count: 5,
+  //   count: 10,
   //   page: 0,
   //   search: '',
   //   fcompanyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
@@ -37,7 +37,7 @@ const SaleInvoiceTable = () => {
     perPage: 10,
     page: 0,
     search: '',
-    count: 5,
+    count: 10,
     externalFilters: {
       salesOrderNo:"",
         salesInvoiceNo:"",
@@ -62,7 +62,7 @@ const SaleInvoiceTable = () => {
 
   const [TABLE_HEAD, setTableHead] = useState([
     { id: 'SNo', label: 'Sl.No', type: 'text', minWidth: '180px' },
-    { id: 'balaceProduct', label: 'SO Number', type: 'text', minWidth: '180px' },
+    { id: 'salesOrderNo', label: 'SO Number', type: 'text', minWidth: '180px' },
     { id: 'SODate', label: 'SO Date', type: 'text', minWidth: '180px' },
     { id: 'InvoiceNo', label: 'Invoice Number', type: 'text', minWidth: '180px' },
     { id: 'invoiceDate', label: 'Invoice Date', type: 'text', minWidth: '180px' },
@@ -92,3 +92,4 @@ const SaleInvoiceTable = () => {
   );
 };
 export default SaleInvoiceTable;
+

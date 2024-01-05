@@ -12,6 +12,7 @@ import { bgGradient } from 'src/theme/css';
 import { useSnackbar } from 'src/components/snackbar';
 import { formatDate } from 'src/nextzen/global/GetDateFormat';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { BasicTable } from 'src/nextzen/Table/BasicTable';
 
 const employeeData=[ {
 
@@ -37,11 +38,27 @@ const employeeData=[ {
 const PreviousWork = ({employeeIDForApis}) => {
   const { enqueueSnackbar } = useSnackbar();
   const theme = useTheme();
+  const [count,setCount] = useState(0)
   const docType=["Salary Slips","Seperation Letter"]
   const [employeeDataToEditOrCreate,setEmployeeDataToEditOrCreate]=useState([])
   const [endpoint,setEndpoint]=useState("");
 
   const [open,setOpen]=useState(false);
+  const handleAddEducationEdit = (data,endpoint) => {
+    setEndpoint(endpoint)
+    // if(data?.documents.length===0){
+    //   data.documets=[
+    //     {
+    //       fileType:'',
+    //       fileName:'',
+    //       fileContent:''
+    //   },
+    // ]
+    // }
+    
+    setEmployeeDataToEditOrCreate(prev=>(data));
+  };
+  
   const handleAddEducation = (data,endpoint) => {
     setEndpoint(endpoint)
     // if(data?.documents.length===0){
@@ -53,19 +70,25 @@ const PreviousWork = ({employeeIDForApis}) => {
     //   },
     // ]
     // }
-    setEmployeeDataToEditOrCreate(prev=>(data));
+
+    console.log("1")
+    
+    setEmployeeDataToEditOrCreate(employeeData);
   };
   
   useEffect(() => {
-    console.log('aa',employeeDataToEditOrCreate.length)
+    //console.log('aa',employeeDataToEditOrCreate.length)
     if(employeeDataToEditOrCreate?.length>0){
+      console.log(employeeDataToEditOrCreate,'2')
     setOpen(true);
    
   
     }
   }, [employeeDataToEditOrCreate]);
-  const handleClose=()=>{setOpen(false);
-    setEmployeeDataToEditOrCreate([])
+  const handleClose=()=>{
+    setEmployeeDataToEditOrCreate([]);
+    setOpen(false);
+   
   }
   
 
@@ -150,7 +173,7 @@ const PreviousWork = ({employeeIDForApis}) => {
     .then((response) => {
       console.log(JSON.stringify(response.data));
       enqueueSnackbar(response?.data?.message, { variant: 'success' });
-      ApiHit()
+     setCount(count+1)
     })
     .catch((error) => {
       console.log(error);
@@ -158,13 +181,38 @@ const PreviousWork = ({employeeIDForApis}) => {
     });
     
    }
-   
+   const handleCount =()=>{
+    setCount(count+1)
+  }
+   const defaultPayload={
+    "companyId": JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+    "employeeId": employeeIDForApis
+   }
+
+   const [Table_Head,setTableHead]=useState([
+    {id:'previousCompanyName',label:"Company Name",type:'text',minWidth:"10pc"},
+    {id:'designation',label:"Designation",type:"text",minWidth:"10pc"},
+    {id:'employementType',label:"Employement Type",type:"text",minWidth:"10pc"},
+    {id:'startDate',label:"From",type:'date',minWidth:"8pc"},
+    {id:'endDate',label:"To",type:"date",minWidth:"8pc"},
+  
+
+   ])
+   const rowActions=[
+    {name : "Edit",icon:"solar:pen-bold"},
+   ]
+
+   const onClickActions=(rowdata,event)=>{
+    console.log(rowdata,"rowdata")
+    handleAddEducationEdit([rowdata], "updateWorkDetails");
+   }
+
   return (
     <>
-      <CreatePreviousWork callApi={ApiHit} employeeIDForApis={employeeIDForApis} open={open} onhandleClose={handleClose} employeeData={employeeDataToEditOrCreate} endpoint={endpoint}/>
+      <CreatePreviousWork callApi={ApiHit} employeeIDForApis={employeeIDForApis} open={open} onhandleClose={handleClose} employeeData={employeeDataToEditOrCreate} endpoint={endpoint} handleCount={handleCount}/>
         
 
-        <Grid container margin='5px' >
+        {/* <Grid container margin='5px' >
         {(tabIndex === 1) &&
       <>
          
@@ -196,7 +244,7 @@ const PreviousWork = ({employeeIDForApis}) => {
                     <Grid container alignItems="flex-end" justifyContent="flex-end" flexDirection="row">
                             <IconButton onClick={() => {
                               const item = itm;
-                              handleAddEducation([item], "updateWorkDetails");
+                              handleAddEducationEdit([item], "updateWorkDetails");
                             }}>
                               <Iconify icon="material-symbols:edit" />
                             </IconButton>
@@ -264,8 +312,32 @@ xs={12}
       <AddCircleIcon sx={{ fontSize: 60 }} />
      
     </Grid>
-    </Grid>
-      
+    </Grid> */}
+    <Grid sx={{display:'flex',flexDirection:'row',justifyContent:'flex-end',alignContent:'flex-end'}}>
+    {localStorage.getItem("employeeID")!==employeeIDForApis &&
+  <Button
+               // color="inherit"
+               //disabled={activeStep === 0}
+               onClick={()=>{handleAddEducation(employeeData,"addExperience")}}
+               sx={{ backgroundColor:'#3B82F6', mb: 1, color:'white',
+               '&:hover': {
+                 backgroundColor: '#1565C0', // Change this to the desired hover color
+               },
+             }}
+             >
+               Add Previous Work
+             </Button>
+}
+             </Grid>
+    {/* <Button sx={{float:"right",marginBottom:2}}  onClick={()=>{handleAddEducation(employeeData,"addExperience")}} variant="contained" color="primary">Add Previous Work</Button> */}
+      <BasicTable
+      defaultPayload={defaultPayload}
+      endpoint='/getExperience'
+      headerData={Table_Head}
+      rowActions={rowActions}
+      count={count}
+      onClickActions={onClickActions}
+      />
     </>
   )
 }

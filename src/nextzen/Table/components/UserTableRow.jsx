@@ -10,7 +10,7 @@ import Checkbox from '@mui/material/Checkbox';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 import ListItemText from '@mui/material/ListItemText';
-import { Grid } from '@mui/material';
+import { Grid, ListItemAvatar } from '@mui/material';
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
 // components
@@ -87,7 +87,8 @@ const avatarUrl="http://192.168.1.199:3001/erp/download?file=saitama.png"
                   display: ele.containesAvatar ? 'flex' : '',
                   alignItems: ele.containesAvatar ? 'center' : '',
                   width:ele.width || '',
-                  cursor:'pointer'
+                  cursor:'pointer',
+                  
                 }}
               >
                 {ele.containesAvatar && (
@@ -132,6 +133,17 @@ const avatarUrl="http://192.168.1.199:3001/erp/download?file=saitama.png"
                  color: 'text.disabled',
                }}
              />
+           )}
+
+           {ele.type==="object" && (
+            
+           
+            
+            <ListItemText
+             primary={row[ele.id]?.label}
+             primaryTypographyProps={{typography: 'body2' }}
+            />
+              
            )}
 
 

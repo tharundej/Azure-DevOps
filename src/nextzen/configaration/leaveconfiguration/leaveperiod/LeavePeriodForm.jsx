@@ -30,6 +30,7 @@ import { Alert, Snackbar } from '@mui/material';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 import UserContext from 'src/nextzen/context/user/UserConext';
 import { ApiHitleavePeriodType } from 'src/nextzen/global/roledropdowns/RoleDropDown';
+import {useSnackbar} from '../../../../components/snackbar'
 
 export default function LeavePeriodForm({ currentUser , getTableData}) {
   const [open, setOpen] = useState(false);
@@ -38,6 +39,7 @@ export default function LeavePeriodForm({ currentUser , getTableData}) {
     setOpen(false);
     reset1();
   };
+  const {enqueueSnackbar} = useSnackbar()
   const [openEdit, setOpenEdit] = useState(false);
   const handleCloseEdit = () => setOpenEdit(false);
   const user = useContext(UserContext);
@@ -59,13 +61,14 @@ export default function LeavePeriodForm({ currentUser , getTableData}) {
     setLeavePeriodType(value);
     // console.log(leavePeriodType,'leavePeriodType');
     const currentYear = dayjs().year();
+
     if (value === 'Year') {
-      // setSelectedStartDate(dayjs(`${currentYear}-01-01`));
-      // setSelectedEndDate(dayjs(`${currentYear}-12-31`));
+      setSelectedStartDate(dayjs(`${currentYear}-01-01`));
+      setSelectedEndDate(dayjs(`${currentYear}-12-31`));
     } else if (value === 'Financial Year') {
       const nextYear = currentYear + 1;
-      // setSelectedStartDate(dayjs(`${currentYear}-04-01`));
-      // setSelectedEndDate(dayjs(`${nextYear}-03-31`));
+      setSelectedStartDate(dayjs(`${currentYear}-04-01`));
+      setSelectedEndDate(dayjs(`${nextYear}-03-31`));
     }
   };
   console.log(leavePeriodType,'leavePeriodType');
@@ -168,25 +171,31 @@ export default function LeavePeriodForm({ currentUser , getTableData}) {
       if (response?.data?.code === 200) {
         handleClose();
         getTableData()
-        setSnackbarSeverity('success');
-        setSnackbarMessage(response?.data?.message);
-        setSnackbarOpen(true);
+        enqueueSnackbar(response?.data?.message,{variant:'success'})
+        // setSnackbarSeverity('success');
+        // setSnackbarMessage(response?.data?.message);
+        // setSnackbarOpen(true);
         handleClose();
         reset1();
+        setLeavePeriodType('');
         console.log('sucess', response);
       }
       if (response?.data?.code === 400) {
-        setSnackbarSeverity('error');
-        setSnackbarMessage(response?.data?.message);
-        setSnackbarOpen(true);
-        handleClose();
+        
+        enqueueSnackbar(response?.data?.message,{variant:'error'})
+        setSelectedDates(null);
+        setSelectedDates2(null);
+        setLeavePeriodType('');
+        reset1();
         console.log('sucess', response);
       }
     } catch (error) {
-      setSnackbarSeverity('error');
-      setSnackbarMessage('Error While Adding Leave Period. Please try again.');
-      setSnackbarOpen(true);
-      handleClose();
+
+      enqueueSnackbar(error.response.data.message,{variant:'error'})
+      setSelectedDates(null);
+      setSelectedDates2(null);
+      setLeavePeriodType('');
+      reset1();
       console.log('error', error);
     }
   });
@@ -237,7 +246,7 @@ export default function LeavePeriodForm({ currentUser , getTableData}) {
       <Button
         onClick={handleOpen}
         variant="contained"
-        startIcon={<Iconify icon="mingcute:add-line" />}
+        // startIcon={<Iconify icon="mingcute:add-line" />}
         sx={{ margin: '20px', color: 'white', backgroundColor: '#3B82F6' }}
       >
         Add Leave Period
@@ -282,9 +291,7 @@ export default function LeavePeriodForm({ currentUser , getTableData}) {
                     label="Start Date"
                     value={selectedStartDate}
                     onChange={handleStartDateChange}
-                    // value={null}
-                    maxDate={new dayjs()}
-                    // onChange={handleDateChanges2}
+                    disabled
                   />
                 </DemoContainer>
               </LocalizationProvider>
@@ -293,9 +300,9 @@ export default function LeavePeriodForm({ currentUser , getTableData}) {
                   <DatePicker
                     sx={{ width: '100%', paddingLeft: '3px' }}
                     label="End Date"
-                    value={selectedEndDate}
-                    minDate={selectedStartDate} // Ensure end date cannot be before the selected start date
-                    onChange={handleEndDateChange}
+              value={selectedEndDate}
+              onChange={handleEndDateChange}
+              disabled
                   />
                 </DemoContainer>
               </LocalizationProvider>

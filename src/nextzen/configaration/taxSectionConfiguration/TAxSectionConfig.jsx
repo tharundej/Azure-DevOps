@@ -154,12 +154,12 @@ const token  =  (user?.accessToken)?user?.accessToken:''
   const errors = {};
 
   // Validate taxSection
-  if (!valueSelected?.taxSection?.match(/^[a-zA-Z0-9()\-_*]+$/)) {
+  if (!valueSelected?.taxSection?.match(/^[a-zA-Z0-9()\-_* ]+$/)) {
     errors.taxSection = 'Invalid characters. Only alphanumeric, (), -, _, * are allowed.';
   }
 
   // Validate taxScheme
-  if (!valueSelected?.taxScheme?.match(/^[a-zA-Z0-9()\-_*]+$/)) {
+  if (!valueSelected?.taxScheme?.match(/^[a-zA-Z0-9()\-_* ]+$/)) {
     errors.taxScheme = 'Invalid characters. Only alphanumeric, (), -, _, * are allowed.';
   }
 

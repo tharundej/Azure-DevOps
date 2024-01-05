@@ -20,7 +20,7 @@ function EmployeeManagementHome  () {
    // const tabLabels = ['EmployeeTable', 'Statoury','Salary Structure',"Roles"];
     const dataObj=[
       {
-        id:'employeeTable',
+        id:'employees',
         label:'Employees',
         content: <EmployeeTable/>
       },

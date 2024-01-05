@@ -18,7 +18,7 @@ const Project = () => {
   const [count,setCount] = useState(0)
   const TABLE_HEAD = [
 
-    { id: "projectID", label: "Project Id", minWidth: '6pc', type: "text" },
+    // { id: "projectID", label: "Project Id", minWidth: '6pc', type: "text" },
     { id: "projectManagerName", label: "Project Manager", minWidth: '9pc', type: "text" },
     { id: "reportingManagerName", label: "Reporting Manager", minWidth: '10pc', type: "text" },
     { id: "projectName", label: "Project Name", minWidth: '8pc', type: "text" },
@@ -33,7 +33,7 @@ const Project = () => {
 
   const defaultPayload={
       "page": 0,
-      "count": 5,
+      "count": 10,
       "search": "",
       "companyId":(user?.companyID)?user?.companyID:'',
       "roleId": (user?.roleID)?user?.roleID:'',
@@ -139,6 +139,7 @@ const handleClose =()=>{
 const [selectedIds, setSelectedIds] = useState([]);
 const handleCloseEmployee=()=>{
   setEditEmployee(false)
+  setViewProject(false)
   setSelectedIds([])
 }
 const [showAll, setShowAll] = useState(false);
@@ -303,7 +304,7 @@ count={count}
            }}
            
            >
-            <AddProject title="Edit Project" rowData={rowData} handleClose={handleClose}/>
+            <AddProject title="Edit Project" rowData={rowData} handleClose={handleClose} />
             </Dialog>
       }
 

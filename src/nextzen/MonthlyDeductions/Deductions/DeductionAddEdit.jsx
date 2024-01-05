@@ -3,7 +3,7 @@ import axios from 'axios';
 import LoadingButton from '@mui/lab/LoadingButton';
 import ModalHeader from '../../global/modalheader/ModalHeader';
 import Iconify from 'src/components/iconify/iconify';
-import { Autocomplete, TextField,Chip,Dialog,DialogContent,DialogActions,Grid ,IconButton,Tooltip,InputLabelProps, Box,Button ,OutlinedInput,InputLabel,MenuItem,FormControl,Select,Stack} from '@mui/material';
+import { Autocomplete,Typography, TextField,Card,CardContent,Chip,Dialog,DialogContent,DialogActions,Grid ,IconButton,Tooltip,InputLabelProps, Box,Button ,OutlinedInput,InputLabel,MenuItem,FormControl,Select,Stack} from '@mui/material';
 import { useContext } from 'react';
 import UserContext from 'src/nextzen/context/user/UserConext';
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
@@ -296,7 +296,10 @@ const getHealthInsuranceDetails=()=>{
  <div>
     {fieldValues.map((fieldValue, index) => (
       <React.Fragment key={index}>
-      
+        <Card sx={{marginBottom:1}}>
+          <CardContent>
+         <Grid container flexDirection="row" >
+        <Grid item md={11}>
         <FormControl sx={{ mt:1, width: "100%" }}>
        <InputLabel id="demo-multiple-checkbox-label">Deductions</InputLabel>
      <Select
@@ -396,11 +399,36 @@ const getHealthInsuranceDetails=()=>{
         sx={{marginTop:1}}
         onChange={(e) => handleTextFieldChange(index,'totalInstallments',parseInt(e.target.value))}
       />}
+      </Grid>
+       {(index==selectCount-1) && <Grid item md={1} sx={{marginTop:4}}>
+   
+   <Box sx={{ pb: 1.5 }}>
+     <Typography variant="subtitle2" noWrap>
+    <Tooltip title="Add" placement="top">
+       <IconButton onClick={handleAdd}>
+         <Iconify icon="icons8:plus" sx={{color:'black'}}/>
+       </IconButton>
+     </Tooltip>
+     </Typography>
+   
+   <Typography variant="subtitle2">
+     {selectCount>1 && <Tooltip title="Remove" placement="top">
+       <IconButton onClick={handleRemove}>
+         <Iconify icon="icons8:minus" sx={{color:'black'}}/>
+       </IconButton>
+     </Tooltip>}
+     </Typography>
+     </Box>
+      </Grid>}
+   
+         </Grid>
+         </CardContent>
+         </Card>
       </React.Fragment>
     ))}
   </div>
 
-      <div style={{display:"flex",float:'right',right:5,textAlign:'right',justifyContent:'right'}}>   
+      {/* <div style={{display:"flex",float:'right',right:5,textAlign:'right',justifyContent:'right'}}>   
       {itemAdded ? (
     <Tooltip title="Add" placement="top">
       <IconButton onClick={handleAdd}>
@@ -414,7 +442,7 @@ const getHealthInsuranceDetails=()=>{
       </IconButton>
     </Tooltip>
   )}
-        </div>
+        </div> */}
       </Box>
      
       <DialogActions>
