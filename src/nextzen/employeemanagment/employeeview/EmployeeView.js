@@ -24,7 +24,7 @@ import EmployeePermissions from './employeepermissions/EmployeePermissions';
 import SnackBarComponent from 'src/nextzen/global/SnackBarComponent';
 import ChangePassword from './changepassword/ChangePassword';
 import { useEffect } from 'react';
-import baseImageUrl, { baseUrl } from 'src/nextzen/global/BaseUrl';
+import {baseImageUrl, baseUrl } from 'src/nextzen/global/BaseUrl';
 import { ASSETS_API } from 'src/config-global';
 import { useRouter } from 'src/routes/hooks';
 
