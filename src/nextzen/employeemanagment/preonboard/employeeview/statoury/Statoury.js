@@ -55,7 +55,7 @@ export default function Statoury({  delivery, shippingAddress, payment,employeeI
   const getEmployeeStattuory=()=>{
   
         let data1 = JSON.stringify({
-        "employeeID": employeeIDForApis
+        "applicantID": employeeIDForApis
         });
 
         let config = {
