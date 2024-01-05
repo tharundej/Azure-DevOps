@@ -162,6 +162,8 @@ const TaxSectionConfiguration = lazy(() =>
   import('../../nextzen/configaration/taxSectionConfiguration/TaxSEctionTab')
 );
 const ChangePassword = lazy(()=>import('../../nextzen/signup/ChangePassword'));
+
+// const ResetPassword = lazy(()=>import('../../nextzen/signup/ResetPassword'))
 // const ShiftConfiguration = lazy(()=> import('src/nextzen/configaration/shiftconfiguration/ShiftConfiguration'));
 // factory
 const FactoryIndex = lazy(() => import('src/nextzen/factory/Factory'));
@@ -640,6 +642,7 @@ export const dashboardRoutes = [
       // { path: 'profile', element: <UserProfilePage /> },
     ],
   },
+
   {
     path:'changepassword',
     element: (
@@ -702,7 +705,7 @@ export const dashboardRoutes = [
   ),
   children: [
     { element: <Personal/> ,index:true },
-    {path:'Organization', element:<Organizationchart/>}
+    {path:'Organizationchart', element: <Organizationchart/> },
 ],
 },
 ];

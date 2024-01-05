@@ -231,7 +231,7 @@ const handleCount =()=>{
                   >
                     <>
                     {localStorage.getItem("employeeID")!==employeeIDForApis &&
-                    <Grid container alignItems="flex-end" justifyContent="flex-end" flexDirection="row">
+                      <Grid container alignItems="flex-end" justifyContent="flex-end" flexDirection="row">
                             <IconButton onClick={() => {
                               const item = itm;
                               handleAddEducation([item], "updateEducationDetails");
@@ -304,7 +304,7 @@ xs={12}
      
       </Grid>
       <Grid sx={{display:'flex',flexDirection:'row',justifyContent:'flex-end',alignContent:'flex-end'}}>
-      {localStorage.getItem("employeeID")!==employeeIDForApis &&  
+      {localStorage.getItem("employeeID")!==employeeIDForApis &&
    <Button
                 // color="inherit"
                 //disabled={activeStep === 0}

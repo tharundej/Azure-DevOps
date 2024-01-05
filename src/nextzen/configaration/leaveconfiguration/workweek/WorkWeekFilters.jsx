@@ -45,9 +45,10 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+
 // import './ShiftFilter.css'
 
-import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
+import { formatDateToYYYYMMDD, formatDate } from 'src/nextzen/global/GetDateFormat';
 
 import CustomDateRangePicker from 'src/nextzen/global/CustomDateRangePicker';
 import WorkWeekForm from './WorkWeekForm';
@@ -89,7 +90,13 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function WorkWeekFilters({ filterData, filterOptions, filterSearch, searchData ,getTableData}) {
+export default function WorkWeekFilters({
+  filterData,
+  filterOptions,
+  filterSearch,
+  searchData,
+  getTableData,
+}) {
   const theme = useTheme();
   const dayTypes = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   const actionsTypes = ['FullDay', 'HalfDay', 'Holiday'];
@@ -268,47 +275,51 @@ export default function WorkWeekFilters({ filterData, filterOptions, filterSearc
         container
         spacing={2}
         alignItems="center"
-        justifyContent="flex-end"
         direction="row"
-        style={{ marginBottom: '1rem' }}
+        style={{ marginBottom: '0.1rem' }}
+        lg={12}
+        md={12}
+        xs={12}
       >
-        <Grid item md={8} xs={8}>
+        <Grid item lg={8} md={8} xs={12} sm={8}>
           <TextField
             placeholder="Search...."
+            size='small'
             fullWidth
             onChange={(e) => handleSearch(e.target.value)}
           />
         </Grid>
-        <Grid item md={2} xs={2}>
+        <Grid item lg={2} md={2} xs={8} sm={2}>
           <WorkWeekForm getTableData={getTableData} />
         </Grid>
-        <Grid item md={2} xs={2}>
-      
-
-          {badgeContent ===  true?(
-               <Badge badgeContent={""} color="success" variant="dot" 
-               
-               anchorOrigin={{
+        <Grid item lg={2} md={2} xs={4} sm={2}>
+          {badgeContent === true ? (
+            <Badge
+              badgeContent={''}
+              color="success"
+              variant="dot"
+              anchorOrigin={{
                 vertical: 'top',
                 horizontal: 'right',
               }}
-              
-              >
-                        <Button onClick={handleClickOpen} style={{width:"80px"}}   >
-                       <Iconify icon="mi:filter"/>
-                       Filters
-                  </Button>
-                  </Badge >
-          ):( <Button onClick={handleClickOpen} style={{width:"80px"}}  >
-          <Iconify icon="mi:filter"/>
-          Filters
-     </Button>)}
-            {/* <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
+            >
+              <Button onClick={handleClickOpen} style={{ width: '80px' }}>
+                <Iconify icon="mi:filter" />
+                Filters
+              </Button>
+            </Badge>
+          ) : (
+            <Button onClick={handleClickOpen} style={{ width: '80px' }}>
+              <Iconify icon="mi:filter" />
+              Filters
+            </Button>
+          )}
+          {/* <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
               <Button onClick={handleClickOpen} sx={{ width: '80px' }}>
                 <Iconify icon="mi:filter" />
               </Button>
             </Stack> */}
-          
+
           {/* <Grid>
             <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
               <Button onClick={handleClickOpen} sx={{ width: '80px' }}>

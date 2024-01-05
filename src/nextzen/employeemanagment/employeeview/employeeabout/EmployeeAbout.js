@@ -334,6 +334,8 @@ useEffect(()=>{
     
   
 }
+console.log(localStorage.getItem("employeeID"),employeeIDForApis,'anilll')
+console.log('hii')
  const handleCallSnackbarP=(msg,sev)=>{
   handleCallSnackbar(msg,sev);
  }
@@ -485,6 +487,7 @@ const [newAvatarUrl, setNewAvatarUrl] = useState("");
         <Typography variant='h5' component="body">General Information</Typography>
 
         </Grid>
+        
         {localStorage.getItem("employeeID")!==employeeIDForApis &&
         <Grid item>
         <Iconify 

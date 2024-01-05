@@ -451,17 +451,17 @@ export default function NavVertical({ openNav, onCloseNav }) {
   const { logout } = useAuthContext();
   const [confirmLogout, setConfirmLogout] = useState(false);
   const pathname = usePathname();
-  const router = useRouter();
   const popover = usePopover();
+  const router = useRouter();
   const lgUp = useResponsive('up', 'lg');
   const { enqueueSnackbar } = useSnackbar();
   const navData = useNavData();
   const [anchorEl, setAnchorEl] = useState(null);
- 
+
   const handleOpenMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
- 
+
   const handleCloseMenu = () => {
     setAnchorEl(null);
   };
@@ -514,7 +514,7 @@ const handleClickItem=()=>{
         </Typography>
       </Grid>
       <Divider sx={{ borderStyle: 'dashed', mt: 1 }} />
- 
+
       <Grid sx={{ display: 'flex', minHeight: '50px' }}>
         <Avatar
           src={user?.photoURL}
@@ -522,6 +522,8 @@ const handleClickItem=()=>{
           sx={{
             width: 36,
             height: 36,
+            ml: 4,
+            mt: 2,
             ml: 4,
             mt: 2,
             border: (theme) => `solid 2px ${theme.palette.background.default}`,
@@ -537,7 +539,7 @@ const handleClickItem=()=>{
             {user?.roleName}
           </Typography>
         </Box>
- 
+
         <Stack sx={{ p: 1 }}>
           <IconButton onClick={handleOpenMenu}>
             <Iconify icon="mingcute:down-fill"  />
@@ -549,14 +551,14 @@ const handleClickItem=()=>{
                 onClick={() => {
                   handleClickItem(option.linkTo);
                   handleCloseMenu();
-                }}
+                }} 
               >
                 {option.label}
               </MenuItem>
             ))}
             <MenuItem
               onClick={handleLogout}
-              sx={{  fontWeight: 'fontWeightBold', color: 'error.main' }}
+              sx={{ m: 1, fontWeight: 'fontWeightBold', color: 'error.main' }}
               style={{ padding: 0, margin: 0 }}
             >
               <Button
@@ -584,6 +586,7 @@ const handleClickItem=()=>{
       <NavSectionVertical
         data={navData}
         config={{
+          currentRole: user?.role || 'admin',
           currentRole: user?.role || 'admin',
         }}
       />

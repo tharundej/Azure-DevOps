@@ -198,9 +198,11 @@ const PreviousWork = ({employeeIDForApis}) => {
   
 
    ])
-   const rowActions=[
-    {name : "Edit",icon:"solar:pen-bold"},
-   ]
+   var rowActions=[]
+   if(localStorage.getItem("employeeID")!==employeeIDForApis ){
+    rowActions.push({name : "Edit",icon:"solar:pen-bold"})
+   }
+
 
    const onClickActions=(rowdata,event)=>{
     console.log(rowdata,"rowdata")

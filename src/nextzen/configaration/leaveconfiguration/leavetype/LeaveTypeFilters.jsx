@@ -45,15 +45,16 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+
 // import './ShiftFilter.css'
 
-import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
+import { formatDateToYYYYMMDD, formatDate } from 'src/nextzen/global/GetDateFormat';
 
 import CustomDateRangePicker from 'src/nextzen/global/CustomDateRangePicker';
 
 import LeaveTypeForm from './LeaveTypeForm';
 import { leaveTypeName } from 'src/nextzen/global/configurationdropdowns/ConfigurationDropdown';
-import {leavePeriodType} from '../../../global/configurationdropdowns/ConfigurationDropdown'
+import { leavePeriodType } from '../../../global/configurationdropdowns/ConfigurationDropdown';
 
 const defaultFilters = {
   name: '',
@@ -66,7 +67,6 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
     padding: theme.spacing(2),
     overflow: 'hidden',
-    
   },
   '& .MuiDialogActions-root': {
     padding: theme.spacing(1),
@@ -92,10 +92,16 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function LeaveTypeFilters({ filterData, filterOptions, filterSearch, searchData,getTableData }) {
+export default function LeaveTypeFilters({
+  filterData,
+  filterOptions,
+  filterSearch,
+  searchData,
+  getTableData,
+}) {
   const theme = useTheme();
   const [leaveTypes, setLeaveTypes] = useState([]);
-  const [leavePeriodTypes,setLeavePeriodTypes]=useState([])
+  const [leavePeriodTypes, setLeavePeriodTypes] = useState([]);
   const [badgeContent, setBadgeContent] = useState(false);
   useEffect(() => {
     async function call() {
@@ -117,7 +123,7 @@ export default function LeaveTypeFilters({ filterData, filterOptions, filterSear
   const designationGradeName = ['senior', 'junior'];
 
   const [dropdown, setDropdown] = useState({});
-  const [dropdown1,setDropdown1] = useState({});
+  const [dropdown1, setDropdown1] = useState({});
   const [dateError, setDataError] = useState('');
   const [filters, setFilters] = useState(defaultFilters);
   const [personName, setPersonName] = React.useState([]);
@@ -305,55 +311,45 @@ export default function LeaveTypeFilters({ filterData, filterOptions, filterSear
         container
         spacing={2}
         alignItems="center"
-        justifyContent="flex-end"
         direction="row"
         style={{ marginBottom: '0.1rem' }}
+        lg={12}
+        md={12}
+        xs={12}
       >
-        <Grid item md={8} xs={8}>
+        <Grid item lg={8} md={8} xs={12} sm={8}>
           <TextField
             placeholder="Search...."
             fullWidth
+            size='small'
             onChange={(e) => handleSearch(e.target.value)}
           />
         </Grid>
-        <Grid item md={2} xs={2}>
-          <LeaveTypeForm getTableData={getTableData}/>
+        <Grid item lg={2} md={2} xs={8} sm={2}>
+          <LeaveTypeForm getTableData={getTableData} />
         </Grid>
-        <Grid item md={2} xs={2}>
-          {/* <Grid>
-            <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
-              <Button onClick={handleClickOpen} sx={{ width: '80px' }}>
-                <Iconify icon="mi:filter" />
-              </Button>
-            </Stack>
-          </Grid> */}
-
-
-
-          {badgeContent ===  true?(
-               <Badge badgeContent={""} color="success" variant="dot" 
-               
-               anchorOrigin={{
+        <Grid item lg={2} md={2} xs={4} sm={2}>
+          {badgeContent === true ? (
+            <Badge
+              badgeContent={''}
+              color="success"
+              variant="dot"
+              anchorOrigin={{
                 vertical: 'top',
                 horizontal: 'right',
               }}
-              
-              >
-                        <Button onClick={handleClickOpen} style={{width:"80px"}}   >
-                       <Iconify icon="mi:filter"/>
-                       Filters
-                  </Button>
-                  </Badge >
-          ):( <Button onClick={handleClickOpen} style={{width:"80px"}}  >
-          <Iconify icon="mi:filter"/>
-          Filters
-     </Button>)}
-            {/* <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
-              <Button onClick={handleClickOpen} sx={{ width: '80px' }}>
+            >
+              <Button onClick={handleClickOpen} style={{ width: '80px' }}>
                 <Iconify icon="mi:filter" />
+                Filters
               </Button>
-            </Stack> */}
-          
+            </Badge>
+          ) : (
+            <Button onClick={handleClickOpen} style={{ width: '80px' }}>
+              <Iconify icon="mi:filter" />
+              Filters
+            </Button>
+          )}
         </Grid>
       </Grid>
 
@@ -362,7 +358,7 @@ export default function LeaveTypeFilters({ filterData, filterOptions, filterSear
         aria-labelledby="customized-dialog-title"
         // maxWidth="sm"
         open={open}
-        
+
         // className="custom-dialog-width"
       >
         <DialogTitle sx={{ textAlign: 'center', paddingBottom: 0, paddingTop: 2 }}>
@@ -396,7 +392,6 @@ export default function LeaveTypeFilters({ filterData, filterOptions, filterSear
             }}
             item
           >
-           
             <Grid item xs={6}>
               <FormControl fullWidth>
                 <InputLabel id="leaveTypeName">Leave Name</InputLabel>
@@ -412,16 +407,16 @@ export default function LeaveTypeFilters({ filterData, filterOptions, filterSear
                   //   sx={{minWidth:'300px'}}
                 >
                   {leaveTypes?.length > 0 ? (
-  leaveTypes.map((name, index) => (
-    <MenuItem key={index} value={name} style={getStyles(name, personName, theme)}>
-      {name?.leaveTypeName}
-    </MenuItem>
-  ))
-) : (
-  <MenuItem value="" style={getStyles(name, personName, theme)}>
-    No leave types available
-  </MenuItem>
-)}
+                    leaveTypes.map((name, index) => (
+                      <MenuItem key={index} value={name} style={getStyles(name, personName, theme)}>
+                        {name?.leaveTypeName}
+                      </MenuItem>
+                    ))
+                  ) : (
+                    <MenuItem value="" style={getStyles(name, personName, theme)}>
+                      No leave types available
+                    </MenuItem>
+                  )}
                 </Select>
               </FormControl>
             </Grid>
