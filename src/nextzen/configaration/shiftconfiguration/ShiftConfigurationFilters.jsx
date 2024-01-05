@@ -293,6 +293,7 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
         <TextField
             placeholder="Search...."
              fullWidth
+             size='small'
              onChange={(e) => handleSearch(e.target.value)}
           />
           

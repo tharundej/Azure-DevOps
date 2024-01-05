@@ -268,6 +268,7 @@ export default function ComoffConfigFilters({ filterData, filterOptions ,filterS
         <TextField
             placeholder="Search...."
              fullWidth
+             size='small'
              onChange={(e) => handleSearch(e.target.value)}
           />
           

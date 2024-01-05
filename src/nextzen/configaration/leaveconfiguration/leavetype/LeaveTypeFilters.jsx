@@ -321,6 +321,7 @@ export default function LeaveTypeFilters({
           <TextField
             placeholder="Search...."
             fullWidth
+            size='small'
             onChange={(e) => handleSearch(e.target.value)}
           />
         </Grid>

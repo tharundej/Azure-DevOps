@@ -246,6 +246,7 @@ export default function WorkWeekForm({ currentUser ,getTableData}) {
                   value: employeepayType.locationName,
                   ...employeepayType,
                 }))}
+                isOptionEqualToValue={(option, value) => option.label === value.label}
                 onChange={(event, newValue, selectedOption) =>
                   handleAutocompleteChange('Location', newValue, selectedOption)
                 }

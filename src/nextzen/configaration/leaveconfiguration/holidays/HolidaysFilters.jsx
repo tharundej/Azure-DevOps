@@ -337,6 +337,7 @@ export default function HolidaysFilters({
         <Grid item lg={8} md={8} xs={12} sm={8}>
           <TextField
             placeholder="Search...."
+            size='small'
             fullWidth
             onChange={(e) => handleSearch(e.target.value)}
           />

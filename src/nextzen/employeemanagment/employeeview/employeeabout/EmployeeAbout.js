@@ -236,7 +236,7 @@ useEffect(()=>{
             desginationGradeValue:desginationGradeValue,
             rolesValue:rolesValue,
             managerValue:managerValue,
-            bloodGroupValue: { label: currentEmployee?.bloodGroup },
+            bloodGroupValue: { label: currentEmployee?.bloodGroup,value:'a' },
             religionValue:{label:currentEmployee?.religion},
             genderValue:{label:currentEmployee?.gender},
             nationalityValue:{nationality:currentEmployee?.nationality},
