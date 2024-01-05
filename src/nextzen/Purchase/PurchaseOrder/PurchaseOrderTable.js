@@ -92,7 +92,7 @@ const PurchaseOrderTable = () => {
       }),
     };
     
-    fetch(baseUrl +'getPoGenarator', options)
+    fetch(baseUrl +'/getPoGenarator', options)
     .then((resp) => resp.blob())
     .then((myBlob) => {
       const url = window.URL.createObjectURL(

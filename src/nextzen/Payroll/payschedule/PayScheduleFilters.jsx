@@ -36,7 +36,7 @@ import dayjs from 'dayjs';
 import Dialog from '@mui/material/Dialog';
 
 import DialogTitle from '@mui/material/DialogTitle';
-
+import Badge from '@mui/material/Badge';
 import { Today } from '@mui/icons-material';
 
 import { useTheme } from '@mui/material/styles';
@@ -123,7 +123,7 @@ export default function PayScheduleFilters({ filterData, filterOptions,searchDat
     call();
   }, []);
   const [dropdown, setDropdown] = useState({});
-
+  const [badgeContent, setBadgeContent] = useState(false);
   const [dateError, setDataError] = useState('');
   const [filters, setFilters] = useState(defaultFilters);
   const [personName, setPersonName] = React.useState([]);
@@ -156,7 +156,7 @@ export default function PayScheduleFilters({ filterData, filterOptions,searchDat
       options: [],
     },
   ]);
-
+const [formData ,setFormData] = useState()
   const [datesSavedArray, setDatesSavedArray] = useState([
     'from_date',
     'to_date',
@@ -209,41 +209,21 @@ export default function PayScheduleFilters({ filterData, filterOptions,searchDat
   const handleClickClose = () => {
     setOpen(false);
   };
-
+  const [dropdownValues, setDropdownValues] = useState({
+    employmentType: [],
+    payScheduleType: []
+  });
   const handleChangeDropDown = (event, field) => {
-    console.log('1',event?.target?.value)
     const {
       target: { value },
     } = event;
-
-    if (field === 'designation_grade_name') {
-      setDropdownDesignationGradeName(value);
-      const obj = dropdown;
-      obj[field] = value;
-      setDropdown(obj);
-    } else if (field === 'shift_name') {
-      setDropdownStatus(value);
-      const obj = dropdown;
-      obj[field] = value;
-      setDropdown(obj);
-    } else if (field === 'payScheduletype') {
-      console.log(value,'ppppp')
-      setdropdownpayscheduleType(value);
-      const obj = dropdown;
-      obj[field] = value;
-      setDropdown(obj);
-    } else if (field === 'employmentType') {
-      setdropdownemploymentType(value);
-      const obj = dropdown;
-      obj[field] = value;
-      setDropdown(obj);
-    }
-
-    // On autofill we get a stringified value.
-
-    console.log(value);
-    // console.log( typeof value === 'string' ? value.split(',') : value,)
+  
+    setDropdownValues((prevValues) => ({
+      ...prevValues,
+      [field]: value,
+    }));
   };
+  
   const handleSearch = (searchTerm) => {
      
     searchData(searchTerm)
@@ -255,7 +235,8 @@ export default function PayScheduleFilters({ filterData, filterOptions,searchDat
   console.log('jii',data)
     const comma = data.join(',');
       const obj = {
-        payScheduleType: comma,
+        payScheduleType: dropdownValues?.payScheduleType[0],
+        employmentType : dropdownValues?.employmentType[0]
       };
      
       filterData(obj);
@@ -306,14 +287,33 @@ export default function PayScheduleFilters({ filterData, filterOptions,searchDat
         <PayScheduleform getTableData={getTableData}/>
         </Grid>
         <Grid item md={2} xs={2} >
-        <Grid>
+        {/* <Grid>
             <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
            
               <Button onClick={handleClickOpen} sx={{ width: '80px' }}>
                 <Iconify icon="mi:filter" />
               </Button>
             </Stack>
-          </Grid>
+          </Grid> */}
+          
+          {badgeContent ===  true?(
+               <Badge badgeContent={""} color="success" variant="dot" 
+               
+               anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              
+              >
+                        <Button onClick={handleClickOpen} style={{width:"80px"}}   >
+                       <Iconify icon="mi:filter"/>
+                       Filters
+                  </Button>
+                  </Badge >
+          ):( <Button onClick={handleClickOpen} style={{width:"80px"}}  >
+          <Iconify icon="mi:filter"/>
+          Filters
+     </Button>)}
         </Grid>
       </Grid>
 
@@ -332,7 +332,7 @@ export default function PayScheduleFilters({ filterData, filterOptions,searchDat
           />
         </DialogTitle>
 
-        <DialogContent  sx={{minWidth:"300px"}}>
+        <DialogContent  sx={{minWidth:"400px"}}>
          
             <Grid container spacing={1}   sx={{flexDirection:'row',display:'flex',marginTop:'1rem'}} item>
               <Grid item xs={6}>
@@ -343,7 +343,7 @@ export default function PayScheduleFilters({ filterData, filterOptions,searchDat
                     labelId="demo-multiple-name-shift_name_1"
                     id="demo-multiple-shift_name_1"
                     multiple
-                    value={dropdownemploymentType}
+                    value={dropdownValues?.employmentType}
                     onChange={(e) => handleChangeDropDown(e, 'employmentType')}
                     input={<OutlinedInput label="Employee Type" />}
                     MenuProps={MenuProps}
@@ -365,13 +365,13 @@ export default function PayScheduleFilters({ filterData, filterOptions,searchDat
                       labelId="demo-multiple-name-shift_name_1"
                       id="demo-multiple-shift_name_1"
                       multiple
-                      value={dropdownpayscheduleType}
-                      onChange={(e) => handleChangeDropDown(e, 'payScheduletype')}
+                      value={dropdownValues?.payScheduleType}
+                      onChange={(e) => handleChangeDropDown(e, 'payScheduleType')}
                       input={<OutlinedInput label="Pay Schedule Type" />}
                       MenuProps={MenuProps}
                     //   sx={{minWidth:'300px'}}
                     >
-                      {payscheduleTypes.map((name,index) => (
+                      {payscheduleTypes?.map((name,index) => (
                         <MenuItem
                           key={index}
                           value={name?.payScheduletype}

@@ -24,6 +24,7 @@ import { formatDateToYYYYMMDD, formatDate } from 'src/nextzen/global/GetDateForm
 import { getStateAPI } from 'src/api/Accounts/Common';
 import ModalHeader from '../global/modalheader/ModalHeader';
 import UserContext from '../context/user/UserConext';
+import { City, Country, State } from 'country-state-city';
 
 export default function CreateVendor({
   currentData,
@@ -39,9 +40,10 @@ export default function CreateVendor({
     vendorEmailID: Yup.string().required('vendor Email ID is Required'),
     address1: Yup.string().required('Address 1 is Required'),
     address2: Yup.string(),
-    city: Yup.string().required('City is Required'),
+    locationCity: Yup.string().required('City is Required'),
     state: Yup.string(),
-    country: Yup.string().required('country is Required'),
+    locationState: Yup.string(),
+    // locationCountry: Yup.string().required('country is Required'),
     pincode: Yup.number().required('pincode is Required'),
     vendorPANNo: Yup.string().required('vendorPANNo is Required'),
     vendorGSTNo: Yup.string().required('vendorGSTNo is Required'),
@@ -64,10 +66,11 @@ export default function CreateVendor({
       vendorEmailID: currentData?.vendorEmailID || '',
       address1: currentData?.address1 || '',
       address2: currentData?.address2 || '',
-      city: currentData?.city || '',
-      state: currentData?.state || '',
+      locationCity: currentData?.locationCity || '',
+      // state: currentData?.state || '',
+      locationState: currentData?.locationState || '',
       stateCode: null,
-      country: currentData?.country || '',
+      locationCountry: currentData?.locationCountry || '',
       pincode: currentData?.pincode || '',
       vendorPANNo: currentData?.vendorPANNo || '',
       vendorGSTNo: currentData?.vendorGSTNo || '',
@@ -102,25 +105,64 @@ export default function CreateVendor({
   const [locationsOptions, setLocationsOptions] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [selectedCountry, setSelectedCountry] = useState({ isoCode: 'IN', name: 'India' });
+  const [selectedState, setSelectedState] = useState({});
+  const [selectedCity, setSelectedCity] = useState({});
+  const [countries, setCountries] = useState([]);
+  const [states, setStates] = useState([]);
+  const [cities, setCities] = useState([]);
   useEffect(() => {
-    const fetchData = async () => {
-      const data = { companyID: user?.companyID ? user?.companyID : '' };
-      try {
-        const response = await getStateAPI(data);
-        console.log('location success', response);
-        const stateNames = response.map((stateObj) => stateObj.state);
-        setLocationsOptions(stateNames);
-        console.log('defaultValues.state', defaultValues.state);
-        const defaultLocation = defaultValues.state;
-        setSelectedLocation(defaultLocation || stateNames[0]);
-      } catch (error) {
-        setErrorMessage(error.message);
-        console.log('API request failed:', error.message);
+    const mockCountries = Country.getAllCountries();
+    setCountries(mockCountries);
+  }, []);
+  useEffect(() => {
+    console.log({ selectedCountry });
+    const fetchStates = async () => {
+      if (selectedCountry) {
+        const statesList = State.getStatesOfCountry(selectedCountry.isoCode);
+        setStates(statesList);
+        const selectedState =
+          statesList.find((state) => state.name === currentData?.locationState) || statesList[0];
+        setSelectedState(selectedState);
+      } else {
+        setStates([]);
       }
     };
+    fetchStates();
+  }, [selectedCountry]);
+  useEffect(() => {
+    const fetchCities = async () => {
+      if (selectedState) {
+        const cities = City.getCitiesOfState(selectedCountry.isoCode, selectedState.isoCode);
+        setCities(cities);
+        const selectedCity =
+          cities.find((city) => city.name === currentData?.locationCity) || cities[0];
+        setSelectedCity(selectedCity);
+      } else {
+        setCities([]);
+      }
+    };
+    fetchCities();
+  }, [selectedState]);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const data = { companyID: user?.companyID ? user?.companyID : '' };
+  //     try {
+  //       const response = await getStateAPI(data);
+  //       console.log('location success', response);
+  //       const stateNames = response.map((stateObj) => stateObj.state);
+  //       setLocationsOptions(stateNames);
+  //       console.log('defaultValues.state', defaultValues.state);
+  //       const defaultLocation = defaultValues.state;
+  //       setSelectedLocation(defaultLocation || stateNames[0]);
+  //     } catch (error) {
+  //       setErrorMessage(error.message);
+  //       console.log('API request failed:', error.message);
+  //     }
+  //   };
 
-    fetchData();
-  }, [defaultValues.state]);
+  //   fetchData();
+  // }, [defaultValues.state]);
 
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snacbarMessage, setSnacbarMessage] = useState('');
@@ -139,6 +181,24 @@ export default function CreateVendor({
   const onSubmit = handleSubmit(async (data) => {
     data.status = selectedStatus;
     data.state = selectedLocation;
+     data.locationCountry = selectedCountry
+    ? {
+        isoCode: selectedCountry.isoCode,
+        name: selectedCountry.name,
+      }
+    : null;
+  data.locationState = selectedState
+    ? {
+        isoCode: selectedState.isoCode,
+        name: selectedState.name,
+      }
+    : null;
+  data.locationCity = selectedCity
+    ? {
+        isoCode: selectedCity.isoCode,
+        name: selectedCity.name,
+      }
+    : null;
     data.onboardingDate = formatDateToYYYYMMDD(datesUsed?.onboardingDate);
     data.offboardingDate = formatDateToYYYYMMDD(datesUsed?.offboardingDate);
     try {
@@ -204,8 +264,8 @@ export default function CreateVendor({
             <RHFTextField name="vendorEmailID" label="Vendor Email ID" />
             <RHFTextField name="address1" label="Address Line 1" />
             <RHFTextField name="address2" label="Address Line 2" />
-            <RHFTextField name="country" label="Country" />
-            <RHFAutocomplete
+
+            {/* <RHFAutocomplete
               name="state"
               id="location-autocomplete"
               options={locationsOptions || []}
@@ -215,8 +275,57 @@ export default function CreateVendor({
               renderInput={(params) => (
                 <TextField {...params} label="Select State" variant="outlined" />
               )}
+            /> */}
+              {/* <RHFAutocomplete
+              name="locationCountry"
+              options={countries || []}
+              value={countries?.find((option) => option.name === currentData?.locationCountry) ||selectedCountry}
+
+              onChange={(event, newValue) => setSelectedCountry(newValue)}
+              getOptionLabel={(option) => option}
+              renderInput={(params) => (
+                <TextField {...params} label="Select Country" variant="outlined" />
+              )}
+            /> */}
+            <RHFAutocomplete
+              name="locationCountry"
+              options={countries || []}
+              value={
+                countries?.find((option) => option.name === currentData?.locationCountry) ||
+                selectedCountry
+              }
+              onChange={(event, newValue) => setSelectedCountry(newValue)}
+              getOptionLabel={(option) => option.name}
+              renderInput={(params) => (
+                <TextField {...params} label="Select Country" variant="outlined" />
+              )}
             />
-            <RHFTextField name="city" label="City" />
+            <RHFAutocomplete
+              name="locationState"
+              options={states || []}
+              value={
+                states?.find((option) => option.name === currentData?.locationState) ||
+                selectedState
+              }
+              onChange={(event, newValue) => setSelectedState(newValue)}
+              getOptionLabel={(option) => option.name}
+              renderInput={(params) => (
+                <TextField {...params} label="Select State" variant="outlined" />
+              )}
+            />
+            <RHFAutocomplete
+              name="locationCity"
+              options={cities || []}
+              value={
+                cities?.find((option) => option.name === currentData?.locationCity) || selectedCity
+              }
+              onChange={(event, newValue) => setSelectedCity(newValue)}
+              getOptionLabel={(option) => option.name}
+              renderInput={(params) => (
+                <TextField {...params} label="Select City" variant="outlined" />
+              )}
+            />
+
             <RHFTextField name="pincode" label="Pincode" />
             <RHFTextField name="vendorPANNo" label="Vendor PAN Number" />
             <RHFTextField name="vendorGSTNo" label="Vendor GST Number" />

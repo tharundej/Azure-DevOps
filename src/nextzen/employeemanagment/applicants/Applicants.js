@@ -75,7 +75,6 @@ export default function Applicants(){
     
       salaryStructure:false
       })
-
     const [employeeTypeOptons,setEmployeeTypeOptions]=useState([
         "Contract","Permanent","daily Wise","Hours Wise"
      
@@ -87,38 +86,16 @@ export default function Applicants(){
      const [desginationGradeOptions,setDesginationGradeOptions]=useState([])
      const [rolesOptions,setrolesOptions]=useState([])
      const [assignManagerOptions,setassignManagerOptions]=useState([])
-
+     const [applicantDetails,setApplicantDetails]=useState()
     const defaultPayload={
-        "manager_id":(user?.roleID==6 || user?.roleID==7)?user?.employeeID:'',
-        "role_id": (user?.roleID)?user?.roleID:'',
-        "company_id": (user?.companyID)?user?.companyID:'',
-        "page": 0,
-        "count": 10,
-        "search": "",
-        "externalFilters": {
-            "leaveTypeName": "",
-            "Status": "",
-            "applyDate": {
-                "from": "",
-                "to": ""
-            },
-            "fromDate": {
-                "from": "",
-                "to": ""
-            },
-            "toDate": {
-                "from": "",
-                "to": ""
-            }
-        },
-        "sort": {
-           "key": 1,
-            "orderby": "al.apply_date"
-        }
-    }
+      "companyId":user?.companyID,
+      "search": "",
+      "page": 0,
+      "count": 5
+  }
         const [TABLE_HEAD,setTableHead] =useState( [
             {
-              id: 'applicantID',
+              id: 'applicant_id',
               label: 'Applicant ID',
               type: 'text',
               
@@ -126,10 +103,11 @@ export default function Applicants(){
               secondaryText: 'name',
             },
             { id: 'firstName', label: 'First name',  type: 'text',minWidth:"10pc" },
-            { id: 'middleName', label: 'Middle Name ',  type: 'text',minWidth:"10pc"  },
+            { id: 'MiddleName', label: 'Middle Name ',  type: 'text',minWidth:"10pc"  },
             { id: 'lastName', label: 'Last Name',  type: 'text',minWidth:"10pc"  },
             { id: 'contactNumber', label: 'Contact Number',  type: 'text',minWidth:"10pc"  },
-            { id: 'personalEmail', label: 'Email',  type: 'text',minWidth:"10pc"  },
+            { id: 'email', label: 'Email',  type: 'text',minWidth:"10pc"  },
+            { id : 'gender', label:'Gender',type:'text',minWidth:'8pc'},
             { id: 'lastWorkingDay', label: 'Commencement Date',  type: 'date',minWidth:"12pc"  },
             { id: 'generateOfferLetter',label:'Offer Letter',type:'button'}
         ])
@@ -138,9 +116,9 @@ export default function Applicants(){
             setNameValue("")
             setEmailValue("")
           }
-
           const handleOpenOffer=(row)=>{
             console.log(row,"rowdetailss")
+            setApplicantDetails(row)
             setOpenOffer(true)
           }
           const handleOfferClose=()=>{
@@ -267,7 +245,6 @@ export default function Applicants(){
             
             });
           }
-
           const ApiHitDepartment=(obj)=>{
             const config = {
         
@@ -423,7 +400,6 @@ export default function Applicants(){
           }
         
          
-
           const ApiHitManager=()=>{
             const data1 = JSON.stringify({
         
@@ -478,51 +454,12 @@ export default function Applicants(){
            ApiHitDepartment(obj)
             
          },[])
-          const NewUserSchema = Yup.object().shape({
-            department_name:Yup.string(),
-            desgination:Yup.string()
-           });   
-           const methods = useForm({
-            resolver: yupResolver(NewUserSchema),
-          });
-
-const {
-            reset,
-            watch,
-            control,
-            setValue,
-            handleSubmit,
-            formState: { isSubmitting },
-          } = methods;
         
-          const values = watch();
-const onSubmit = handleSubmit(async (data) => {
-
-            const obj={
-                
-                    "companyID":currentWorkData?.companyID,
-                    "applicantID":"COMPPRE2024010318025530",
-                    "employmentType":currentWorkData?.employmentType,
-                    "departmentID":currentWorkData?.departmentID?.departmentID,
-                    "designationID":currentWorkData?.designationID?.designationID,
-                    "designationGradeID":currentWorkData?.designationGradeID?.designationGradeID,
-                    "ctc":parseInt(currentWorkData?.ctc,10),
-                    "monthlyPay":currentWorkData?.monthlyPay,
-                    "bonus":currentWorkData?.bonus,
-                    "variablePay":currentWorkData?.variablePay,
-                    // "followSalaryStructure":true
-                
-            }
-            // ApiHitCurrentWork(obj);
-      console.log(obj,'currentWorkData')
-
-});
-
 const generateOfferLetter =()=>{
     const obj={
                 
         "companyID":currentWorkData?.companyID,
-        "applicantID":"COMPPRE2024010318025530",
+        "applicantID":applicantDetails?.applicant_id,
         "employmentType":currentWorkData?.employmentType,
         "departmentID":currentWorkData?.departmentID?.departmentID,
         "designationID":currentWorkData?.designationID?.designationID,
@@ -544,30 +481,16 @@ const config={
       .request(config)
       .then((response) => {
         console.log(response, 'responsedata', response.data);
-       if(response){
-         dowloadPDF()
+       if(response.data){
+         dowloadPDF(response.data)
        }
       })
       .catch((error) => {
         console.log(error);
       });
-
-
 }
-
-const dowloadPDF =()=>{
-    const options = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'User-Agent': 'insomnia/8.5.1' },
-        body: JSON.stringify({
-          "applicantID": "9599959j",
-          "companyID": "COMP3"
-        }),
-      };
-      
-      fetch('http://192.168.1.199:3001/erp/offerGenerator', options)
-        .then((resp) => resp.blob())
-        .then((myBlob) => {
+const dowloadPDF =(resp)=>{
+          const myBlob = resp.blob()
           const url = window.URL.createObjectURL(
             new Blob([myBlob], {
               type: 'application/pdf',
@@ -575,15 +498,9 @@ const dowloadPDF =()=>{
             })
           );
       
-          // Open the PDF in a new tab
           window.open(url, '_blank');
-        })
-        .catch((err) => {
-          console.log(err);
-        });
 }
 return (
-
         <>
             <Grid sx={{display:'flex', flexDirection:'row',alignItems:'center',justifyContent:'flex-end'}}>
            <Grid item>
@@ -594,10 +511,8 @@ return (
         
         sx={{color:'black',mr:0.5}}><SentIcon sx={{width:40,height:40}}/></Button>
 </Tooltip>
-
       </Grid>
       </Grid>
-
       <Dialog 
       fullWidth
       onClose={handleOfferClose}
@@ -609,10 +524,9 @@ return (
       >
    <ModalHeader heading="Offer Letter"/>
    <DialogContent sx={{paddingTop:5}}>
-   {/* <FormProvider methods={methods} onSubmit={onSubmit}> */}
+ 
         <Grid container spacing={3}>
          
-
           <Grid xs={12} md={12}>
             <Stack sx={{ p: 3 }}>
               <Box
@@ -649,7 +563,6 @@ return (
             }}
             renderInput={(params) => <TextField {...params} label="Employement Type" />}
           />
-
           {/* <Autocomplete
             disablePortal
             id="combo-box-demo"
@@ -691,9 +604,7 @@ return (
                 companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
                 departmentID:newvalue?.departmentID
               }
-
                ApiHitDesgniation(obj)
-
              
               
               // const timeStampCity = JSON.stringify(new Date().getTime());
@@ -719,15 +630,12 @@ return (
                 ...prev,
                 designationID:newvalue
               }))
-
               const obj={
                 companyID:JSON.parse(localStorage.getItem('userDetails'))?.companyID,
                 designationID:newvalue?.designationID
                 
               }
-
                ApiHitDesgniationGrade(obj)
-
              
               
               // const timeStampCity = JSON.stringify(new Date().getTime());
@@ -740,8 +648,6 @@ return (
             }}
             renderInput={(params) => <TextField {...params} label="Designation" />}
           />
-
-
             <Autocomplete
               disablePortal
               id="combo-box-demo"
@@ -755,7 +661,6 @@ return (
                   ...prev,
                   designationGradeID:newvalue
                 }))
-
               
               
               // const timeStampCity = JSON.stringify(new Date().getTime());
@@ -768,7 +673,6 @@ return (
             }}
             renderInput={(params) => <TextField {...params} label="Desgination Grade" />}
           />
-
               {/* <Autocomplete
               disablePortal
               id="combo-box-demo"
@@ -782,7 +686,6 @@ return (
                   ...prev,
                   roleID:newvalue
                 }))
-
               
               
               // const timeStampCity = JSON.stringify(new Date().getTime());
@@ -795,7 +698,6 @@ return (
             }}
             renderInput={(params) => <TextField {...params} label="Select Role" />}
           /> */}
-
               {/* <Autocomplete
               disablePortal
               id="combo-box-demo"
@@ -809,7 +711,6 @@ return (
                   ...prev,
                   reportingManagerID:newvalue
                 }))
-
               
               
               // const timeStampCity = JSON.stringify(new Date().getTime());
@@ -822,9 +723,6 @@ return (
             }}
             renderInput={(params) => <TextField {...params} label="Reporting Manager" />}
           /> */}
-
-
-
         <TextField 
           label="Monthly Salary/PM"  
           id="Monthly"
@@ -842,7 +740,6 @@ return (
             }));
           }}
         />
-
       <TextField 
         label="Variable Pay/PA"  
         id="Variable"
@@ -852,7 +749,6 @@ return (
           const enteredValue = parseFloat(e?.target?.value) ;
           const newVariablePay = enteredValue;
           const newTotalSalary =  currentWorkData?.monthlyPay * 12+enteredValue+currentWorkData?.bonus;
-
           setCurrentWorkData((prev) => ({
             ...prev,
             variablePay: newVariablePay,
@@ -861,7 +757,6 @@ return (
         }}
        
       />
-
           <TextField 
             label="Bonus Pay/PA"  
             id="Bonus"
@@ -879,9 +774,6 @@ return (
               }));
             }}
             />
-
-
-
         <TextField 
           label="CTC"  
           id="ctc"
@@ -894,8 +786,6 @@ return (
           }}
         />
           
-
-
 <FormGroup>
   <FormControlLabel control={<Checkbox  onChange={(e)=>{
                   setCurrentWorkData(prev=>({
@@ -907,7 +797,6 @@ return (
   
   
 </FormGroup>
-
 </Box>
 <Grid sx={{float:"right",display:"flex",justifyContent:'flex-end'}}>
 <Button sx={{marginRight:2}} variant="contained" color="primary" onClick={generateOfferLetter}>Generate Offer</Button>
@@ -927,7 +816,6 @@ return (
      PaperProps={{
           sx: { maxWidth: 500 },
       }}
-
       >
    <ModalHeader heading="Invitation"/>
 <DialogContent>
@@ -950,7 +838,7 @@ return (
     </Dialog>
           <BasicTable
             headerData={TABLE_HEAD}
-            endpoint='/hrapprovals'
+            endpoint='/getApplicantDetails'
             defaultPayload={defaultPayload}
             handleOpenOffer={handleOpenOffer}/>
         </>

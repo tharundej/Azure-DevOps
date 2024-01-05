@@ -18,7 +18,7 @@ const Project = () => {
   const [count,setCount] = useState(0)
   const TABLE_HEAD = [
 
-    { id: "projectID", label: "Project Id", minWidth: '6pc', type: "text" },
+    // { id: "projectID", label: "Project Id", minWidth: '6pc', type: "text" },
     { id: "projectManagerName", label: "Project Manager", minWidth: '9pc', type: "text" },
     { id: "reportingManagerName", label: "Reporting Manager", minWidth: '10pc', type: "text" },
     { id: "projectName", label: "Project Name", minWidth: '8pc', type: "text" },
@@ -304,7 +304,7 @@ count={count}
            }}
            
            >
-            <AddProject title="Edit Project" rowData={rowData} handleClose={handleClose}/>
+            <AddProject title="Edit Project" rowData={rowData} handleClose={handleClose} />
             </Dialog>
       }
 

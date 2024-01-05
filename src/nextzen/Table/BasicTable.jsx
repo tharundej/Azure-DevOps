@@ -84,7 +84,7 @@ import DeductionFilter from '../MonthlyDeductions/Deductions/DeductionFilter';
 import LeaveFilter from '../LeaveManagement/LeaveFilter';
 import { LoadingScreen } from 'src/components/loading-screen';
 import ExpenseClaimFilters from '../configaration/expenseclaimconfiguration/ExpenseClaimFilters';
-import PayScheduleFilters from '../Payroll/payschedule/PayScheduleFilters';
+
 import ShiftConfigurationFilters from '../configaration/shiftconfiguration/ShiftConfigurationFilters';
 import LeavePeriodFilters from '../configaration/leaveconfiguration/leaveperiod/LeavePeriodFilters';
 import LeaveTypeFilters from '../configaration/leaveconfiguration/leavetype/LeaveTypeFilters';
@@ -135,6 +135,10 @@ import FuelFilter from '../expenses/FuelFilter';
 import VehicleFilter from '../expenses/VehicleFilter';
 import OtherFIlter from '../expenses/OtherFIlter';
 import EarningAndDeductionFilter from '../Payroll/CreatePayRun/EarningAndDeductionFilter';
+import PayScheduleHistoryFilter from '../Payroll/CalculateEarningsAndDeductions/PayScheduleHistoryFilter';
+import ApproveTimeSheetSearch from '../timesheet/monthlyTimeSheet/Calendar/approveTimeSheetSearch';
+// import PayScheduleFilters from '../Payroll/payschedule/PayScheduleFilters';
+import PayScheduleFilters from '../configaration/PayRoll/payScheduleConfig/PayScheduleFilters';
 
 const defaultFilters = {
   name: '',
@@ -232,7 +236,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
       // url: `https://898vmqzh-3001.inc1.devtunnels.ms/erp/hrapprovals`,
    
       url: baseUrl + `${endpoint}`,
-      // url:'https://vshhg43l-3001.inc1.devtunnels.ms/erp'+`${endpoint}`,
+      // url:'https://kz7mdxrb-3001.inc1.devtunnels.ms/erp'+`${endpoint}`,
       // url:`https://xql1qfwp-3001.inc1.devtunnels.ms/erp`+`${endpoint}`,
       // url:`https://vshhg43l-3001.inc1.devtunnels.ms/erp/searchSalaryAdvance`,
       // url:`https://vshhg43l-3001.inc1.devtunnels.ms/erp/searchSalaryAdvance`,
@@ -527,6 +531,13 @@ const [index, setIndex]=useState(""); // index setting
               getTableData={getTableData}
             />
           )}
+          {filterName === 'TimeSearchFilterCalendar' && (
+            <ApproveTimeSheetSearch
+            filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              getTableData={getTableData}
+            />
+          )}
           {/* {filterName === "claimSearchFilter" && <ClaimSearchFilter  filterData={handleFIlterOptions} />} */}
           {filterName === 'TimeSearchFilter' && (
             <TimeSheetSearchFilter
@@ -617,8 +628,24 @@ const [index, setIndex]=useState(""); // index setting
               getTableData={getTableData}
             />
           )}
+          {filterName === 'PayScheduleCongifFilterSearch' && (
+            <PayScheduleFilters
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              searchData={handleFilterSearch}
+              getTableData={getTableData}
+            />
+          )}
           {filterName === 'PayScheduleFilterSearch' && (
             <PayScheduleFilters
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              searchData={handleFilterSearch}
+              getTableData={getTableData}
+            />
+          )}
+           {filterName === 'PayScheduleHistoryFilter' && (
+            <PayScheduleHistoryFilter
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
               searchData={handleFilterSearch}

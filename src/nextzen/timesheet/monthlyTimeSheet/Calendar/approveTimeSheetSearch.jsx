@@ -38,7 +38,7 @@ import Select from '@mui/material/Select';
 
 import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
 
-import CustomDateRangePicker from '../global/CustomDateRangePicker';
+// import CustomDateRangePicker from '../global/CustomDateRangePicker';
 // import { ButtonGroup } from 'rsuite';
 
 
@@ -81,17 +81,10 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function ClaimSearchFilter({filterData,searchData,dialogConfig,filterOptions,addButton,buttonFunction,dialogPayload}){
+export default function ApproveTimeSheetSearch({filterData,filterSearch,dialogPayload}){
 
-  // dialogConfig,filterOptions,addButton,buttonFunction
-  const { title, fields } = dialogConfig;
 
   const theme = useTheme();
-  
-
- 
- 
-  
   const CustomBadge = styled(Badge)({
     '.MuiBadge-dot': {
       width: '20px', // Adjust the width as needed
@@ -127,7 +120,7 @@ export default function ClaimSearchFilter({filterData,searchData,dialogConfig,fi
 
     const handleSearch = (searchTerm) => {
  
-        searchData(searchTerm)
+        filterSearch(searchTerm)
         console.log(searchTerm,"search ........")
         };
     // dynamic dialog checking 
@@ -214,156 +207,107 @@ const handleApply=()=>{
 //   { type: 'Select', label: 'Payment Status', name: 'paymentStatus', options: ['Option A', 'Option B', 'Option C'] },
 // ];
 console.log(selectedFields,"selectedFields 2nd method")
+const [date , setDate]=useState(
+  {
+    startDate:"",
+    endDate:""
+  }
+)
+
+const handleDateChange = (selectedDate) => {
+  if (selectedDate) {
+    // Parse the date string into a Date object
+    const parsedDate = new Date(selectedDate);
+
+    // Get month and year from the parsed date
+    const selectedMonth = parsedDate.getMonth() + 1; // Month is zero-based, so add 1
+    const selectedYear = parsedDate.getFullYear();
+
+    // Calculate the start and end dates for the selected month
+    const monthStartDate = `${selectedYear}-${selectedMonth}-01`;
+    const lastDay = new Date(selectedYear, selectedMonth, 0).getDate(); // Get the last day of the selected month
+    const monthEndDate = `${selectedYear}-${selectedMonth}-${lastDay}`;
+    
+
+    console.log(monthEndDate,'Month Start Date:', monthStartDate);
+    setDate(prevDate => ({
+      startDate: monthStartDate,
+      endDate: monthEndDate
+    }));
+    filterData({
+      startDate: monthStartDate,
+      endDate: monthEndDate
+    });
+    
+    // console.log('Month End Date:', );
+  }
+};
     return (
         <>
-          <Grid container alignItems="center" paddingBottom="10px" marginTop={1}>
-            <Grid sm={8} xs={12} item>
+          <Grid container alignItems="center" spacing={1} marginBottom={1} >
+            <Grid sm={6} xs={6} item>
 
             <TextField placeholder='Search....' 
             fullWidth
             // onChange={handleSeacrch}
             onChange={(e) => handleSearch(e.target.value)}
-            size="small"
+            // size="small"
 
             />
             </Grid>
-            <Grid sm={2} xs={4} sx={{alignSelf:"center",textAlign:"center"}}>
-              {addButton && <Button variant='contained' color='primary' sx={{borderRadius:"4px"}} onClick={buttonFunction}>{addButton}</Button>}
-              
+           
 
-            </Grid>
-
-            <Grid sm={2} xs={4} item>
-
-        <Stack sx={{display:'flex',alignItems:'flex-end'}} >
-          {badgeContent ===  true?(
-               <Badge badgeContent={""} color="error" variant="dot" anchorOrigin={{
-                vertical: 'up',
-                horizontal: 'left',
-              }} >
-                        <Button onClick={handleClickOpen} style={{width:"80px"}}   sx={{  animation: isBlinking? `${blinkAnimation} 2s infinite` : '' } }>
-                       <Iconify icon="mi:filter"/>
-                       Filters
-                  </Button>
-                  </Badge >
-          ):( <Button onClick={handleClickOpen} style={{width:"80px"}}   sx={{  animation: isBlinking? `${blinkAnimation} 2s infinite` : '' } }>
-          <Iconify icon="mi:filter"/>
-          Filters
-     </Button>)}
-        {/* <Badge badgeContent={""} color="error"  anchorOrigin={{
-    vertical: 'up',
-    horizontal: 'left',
-  }} >
-            <Button onClick={handleClickOpen} style={{width:"80px"}}   sx={{  animation: isBlinking? `${blinkAnimation} 2s infinite` : '' } }>
-           <Iconify icon="mi:filter"/>
-           Filters
-      </Button>
-      </Badge > */}
-
-      </Stack>
-      </Grid>
+            <Grid sm={6} xs={6} item>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DatePicker
+          size="small"
+          label={'Month Year'}
+          placeholder="May 2023"
+          views={['month', 'year']}
+          onChange={(e) => handleDateChange(e)}
+          sx={{
+            '& input': {
+              fontSize: '0.8rem', // Adjust the font size as needed
+            },
+          }}
+        />
+      </LocalizationProvider>
+    </Grid>
          </Grid>
      
 
-    <Dialog open={openButton} onClose={handleClickCloseButton}>
-      {/* <DialogTitle>{title}</DialogTitle> */}
-      <DialogContent>
-       
-        <Button>apply</Button>
-      </DialogContent>
-    </Dialog>
-
-
-
-
-     <Dialog open={open} onClose={onClose}  maxWidth="1200px" >
-      <Grid container flex flexDirection={"row"}>
-      <Grid item  xs={10}>
-      <DialogTitle>{title}</DialogTitle>
-      </Grid>
-      <Grid fullWidth item sx={{alignSelf:"center"}} xs={2}> 
-      <CancelOutlinedIcon sx={{cursor:"pointer"}} onClick={onClose} />
-      </Grid>
-      </Grid>
-
-   
-      <DialogContent  >
-      
-      {/* <Grid container item spacing={3} xs={6} flex flexDirection={"row"}> */}
-      {fields.map((field, index) => (
-        <Grid key={index} item xs={6} md={4} margin={3}>
-          {field.type === 'datePicker' && (
-            <DatePicker
-              label={field.label}
-              value={selectedFields[field.name] ? new Date(selectedFields[field.name]): null}
-              onChange={(date) => handleFieldChange(field.type,field.name, date)}
-              renderInput={(params) => <TextField {...params} variant="outlined" />}
-            />
-          )}
-          {field.type === 'Select' && (
-            <FormControl fullWidth>
-              <InputLabel>{field.label}</InputLabel>
-              <Select
-                label={field.label}
-                value={selectedFields[field.name] || ""}
-                onChange={(e) => handleFieldChange(field.type,field.name, e.target.value)}
-                variant="outlined"
-              >
-                {field.options.map((option, optionIndex) => (
-                  <MenuItem key={optionIndex} value={option}>
-                    {option}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          )}
-        </Grid>
-      ))}
-     {/* </Grid> */}
-     
-      <Grid container justifyContent="flex-end"  marginBottom={3} spacing={1} >
-      {/* <Badge badgeContent={badgeContent} color="error"> */}
-      <Button sx={{margin:"2px"}} variant="outlined" onClick={handleReset}>
-            Reset
-          </Button>
-      <Button variant='contained'  color="primary" sx={{margin:"2px"}} onClick={handleApply}>Apply</Button>
-      {/* </Badge> */}
-
-      </Grid >
-      </DialogContent>
-      
-    </Dialog>
+    
     </>
     )
     
 }
 
-ClaimSearchFilter.propTypes={
+ApproveTimeSheetSearch.propTypes={
     dialogConfig: PropTypes.any,
 }
 
-// ClaimSearchFilter.propTypes={
+// ApproveTimeSheetSearch.propTypes={
 //   searchFilterComponent: PropTypes.any,
 // }
 
-ClaimSearchFilter.propTypes={
-   searchData: PropTypes.any,
+ApproveTimeSheetSearch.propTypes={
+   filterSearch: PropTypes.any,
 }
-ClaimSearchFilter.propTypes={
+ApproveTimeSheetSearch.propTypes={
     filterData: PropTypes.func,
 }
 
-ClaimSearchFilter.propTypes={
+ApproveTimeSheetSearch.propTypes={
   buttonFunction: PropTypes.func,
 }
-ClaimSearchFilter.propTypes={
+ApproveTimeSheetSearch.propTypes={
   addButton: PropTypes.any,
 }
-ClaimSearchFilter.propTypes={
+ApproveTimeSheetSearch.propTypes={
   dialogPayload: PropTypes.any,
 }
 
-ClaimSearchFilter.propTypes={
+ApproveTimeSheetSearch.propTypes={
     filterOptions: PropTypes.arrayOf(
         PropTypes.shape({
           fieldName: PropTypes.string,

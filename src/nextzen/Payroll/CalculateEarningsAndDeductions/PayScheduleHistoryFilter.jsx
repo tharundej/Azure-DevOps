@@ -56,7 +56,7 @@ import axios from 'axios';
 
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import AddTaxSectionConfig from 'src/nextzen/configaration/taxSectionConfiguration/AddTaxSectionConfig';
-import EarningsAndDeduction from './EarningsAndDeduction';
+import CalculateEarningsAndDeductions from './CalculateEarningsAndDeductions';
 
 const defaultFilters = {
   name: '',
@@ -94,7 +94,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function EarningAndDeductionFilter({ filterData, filterOptions, filterSearch, searchData }) {
+export default function PayScheduleHistoryFilter({ filterData, filterOptions, filterSearch, searchData,isShowHandle }) {
   const theme = useTheme();
   const leavePeriodTypes = ['Financial Year', 'Year'];
   const designationName = ['executive'];
@@ -390,7 +390,7 @@ export default function EarningAndDeductionFilter({ filterData, filterOptions, f
   };
 const [openComponent ,setOpenComponent] =useState(false)
   const handleOpen =()=>{
-  
+    isShowHandle()
     setOpenComponent(true)
   }
   console.log(formData, 'inreset');
@@ -415,14 +415,14 @@ const [openComponent ,setOpenComponent] =useState(false)
           />
         </Grid>
 
-        <Grid item xs={4} msd={4}>
+        {/* <Grid item xs={4} msd={4}> */}
          {/* <AddTaxSectionConfig /> */}
          {/* <EarningsAndDeduction /> */}
-         <Button style={{ backgroundColor: '#007AFF', color: 'white' }} onClick={handleOpen}>
-               Verify And Complete
-              </Button>
-        </Grid>
-        {/* <Grid item md={2} xs={2}>
+         {/* <Button style={{ backgroundColor: '#007AFF', color: 'white' }} onClick={handleOpen}>
+               Calculate Earnings and Decduction
+              </Button> */}
+        {/* </Grid> */}
+        <Grid item md={2} xs={2}>
           <Grid>
           {badgeContent ===  true?(
                <Badge badgeContent={""} color="success" variant="dot" 
@@ -442,9 +442,13 @@ const [openComponent ,setOpenComponent] =useState(false)
           <Iconify icon="mi:filter"/>
           Filters
      </Button>)}
-          
+            {/* <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
+              <Button onClick={handleClickOpen} sx={{ width: '80px' }}>
+                <Iconify icon="mi:filter" />
+              </Button>
+            </Stack> */}
           </Grid>
-        </Grid> */}
+        </Grid>
       </Grid>
 
       <BootstrapDialog
@@ -553,17 +557,17 @@ const [openComponent ,setOpenComponent] =useState(false)
           </Button>
         </div>
       </BootstrapDialog>
-      {/* {openComponent? <EarningsAndDeduction /> : null} */}
+      {openComponent? <EarningsAndDeduction /> : null}
     </>
   );
 }
 
-EarningAndDeductionFilter.propTypes = {
+PayScheduleHistoryFilter.propTypes = {
   filterData: PropTypes.func,
   searchData: PropTypes.any,
 };
 
-EarningAndDeductionFilter.propTypes = {
+PayScheduleHistoryFilter.propTypes = {
   filterOptions: PropTypes.arrayOf(
     PropTypes.shape({
       fieldName: PropTypes.string,

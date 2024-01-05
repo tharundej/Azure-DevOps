@@ -205,6 +205,10 @@ export function useNavData() {
           title: t('Tax Section Configuration'),
           path: paths.dashboard.configurations.taxsectionconfiguration,
         },
+        {
+          title: t('Payroll Configuration'),
+          path: paths.dashboard.configurations.payschedule,
+        },
       ],
     },
     // {
