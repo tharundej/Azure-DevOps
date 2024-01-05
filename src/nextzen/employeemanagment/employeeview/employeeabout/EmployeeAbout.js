@@ -24,7 +24,7 @@ import { useEffect,useState } from 'react';
 import axios from 'axios';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
 import EmployeeAboutEdit from './EmployeeAboutEdit';
-import baseImageUrl, { baseUrl } from 'src/nextzen/global/BaseUrl';
+import {baseImageUrl, baseUrl } from 'src/nextzen/global/BaseUrl';
 
 import { Country, State, City }  from 'country-state-city';
 
@@ -334,6 +334,8 @@ useEffect(()=>{
     
   
 }
+console.log(localStorage.getItem("employeeID"),employeeIDForApis,'anilll')
+console.log('hii')
  const handleCallSnackbarP=(msg,sev)=>{
   handleCallSnackbar(msg,sev);
  }
@@ -485,6 +487,8 @@ const [newAvatarUrl, setNewAvatarUrl] = useState("");
         <Typography variant='h5' component="body">General Information</Typography>
 
         </Grid>
+        
+        {localStorage.getItem("employeeID")!==employeeIDForApis &&
         <Grid item>
         <Iconify 
         sx={{cursor: "pointer",color:'black'}}
@@ -495,6 +499,7 @@ const [newAvatarUrl, setNewAvatarUrl] = useState("");
         icon="solar:pen-bold" />
 
         </Grid>
+}
     </Grid>
      
       <Grid container spacing={{ xs: 10, sm: 10, lg: 10 ,md:5}}>

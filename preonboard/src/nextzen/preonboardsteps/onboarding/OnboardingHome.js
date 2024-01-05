@@ -105,7 +105,7 @@ export default function OnBoardForm() {
   }
 
   const handleSubmit=()=>{
-    childref.current.childFunctionWork()
+    childref.current.childFunctionStatutory()
   }
   const handleNextIncrement=()=>{
     const newActiveStep =
@@ -219,7 +219,7 @@ const handleCallSnackbar=(message,severity)=>{
                 Cancel
               </Button>
               <Box sx={{ flex: '1 1 auto' }} />
-              {activeStep+1!==7 &&
+              {activeStep+1!==5 &&
              <Button
              onClick={handleNext}
              sx={{
@@ -247,7 +247,7 @@ const handleCallSnackbar=(message,severity)=>{
              )}
              {!loading && <Typography>Save and Continue</Typography>}
            </Button>}
-              {activeStep+1===7 &&
+              {activeStep+1===5 &&
               <Button onClick={handleSubmit}  sx={{ backgroundColor:'#3B82F6', mr: 1, color:'white',
               '&:hover': {
                 backgroundColor: '#1565C0', // Change this to the desired hover color
@@ -255,7 +255,7 @@ const handleCallSnackbar=(message,severity)=>{
             }}>
                 Submit
               </Button>}
-              {(activeStep+1!==1 && activeStep+1!==7)&&(
+              {(activeStep+1!==1 && activeStep+1!==5)&&(
               <Button onClick={handleNextIncrement} sx={{ backgroundColor:'#3B82F6', mr: 1, color:'white','&:hover': {
                 backgroundColor: '#1565C0', // Change this to the desired hover color
               }, }}>

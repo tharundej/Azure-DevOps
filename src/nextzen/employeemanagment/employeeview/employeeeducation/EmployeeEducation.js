@@ -230,7 +230,8 @@ const handleCount =()=>{
                     }}
                   >
                     <>
-                    <Grid container alignItems="flex-end" justifyContent="flex-end" flexDirection="row">
+                    {localStorage.getItem("employeeID")!==employeeIDForApis &&
+                      <Grid container alignItems="flex-end" justifyContent="flex-end" flexDirection="row">
                             <IconButton onClick={() => {
                               const item = itm;
                               handleAddEducation([item], "updateEducationDetails");
@@ -243,7 +244,7 @@ const handleCount =()=>{
                             }} sx={{ marginLeft: 1 }}>
                               <Iconify icon="material-symbols:delete" />
                             </IconButton>
-                          </Grid>
+                          </Grid>}
                       <Grid container alignItems="center" justifyContent="center" flexDirection="column">
                         <Typography variant='h5'>
                           {itm?.nameOfTheDegree?.label}
@@ -303,7 +304,7 @@ xs={12}
      
       </Grid>
       <Grid sx={{display:'flex',flexDirection:'row',justifyContent:'flex-end',alignContent:'flex-end'}}>
-  
+      {localStorage.getItem("employeeID")!==employeeIDForApis &&
    <Button
                 // color="inherit"
                 //disabled={activeStep === 0}
@@ -315,7 +316,8 @@ xs={12}
               }}
               >
                Add Education
-              </Button></Grid>
+              </Button>
+}</Grid>
       {/* <Button sx={{float:"right",marginBottom:2}} variant="contained" color="primary" onClick={()=>{handleAddEducation(employeeData,"addEducation")}}> Add Education</Button> */}
       <BasicTable
       defaultPayload={defaultPayload}

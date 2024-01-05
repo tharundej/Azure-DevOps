@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import Iconify from '../../../../components/Iconify';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 // import { useSnackbar } from 'src/components/snackbar';
+import {baseUrl} from "../../../../components/baseUrl"
 
 import React, {
   useState,
@@ -164,6 +165,7 @@ const PreExperience = forwardRef((props, ref) => {
   };
 
   const ApiHitExperience = () => {
+   
     const invalidFields = defaultValues.filter(
       (item) => !item.previousCompanyName || !item.designation
     );
@@ -174,9 +176,11 @@ const PreExperience = forwardRef((props, ref) => {
       return;
     }
     props.handleLoader();
+
     const obj = {
-      companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
-      employeeId: localStorage.getItem('employeeIdCreated'),
+      // companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+      companyId:JSON.parse(localStorage.getItem("onboardDetails")).companyID,
+      applicantId:JSON.parse(localStorage.getItem("onboardDetails")).applicantID,
       experience: defaultValues,
     };
     console.log(obj, 'obbbbb');
@@ -185,15 +189,15 @@ const PreExperience = forwardRef((props, ref) => {
       method: 'post',
       maxBodyLength: Infinity,
     //   url: `${baseUrl}/addExperience`,
-      // url:'https://2d56hsdn-3001.inc1.devtunnels.ms/erp/addExperience',
+      url: `${baseUrl}/addApplicantWorkDetails`,
       headers: {
         Authorization:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE',
         'Content-Type': 'application/json',
       },
       data: {
-        companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
-        employeeId: localStorage.getItem('employeeIdCreated'),
+        companyId:"COMP22",
+        applicantId: "COMPPRE2024010318025530",
         experience: defaultValues,
       },
     };
@@ -203,6 +207,7 @@ const PreExperience = forwardRef((props, ref) => {
       .then((response) => {
         console.log(JSON.stringify(response.data));
         props.nextStep();
+        props.handleLoaderClose();
         //  props.handleCallSnackbar(response.data.message,"success")
         // enqueueSnackbar(response?.data?.message, { variant: 'success' });
         console.log(response.data.message, 'response.data.message');

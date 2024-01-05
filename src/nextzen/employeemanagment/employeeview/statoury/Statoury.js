@@ -310,7 +310,9 @@ export default function Statoury({  delivery, shippingAddress, payment,employeeI
         <Typography variant='h5' component="body">Statoury Information</Typography>
 
         </Grid>
-        {employeeStatouryData?.statutoryID!==0  && 
+        
+        {(employeeStatouryData?.statutoryID!==0  && localStorage.getItem("employeeID")!==employeeIDForApis) &&
+        
         <Grid sx={{cursor: "pointer"}} onClick={()=>{
             console.log('handle clickeddd')
             handleEdit()

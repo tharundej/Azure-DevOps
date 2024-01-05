@@ -265,6 +265,7 @@ export default function ExpenseClaimFilters({ filterData, filterOptions ,filterS
         <Grid item  md={8} xs={8}>
         <TextField
             placeholder="Search...."
+            size='small'
              fullWidth
              onChange={(e) => handleSearch(e.target.value)}
           />

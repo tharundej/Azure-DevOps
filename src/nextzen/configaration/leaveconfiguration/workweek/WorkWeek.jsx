@@ -133,7 +133,7 @@ export default function WorkWeek({ currentUser }) {
     console.log('submitted data111', data);
     handleCloseEdit()
     try {
-      const response = await axios.post(baseUrl + '/editWorkWeek', data);
+      const response = await axios.post(baseUrl + '/editWorkWeekV2', data);
       if (response?.data?.code === 200) {
         // setSnackbarSeverity('success');
         // setSnackbarMessage(response?.data?.message);
@@ -226,7 +226,7 @@ export default function WorkWeek({ currentUser }) {
         companyID: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
         holidayID: rowdata.holidayID,
       };
-      const response = await axios.post(baseUrl + '/deleteHoliday', data);
+      const response = await axios.post(baseUrl + '/deleteHolidayV2', data);
       if (response?.data?.code === 200) {
         setSnackbarSeverity('success');
         setSnackbarMessage(response?.data?.message);

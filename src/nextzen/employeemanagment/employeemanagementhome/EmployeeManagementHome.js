@@ -7,9 +7,11 @@ import EmployeeTable from '../employeestable/Employeestable';
 import { StatouryTable } from '../statoury/StatouryTable';
 import SalaryStructure from '../salarystructure/SalaryStructure';
 import RoleAndResponsiblity from '../roleandresponsiblity/RoleAndResponsiblity';
+import PreOnboardTable from '../preonboard/preonboardtable/PreOnboardTable';
 
 import UserContext from 'src/nextzen/context/user/UserConext';
 import { forEach } from 'lodash';
+import Applicants from '../applicants/Applicants';
 
 
 function EmployeeManagementHome  () {
@@ -34,6 +36,17 @@ function EmployeeManagementHome  () {
         label:'Salary Structure',
         content: <SalaryStructure/>
       },
+      {
+        id:'applicants',
+        label:'Applicants',
+        content:<Applicants/>
+      },
+      {
+        id:'preonboard',
+        label:'Pre Onboard',
+        content:<PreOnboardTable/>
+      }
+
 
     ]
 
@@ -54,6 +67,10 @@ function EmployeeManagementHome  () {
       });
       arr.push("Permissions")
       arr1.push(<RoleAndResponsiblity/>)
+      arr.push('Applicants')
+      arr1.push(<Applicants/>)
+      arr.push('Pre Onboard')
+      arr1.push(<PreOnboardTable/>)
       console.log(arr,'arrrr')
       
       setTabLabels(arr);

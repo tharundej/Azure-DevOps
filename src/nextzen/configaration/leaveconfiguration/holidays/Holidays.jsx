@@ -53,8 +53,10 @@ export default function Holidays({ currentUser }) {
   ];
   const actions = [
     { name: 'Edit', icon: 'solar:pen-bold', path: 'jjj' },
+
     { name: "Delete", icon: "solar:trash-bin-trash-bold", id: "2", type: "serviceCall", endpoint: '/DeleteShiftRoaster'},
     // { name: 'Delete', icon: 'hh', path: 'jjj', endpoint: '/' },
+
   ];
   // const bodyContent = [
   //   {
@@ -108,6 +110,7 @@ export default function Holidays({ currentUser }) {
     setEditData(rowdata);
     console.log(rowdata, 'rowdataaaaaaaaaaaaaa');
   };
+
   const deleteFunction= async(rowdata,event)=>{
     var  holidays=[]
     holidays= rowdata.locations
@@ -160,6 +163,7 @@ export default function Holidays({ currentUser }) {
   //     console.log('error', error);
   //   }
   // };
+
   const snackBarAlertHandleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;

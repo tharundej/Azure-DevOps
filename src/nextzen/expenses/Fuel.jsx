@@ -128,6 +128,7 @@ export default function Fuel({ updateTotalExpense }) {
     { id: 'paidAmount', label: 'Paid Amount', type: 'text', minWidth: '180px' },
     { id: 'balanceAmount', label: 'Balance Amount', type: 'text', minWidth: '180px' },
     { id: 'paymentStatus', label: 'Status', type: 'text', minWidth: '180px' },
+
   ]);
 
   console.log(user, 'user');
