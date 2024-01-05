@@ -129,8 +129,23 @@ axios.request(config)
             companyId:(user?.companyID)? user?.companyID : '',
             employeeId:(user?.employeeID)? user?.employeeID : '',
           }
-          const response = await instance.post('/availableLeave',data)
-          setAvailableLeaveData(response?.data?.balances)
+
+          let config = {
+            method: 'post',
+            url: `${baseUrl}/availableLeave`,
+            headers: { 
+              'Content-Type': 'application/json'
+            },
+            data : data
+          };
+           
+          axios.request(config)
+          .then((response) => {
+            setAvailableLeaveData(response?.data?.data)
+          })
+          .catch((error) => {
+            console.log(error);
+          });
         }catch(error){
           console.log("Error",error)
           throw error;

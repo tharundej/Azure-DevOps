@@ -18,6 +18,7 @@ import Scrollbar from 'src/components/scrollbar';
 // ----------------------------------------------------------------------
 
 export default function AvailableLeave({ title,  list, ...other }) {
+  console.log("🚀 ~ file: Availableleave.jsx:21 ~ AvailableLeave ~ list:", list)
   const recordsToShow = 5;
   return (
     <Card {...other}

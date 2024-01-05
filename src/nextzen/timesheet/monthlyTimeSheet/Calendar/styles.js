@@ -5,7 +5,7 @@ import { styled, alpha } from '@mui/material/styles';
 export const StyledCalendar = styled('div')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  // height: '100%',
+  height: '600px',
   width: 'calc(100% + 2px)',
   marginLeft: -1,
   marginRight:-1,
@@ -28,6 +28,10 @@ export const StyledCalendar = styled('div')(({ theme }) => ({
     '--fc-highlight-color': theme.palette.action.hover,
   },
 
+  
+
+  // '& .fc-day': { display: 'none' },
+  // '& .fc-day-sun': { display: 'none' },
   '& .fc .fc-license-message': { display: 'none' },
   '& .fc a': { color: theme.palette.text.primary },
 

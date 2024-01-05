@@ -177,6 +177,7 @@ const Balancesheet = lazy(() => import('src/nextzen/balancesheet/BalanceSheet'))
 const SalesOrder = lazy(() => import('src/nextzen/sales/SalesOrder/SalesOrder'));
 const SalesInvoice = lazy(() => import('src/nextzen/sales/SaleInvoice/SaleInvoice'));
 const SalesPayment = lazy(() => import('src/nextzen/sales/SalePayment/SalePayment'));
+const PayScheduleConfig = lazy(() => import('src/nextzen/configaration/PayRoll/PayConfig'));
 export const dashboardRoutes = [
   {
     path: 'dashboard',
@@ -678,6 +679,7 @@ export const dashboardRoutes = [
       { path: 'roleconfiguration', element: <RoleConfiguration /> },
 
    { path: 'taxsectionconfiguration', element: <TaxSectionConfiguration /> },
+   { path: 'payschedule', element: <PayScheduleConfig /> },
 
   ],
 },
@@ -693,7 +695,8 @@ export const dashboardRoutes = [
     </AuthGuard>
   ),
   children: [
-    { element: <Organizationchart/> ,index:true },
+    { element: <Personal/> ,index:true },
+    {path:'Organization', element:<Organizationchart/>}
 ],
 },
 ];

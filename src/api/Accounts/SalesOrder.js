@@ -42,3 +42,13 @@ export const deleteSalesOrderAPI = async (requestBody) => {
     throw error; // Re-throw the error to propagate it
   }
 };
+export const getSalesOrderDetailsAPI = async (requestBody) => {
+  try {
+    const response = await instance.post(`getProductInfoForInvoice`, requestBody, apiHeaders);
+    console.log('API response:', response.data.data); // Log the response data
+    return response.data.data;
+  } catch (error) {
+    console.error('API request failed:', error);
+    throw error; // Re-throw the error to propagate it
+  }
+};

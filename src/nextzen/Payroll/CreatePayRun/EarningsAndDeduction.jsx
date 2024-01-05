@@ -32,45 +32,45 @@ const token  =  (user?.accessToken)?user?.accessToken:''
 const [cardData ,setCardData] = React.useState()
 const [loading,setLoading] = React.useState(false);
   const TABLE_HEAD = [
-    { id: 'employementType', label: 'Employee Type', type: 'text' },
+    { id: 'employementType', label: 'Employee Type', type: 'text' , minWidth: 140},
 
-    { id: 'employeeName', label: 'Employee Name', type: 'text' },
+    { id: 'employeeName', label: 'Employee Name', type: 'text', minWidth: 140 },
 
-    { id: 'employeeID', label: 'Employee id', type: 'text' },
+    { id: 'employeeID', label: 'Employee id', type: 'text', minWidth: 140 },
 
     // { id: 'salaryMonth', label: 'Salary', type: 'text' },
 
-    { id: 'ctcOfYear', label: 'CTC Of Year', type: 'text' },
+    { id: 'ctcOfYear', label: 'CTC Of Year', type: 'text', minWidth: 140 },
 
-    { id: 'ctcOfMonth', label: 'CTC Of Month', type: 'text' },
-    { id: 'basicMonthSalary', label: 'Basic Of Month', type: 'text' },
-    { id: 'hra', label: 'HRA', type: 'text' },
-    { id: 'lta', label: 'LTA', type: 'text' },
-    { id: 'esic', label: 'ESIC  Amount', type: 'text' },
-    { id: 'tds', label: 'TDS', type: 'text' },
-    { id: 'Incentives', label: 'Incentives', type: 'text' },
-    { id: 'Bonus', label: 'Bonus', type: 'text' },
-    { id: 'OTAmount', label: 'OT Amount', type: 'text' },
-    { id: 'specialAllowance', label: 'Spacial Alowance', type: 'text' },
+    { id: 'ctcOfMonth', label: 'CTC Of Month', type: 'text', minWidth: 140 },
+    { id: 'basicMonthSalary', label: 'Basic Of Month', type: 'text', minWidth: 140 },
+    { id: 'hra', label: 'HRA', type: 'text', minWidth: 140 },
+    { id: 'lta', label: 'LTA', type: 'text', minWidth: 140 },
+    { id: 'esic', label: 'ESIC  Amount', type: 'text', minWidth: 140 },
+    { id: 'tds', label: 'TDS', type: 'text', minWidth: 140 },
+    { id: 'Incentives', label: 'Incentives', type: 'text', minWidth: 140 },
+    { id: 'Bonus', label: 'Bonus', type: 'text', minWidth: 140 },
+    { id: 'OTAmount', label: 'OT Amount', type: 'text' , minWidth: 140},
+    { id: 'specialAllowance', label: 'Special allowance', type: 'text', minWidth: 140 },
 
-    { id: 'conveyanceAllowance', label: 'Conveyance Alowance', type: 'text' },
-    { id: 'medicalAllowance', label: 'Medical Allowance', type: 'text' },
+    { id: 'conveyanceAllowance', label: 'Conveyance Allowance', type: 'text' , minWidth: 140},
+    { id: 'medicalAllowance', label: 'Medical Allowance', type: 'text', minWidth: 140 },
     // { id: 'professionalTax', label: 'Professional Tax', type: 'text' },
 
-    { id: 'employeePF', label: 'Employee PF', type: 'text' },
+    { id: 'employeePF', label: 'Employee PF', type: 'text' , minWidth: 140},
 
-    { id: 'employerPF', label: 'Employer PF', type: 'text' },
+    { id: 'employerPF', label: 'Employer PF', type: 'text', minWidth: 140 },
   
-    { id: 'totalGrossPay', label: 'Gross Pay', type: 'text' },
+    { id: 'totalGrossPay', label: 'Gross Pay', type: 'text', minWidth: 140 },
   ];
 
 
   const actions = [
-    { name: 'Approve', icon: 'hh', path: 'jjj' },
+    // { name: 'Approve', icon: 'hh', path: 'jjj' },
 
-    { name: 'View', icon: 'hh', path: 'jjj' },
+    // { name: 'View', icon: 'hh', path: 'jjj' },
 
-    { name: 'Edit', icon: 'hh', path: 'jjj' },
+    // { name: 'Edit', icon: 'hh', path: 'jjj' },
   ];
   const defaultPayload = 
   {
@@ -162,7 +162,7 @@ const handleClose = () => {
     
       <BasicTable
         headerData={TABLE_HEAD}
-        endpoint="/getPayRunDetailsContract"
+        endpoint="/getPayRunByType"
         defaultPayload={defaultPayload}
         rowActions={actions}
         filterName="EarningAndDeductionFilter"

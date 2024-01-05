@@ -33,6 +33,8 @@ import { blue } from '@mui/material/colors';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import instance from 'src/api/BaseURL';
 import LoadingButton from '@mui/lab/LoadingButton';
+import { BasicTable } from 'src/nextzen/Table/BasicTable';
+import { Container } from '@mui/system';
 
 
 export default function TotalWorkingHourPerDay({ currentUser }) {
@@ -206,7 +208,7 @@ export default function TotalWorkingHourPerDay({ currentUser }) {
  
   useEffect(() => {
    
-    getOvertime();
+      
     
   }, []);
   const snackBarAlertHandleClose = (event, reason) => {
@@ -232,14 +234,13 @@ export default function TotalWorkingHourPerDay({ currentUser }) {
     setEditExpenseName(data);
     setIsEditing(true);
   };
-  const ApiHitDelete= async(itm) => {
-  console.log("🚀 ~ file: TotalWorkingHoursPerDay.jsx:243 ~ ApiHitDelete ~ itm:", itm)
+  const ApiHitDelete= async(rowdata,event) => {
   
 
     
     try{
       const data ={
-        dialytimesheetOtId: parseInt(itm?.dialytimesheetOtId),
+        dialytimesheetOtId: parseInt(rowdata?.dialytimesheetOtId),
       }
       const response = await instance.post("/deleteOvertime",data)
       if(response?.data?.statusCode == "200"){
@@ -276,6 +277,33 @@ export default function TotalWorkingHourPerDay({ currentUser }) {
     }
     return arr
   }
+  const defaultPayload ={
+    "companyID":(user?.companyID)?user?.companyID : '',
+    "count": 5,
+    "page":0,
+  }
+  const TABLE_HEAD = [
+
+    
+    
+    { id: "locationName", label: "Location", width: 520, type: "text" },
+
+    { id: "maxHours", label: "Total Working Hours", width: 580, type: "text" },
+  //   { id: "from_shift_group", label: "Old Shift Group Name", width: 180, type: "text" },
+
+  //   // { id: "FromShiftgroup_Name", label: " From Shift Group Name", width: 220, type: "text" },
+  //   { id: "to_shift_name", label: "New Shift Name", width: 220, type: "text" },
+  //   { id: "to_shift_group", label: "New Shift Group Name", width: 220, type: "text" },
+  //   { id: "start_date", label: "Swap Date", width: 220, type: "text" },
+  ]
+  const actions = [
+    { name: "Delete", icon: "solar:trash-bin-trash-bold", id: "2", type: "serviceCall", endpoint: '/DeleteShiftRoaster'},
+  ];
+  const onClickActions =(rowdata,event)=>{
+    if(event?.name==="Delete"){
+      ApiHitDelete(rowdata,event)
+    } 
+  }
   return (
     <>
       <Snackbar
@@ -296,6 +324,7 @@ export default function TotalWorkingHourPerDay({ currentUser }) {
         </Alert>
       </Snackbar>
  
+      
       <Dialog
         fullWidth
         maxWidth={false}
@@ -304,7 +333,7 @@ export default function TotalWorkingHourPerDay({ currentUser }) {
         PaperProps={{
           sx: { maxWidth: 320 },
         }}
-      >
+      > 
         <FormProvider methods={methods1} onSubmit={onSubmit1}>
           <ModalHeader heading="Add Expense Configuration" />
           <DialogContent>
@@ -387,161 +416,23 @@ export default function TotalWorkingHourPerDay({ currentUser }) {
           </DialogActions>
         </FormProvider>
       </Dialog>
-      <Grid container spacing={4} sx={{padding:"0px" ,margin:"10px"}}>
-      <Grid
-          lg={2}
-          md={2}
-          xs={4}
-          onClick={handleOpenDialog}
-          sx={{
-            ...bgGradient({
-              direction: '135deg',
-              startColor: alpha(theme.palette[color].light, 0.2),
-              endColor: alpha(theme.palette[color].main, 0.2),
-            }),
-            p: 3,
-            borderRadius: 2,
-            // color: `${color}.darker`,
-            backgroundColor: 'common.white',
-            padding: '10px',
-            margin: '10px',
-            boxShadow: '3',
-            height: '20vh',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '20px',
-            width: '180px',
-          }}
-        >
-          <AddCircleIcon sx={{ fontSize: 50 }} />
-        </Grid>
-        {/* <Grid container spacing={1}> */}
+    
 
-{/* </Grid> */}
 
-        {OvertimeData.map((config , index) => (
-          <Grid
-          lg={3}
-          md={3}
-          xs={12}
-          sx={{
-            ...bgGradient({
-              direction: '135deg',
-              startColor: alpha(theme.palette[color].light, 0.2),
-              endColor: alpha(theme.palette[color].main, 0.2),
-            }),
-            p: 3,
-            borderRadius: 2,
-            // color: `${color}.darker`,
-            backgroundColor: 'common.white',
-            padding: '10px',
-            margin: '10px',
-            boxShadow: '3',
-           
-          }}
-          >
-            <>
-            <Grid container alignItems="flex-end" justifyContent="flex-end" flexDirection="row">
-                            {/* <IconButton onClick={() => {
-                              const item = itm;
-                              handleAddEducation([item], "updateWorkDetails");
-                            }}>
-                              <Iconify icon="material-symbols:edit" />
-                            </IconButton> */}
-                            <IconButton
-                             onClick={ (e)=>{ApiHitDelete(config)}} 
-                            sx={{ marginLeft: 1 }}>
-                              <Iconify icon="material-symbols:delete" />
-                            </IconButton>
-                          </Grid>
+      <Container sx={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "flex-end",marginBottom:'10px ' }}>
+  <Button   variant="contained"      sx={{ margin: '20px', color: 'white', backgroundColor: '#3B82F6' }} onClick={handleOpenDialog}> Add Total Work/Hour</Button>
+</Container>
+      <BasicTable 
 
-                          <Grid container alignItems="center" justifyContent="center" flexDirection="column">
-                        <Typography variant='h5'>
-                          {config?.locationName}
-                         
-                        </Typography>
-                  
-                  
-                        <Typography variant='h6'>{config?.maxHours} HRS Per Day</Typography>
-                  
-                        {/* <Typography component="span">
-                          {formatDate(itm?.startDate)} - {formatDate(itm?.endDate)}
-                          <Stack lg={12}></Stack>
-                        </Typography> */}
-                      </Grid>
-            </>
-            {/* <div style={{padding:"0px"}}>
-             
-            <IconButton onClick={() => setEditExpenseName(config)} style={{display:"flex" ,float:"right"}}>
-                <Iconify icon="material-symbols:edit" />
-              </IconButton>
-            
-              <Typography variant="body1">{config?.locationName}</Typography>
-              <Typography variant="body1"> {config?.maxHours} HRS Per Day</Typography>
+headerData={TABLE_HEAD}
+endpoint="/getOvertime"
+bodyData='data'
+defaultPayload={defaultPayload}
+// filterName="SwapSearchFilter"
+rowActions={actions}
+onClickActions={onClickActions}
 
-            </div> */}
-          </Grid>
-        ))}
-
- 
-        {/* {editExpenseName && (
-          <Dialog
-            fullWidth
-            maxWidth={false}
-            open={true} // Open the dialog when editing an expense
-            onClose={() => setEditExpenseName(null)} // Close the dialog when canceled
-            PaperProps={{
-              sx: { maxWidth: 320 },
-            }}
-          >
-            <FormProvider methods={methods1} >
-             
-              <ModalHeader heading="Edit Expense Configuration" />
-              <DialogContent>
-                <Box
-                  rowGap={3}
-                  columnGap={2}
-                  display="grid"
-                  marginTop={2}
-                  // Adjust width and center the text field
-                  alignItems="center"
-                >
-                  <RHFTextField
-                    size="small"
-                    name="expenseName"
-                    label="Expense Name"
-                    fullWidth
-                    value={editExpenseName?.expenseName || ''}
-                    onChange={(e) => {
-                      setValue1('expenseName', e.target.value); // Update the form value
-                       setEditExpenseName({ ...editExpenseName, expenseName: e.target.value }); // Update state
-                    }}
-                    sx={{ margin: '0 auto' }}
-                  />
-                </Box>
-              </DialogContent>
- 
-              <DialogActions>
-                <Button variant="outlined" onClick={() => setEditExpenseName(null)}>
-                  Cancel
-                </Button>
-                <Button
-                  sx={{ backgroundColor: '#3B82F6' }}
-                  type="submit"
-                  variant="contained"
-                  onSubmit={onSubmit2}
-                  onClick={onSubmit2}
-                >
-                  Save
-                </Button>
-              </DialogActions>
-            </FormProvider>
-          </Dialog>
-        )} */}
-        <Grid />
-
-      </Grid>
+/>  
     </>
   );
 }

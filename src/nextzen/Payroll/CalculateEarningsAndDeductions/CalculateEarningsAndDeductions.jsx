@@ -33,53 +33,54 @@ const token  =  (user?.accessToken)?user?.accessToken:''
 const [cardData ,setCardData] = React.useState()
 const [loading,setLoading] = React.useState(false);
 const TABLE_HEAD = [
-  { id: 'employeeType', label: 'Employee Type', type: 'text' },
+  { id: 'employeeType', label: 'Employee Type', type: 'text' , minWidth: 140},
 
-  { id: 'employeeName', label: 'Employee Name', type: 'text' },
+  { id: 'employeeName', label: 'Employee Name', type: 'text', minWidth: 140 },
 
-  { id: 'employeeid', label: 'Employee id', type: 'text' },
+  { id: 'employeeid', label: 'Employee id', type: 'text' , minWidth: 140},
 
-  { id: 'salaryyearandMonth', label: 'Salary year and Month', type: 'text' },
+  { id: 'salaryyearandMonth', label: 'Salary year and Month', type: 'text', minWidth: 140 },
 
-  { id: 'presentdays', label: 'Present days ', type: 'text' },
+  { id: 'presentdays', label: 'Present days ', type: 'text', minWidth: 140 },
 
-  { id: 'paidLeaves', label: 'Paid Leaves', type: 'text' },
-  { id: 'weekOffs', label: 'Week Offs', type: 'text' },
-  { id: 'festivalDays', label: 'Festival Days', type: 'text' },
-  { id: 'totalPaidDays', label: 'Total Paid Days', type: 'text' },
-  { id: 'basic', label: 'Basic', type: 'text' },
-  { id: 'hra', label: 'HRA', type: 'text' },
-  { id: 'lta', label: 'LTA', type: 'text' },
-  { id: 'da', label: 'DA', type: 'text' },
+  { id: 'paidLeaves', label: 'Paid Leaves', type: 'text', minWidth: 140 },
+  { id: 'weekOffs', label: 'Week Offs', type: 'text', minWidth: 140 },
+  { id: 'festivalDays', label: 'Festival Days', type: 'text', minWidth: 140 },
+  { id: 'totalPaidDays', label: 'Total Paid Days', type: 'text' , minWidth: 140},
+  { id: 'basic', label: 'Basic', type: 'text', minWidth: 140 },
+  { id: 'hra', label: 'HRA', type: 'text', minWidth: 140 },
+  { id: 'lta', label: 'LTA', type: 'text' , minWidth: 140},
+  { id: 'da', label: 'DA', type: 'text', minWidth: 140 },
 
-  { id: 'Incentives', label: 'Incentives', type: 'text' },
-  { id: 'Bonus', label: 'Bonus', type: 'text' },
-  { id: 'OTAmount', label: 'OT Amount', type: 'text' },
+  { id: 'Incentives', label: 'Incentives', type: 'text', minWidth: 140 },
+  { id: 'Bonus', label: 'Bonus', type: 'text' , minWidth: 140},
+  { id: 'OTAmount', label: 'OT Amount', type: 'text' , minWidth: 140},
 
-  { id: 'employeePf', label: 'Employee PF', type: 'text' },
+  { id: 'employeePf', label: 'Employee PF', type: 'text', minWidth: 140 },
 
-  { id: 'employerPf', label: 'Employer PF', type: 'text' },
-  { id: 'esic', label: 'ESIC  Deduction', type: 'text' },
-  { id: 'pt', label: 'PT', type: 'text' },
-  { id: 'tds', label: 'TDS', type: 'text' },
-  { id: 'loanRepayment', label: 'Loan Repayment', type: 'text' },
-  { id: 'arreaes', label: 'Arrears', type: 'text' },
-  { id: 'otherdeduction', label: 'Other Deduction', type: 'text' },
-  { id: 'TotalNumber', label: 'Total Number', type: 'text' },
+  { id: 'employerPf', label: 'Employer PF', type: 'text' , minWidth: 140},
+  { id: 'esic', label: 'ESIC  Deduction', type: 'text', minWidth: 140 },
+  { id: 'pt', label: 'PT', type: 'text', minWidth: 140 },
+  { id: 'tds', label: 'TDS', type: 'text' , minWidth: 140},
+  { id: 'loanRepayment', label: 'Loan Repayment', type: 'text', minWidth: 140 },
+  { id: 'arreaes', label: 'Arrears', type: 'text', minWidth: 140 },
+  { id: 'otherdeduction', label: 'Other Deduction', type: 'text' , minWidth: 140},
+  { id: 'TotalNumber', label: 'Total Number', type: 'text' , minWidth: 140},
 ];
 
 
   const actions = [
-    { name: 'Approve', icon: 'hh', path: 'jjj' },
+    // { name: 'Approve', icon: 'hh', path: 'jjj' },
 
-    { name: 'View', icon: 'hh', path: 'jjj' },
+    // { name: 'View', icon: 'hh', path: 'jjj' },
 
-    { name: 'Edit', icon: 'hh', path: 'jjj' },
+    // { name: 'Edit', icon: 'hh', path: 'jjj' },
   ];
   const defaultPayload = 
   {
       page:0,
       count:5,
+     
       companyID:cmpId,
       employementType:employmentType,
       sort:{
@@ -231,7 +232,7 @@ console.log(financialYears ,selectedYear, selectedMonth ,"financialYears")
                 <TextField
                   {...params}
                   label={
-                     'Please Select Financial Year'
+                     'Please Select Financial Year working'
                     
                   }
                 />
@@ -258,7 +259,8 @@ console.log(financialYears ,selectedYear, selectedMonth ,"financialYears")
             />
           </Grid> }
       </Grid>
-    <Grid container spacing={3} style={{marginBottom:"0.5rem"}}>
+ { 
+ <>  <Grid container spacing={3} style={{marginBottom:"0.5rem"}}>
      <Grid xs={12} md={6} lg={6}>
   <Stack
     direction="column"
@@ -437,14 +439,15 @@ console.log(financialYears ,selectedYear, selectedMonth ,"financialYears")
     
      
      <BasicTable
-    isShowHandle={isShowHandle}
+    // isShowHandle={isShowHandle}
         headerData={TABLE_HEAD}
-        endpoint="/getPayRunDetailsContract"
+        endpoint="/getPayRunByType"
         defaultPayload={defaultPayload}
         rowActions={actions}
-        filterName="CreatePayRunFilter"
+        filterName="PayScheduleHistoryFilter"
       /> 
-      
+      </>
+      }
       </>
 }
     </Box>
