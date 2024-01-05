@@ -28,6 +28,9 @@ const EmployeeManagementHome = lazy(() =>
 const EmployeeView = lazy(() =>
   import('../../nextzen/employeemanagment/employeeview/EmployeeView')
 );
+const PreonboardEmployeeView=lazy(()=>
+import('../../nextzen/employeemanagment/preonboard/employeeview/EmployeeView')
+);
 
 // OVERVIEW
 const IndexPage = lazy(() => import('src/pages/dashboard/app'));
@@ -485,6 +488,8 @@ export const dashboardRoutes = [
       { path: 'onboardform', element: <OnBoardForm /> },
       {path: 'changepassword',element: <ChangePassword/>},
       { path: ':id/employeeview', element: <EmployeeView /> },
+      { path: ':id/preonboard', element: <PreonboardEmployeeView /> },
+
 
     ],
   },
