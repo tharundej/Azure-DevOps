@@ -10,6 +10,7 @@ import RoleAndResponsiblity from '../roleandresponsiblity/RoleAndResponsiblity';
 
 import UserContext from 'src/nextzen/context/user/UserConext';
 import { forEach } from 'lodash';
+import Applicants from '../applicants/Applicants';
 
 
 function EmployeeManagementHome  () {
@@ -34,6 +35,11 @@ function EmployeeManagementHome  () {
         label:'Salary Structure',
         content: <SalaryStructure/>
       },
+      {
+        id:'applicants',
+        label:'Applicants',
+        content:<Applicants/>
+      }
 
     ]
 
@@ -54,6 +60,8 @@ function EmployeeManagementHome  () {
       });
       arr.push("Permissions")
       arr1.push(<RoleAndResponsiblity/>)
+      arr.push('Applicants')
+      arr1.push(<Applicants/>)
       console.log(arr,'arrrr')
       
       setTabLabels(arr);

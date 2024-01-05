@@ -10,7 +10,7 @@ import Checkbox from '@mui/material/Checkbox';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 import ListItemText from '@mui/material/ListItemText';
-import { Grid, ListItemAvatar } from '@mui/material';
+import { Grid, ListItemAvatar, ListItemButton } from '@mui/material';
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
 // components
@@ -228,6 +228,21 @@ const avatarUrl="http://192.168.1.199:3001/erp/download?file=saitama.png"
                      color: 'text.disabled',
                    }}
                  />
+               )}
+
+               {ele.type === 'button' && (
+                  <ListItemText
+
+                  primary={(ele.id === "generateOfferLetter")?( <Button color="primary" variant="contained">Generate Offer</Button>):null
+                  
+                 }
+                  secondary={(ele.secondaryText && row[ele.secondaryText]) || ''}
+                  primaryTypographyProps={{ typography: 'body2'}}
+                  secondaryTypographyProps={{
+                    component: 'span',
+                    color: 'text.disabled',
+                  }}
+                />
                )}
 
                 {ele.type === 'badge' && (
