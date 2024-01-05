@@ -130,6 +130,7 @@ import AdditionsFilterSearch from '../MonthlyDeductions/Additions/AdditionsFilte
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
 import SettingsHead from '../accountsettings/SettingsHeader';
+import GstSettingsHead from '../gstsettings/GstSettingsHeader';
 import CreatePayRunFilter from '../Payroll/CreatePayRun/CreatePayRunFilter';
 import FuelFilter from '../expenses/FuelFilter';
 import VehicleFilter from '../expenses/VehicleFilter';
@@ -719,6 +720,9 @@ const [index, setIndex]=useState(""); // index setting
           )}
           {filterName === 'SettingsHead' && (
             <SettingsHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} getTableData={getTableData} />
+          )}
+          {filterName === 'GstSettingsHead' && (
+            <GstSettingsHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} getTableData={getTableData} />
           )}
           {filterName === 'VendorHead' && (
             <VendorHead

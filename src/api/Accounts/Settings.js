@@ -1,8 +1,19 @@
+import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import instance from '../BaseURL';
 import { apiHeaders } from '../Token';
 export const createAccountInformationAPI = async (requestBody) => {
   try {
     const response = await instance.post(`AccountInformation`, requestBody, apiHeaders);
+    console.log('API response:', response); // Log the response data
+    return response.data;
+  } catch (error) {
+    console.error('API request failed:', error);
+    throw error; // Re-throw the error to propagate it
+  }
+};
+export const creategstInformationAPI = async (requestBody) => {
+  try {
+    const response = await instance.post(`GstInformation`, requestBody, apiHeaders);
     console.log('API response:', response); // Log the response data
     return response.data;
   } catch (error) {

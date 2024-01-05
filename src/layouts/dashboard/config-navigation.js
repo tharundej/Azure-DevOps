@@ -205,10 +205,6 @@ export function useNavData() {
           title: t('Tax Section Configuration'),
           path: paths.dashboard.configurations.taxsectionconfiguration,
         },
-        {
-          title: t('PayRoll Configuration'),
-          path: paths.dashboard.configurations.payschedule,
-        },
       ],
     },
     // {
@@ -321,7 +317,7 @@ export function useNavData() {
       icon: ICONS.g_configurations,
       children: [
         { title: t('Account Settings'), path:  paths.dashboard.settings.accountsettings },
-        { title: t('GST settings'), path: paths.dashboard.settings.accountsettings },
+        { title: t('GST settings'), path: paths.dashboard.settings.gstsettings },
         // { title: t('Sales Payment'), path: paths.dashboard.sale.salePayment },
       ],
     },

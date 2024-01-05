@@ -19,6 +19,7 @@ import VendorMaterials from 'src/nextzen/vendorMaterials/VendorMaterials';
 import Settings from 'src/nextzen/accountsettings/AccountSettings';
 import LoanDetails from 'src/nextzen/MonthlyDeductions/Loans/loanDetails';
 import AccountSettings from 'src/nextzen/accountsettings/AccountSettings';
+import GstSettings from 'src/nextzen/gstsettings/GstSettings';
 // ----------------------------------------------------------------------
 
 // employee Management
@@ -468,11 +469,11 @@ export const dashboardRoutes = [
       //   ],
       // },
       {
-        path: 'accountsettings',
+        path: 'settings',
         children: [
           { element: <AccountSettings />, index: true },
           { path: 'accountsettings', element: <AccountSettings /> },
-          { path: 'gstsettings', element: <AccountSettings /> },
+          { path: 'gstsettings', element: <GstSettings /> },
 
         ],
       },

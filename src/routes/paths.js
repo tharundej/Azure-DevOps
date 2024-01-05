@@ -203,7 +203,7 @@ export const paths = {
       roleconfiguration: `/configurations/roleconfiguration`,
       taxsectionconfiguration: `/configurations/taxsectionconfiguration`,
       payschedule : `/configurations/payschedule`
-      
+
       },
 
     product: {
@@ -294,7 +294,8 @@ export const paths = {
       balancesheet: `${ROOTS.DASHBOARD}/balancesheet`,
     },
     settings: {
-      accountsettings: `${ROOTS.DASHBOARD}/accountsettings`,
+      accountsettings: `${ROOTS.DASHBOARD}/settings/accountsettings`,
+      gstsettings: `${ROOTS.DASHBOARD}/settings/gstsettings`,
     },
   },
 };
