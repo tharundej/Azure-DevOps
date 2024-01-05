@@ -5,6 +5,8 @@ import { Helmet } from 'react-helmet-async';
 import axios from 'axios';
 
 import { _userList } from '../../../_mock';
+import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
+import SnackBarComponent from 'src/nextzen/global/SnackBarComponent';
 
 import { BasicTable } from '../../Table/BasicTable';
 import { getPurchaseOrderAPI } from 'src/api/Accounts/PurchaseOrder';
@@ -231,6 +233,19 @@ const PurchaseOrderTable = () => {
   };
   return (
     <>
+     <SnackBarComponent
+        open={openSnackbar}
+        severity={severity}
+        onHandleCloseSnackbar={HandleCloseSnackbar}
+        snacbarMessage={snacbarMessage}
+      />
+      <ConfirmationDialog
+        open={confirmDeleteOpen}
+        onClose={handleCancelDelete}
+        onConfirm={handleDeleteConfirmed}
+        itemName="Delete Settings"
+        message={`Are you sure you want to delete ${deleteData?.title}?`}
+      />
     {editShowForm && (
         <Dialog
           fullWidth
