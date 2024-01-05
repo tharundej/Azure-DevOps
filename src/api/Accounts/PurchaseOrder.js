@@ -22,7 +22,7 @@ export const getPurchaseOrderAPI = async (requestBody) => {
 };
 export const updatePurchaseOrderAPI = async (requestBody) => {
   try {
-    const response = await instance.post(`editPurchaseOrder`, requestBody, apiHeaders);
+    const response = await instance.post(`updatePurchaseOrder`, requestBody, apiHeaders);
     console.log('API response:', response.data); // Log the response data
     return response.data;
   } catch (error) {
