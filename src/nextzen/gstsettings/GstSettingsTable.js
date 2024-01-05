@@ -1,27 +1,29 @@
 import { useEffect, useState, useCallback, useContext } from 'react';
-import { Helmet } from 'react-helmet-async';
-import axios from 'axios';
-import { _userList } from '../../_mock';
-import { BasicTable } from '../Table/BasicTable';
-import UserContext from '../context/user/UserConext';
-import { DeleteExpensesAPI } from 'src/api/Accounts/Expenses';
-import CreateExpenses from './CreateExpenses';
-import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
-import { Box, Card, CardContent, Dialog, Grid, Typography } from '@mui/material';
-import SnackBarComponent from '../global/SnackBarComponent';
-import { update } from 'lodash';
-import { baseUrl } from '../global/BaseUrl';
-// import { Box, Button, Card, CardContent, Dialog, Grid, Typography } from '@mui/material';
-// import { Box } from '@mui/system';
 
-export default function Fuel({ updateTotalExpense }) {
+import { Helmet } from 'react-helmet-async';
+
+import { _userList } from '../../_mock';
+
+import { BasicTable } from '../Table/BasicTable';
+import CreateGstSettings from './CreateGstSettings';
+import { Dialog } from '@mui/material';
+import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
+import SnackBarComponent from '../global/SnackBarComponent';
+import { DeleteFactoryAPI } from 'src/api/Accounts/Factory';
+import UserContext from '../context/user/UserConext';
+import { DeleteAccountInformationAPI } from 'src/api/Accounts/Settings';
+import { DeleteGstInformationAPI } from 'src/api/Accounts/Settings';
+
+const GstSettingsTable = () => {
   const { user } = useContext(UserContext);
+  console.log('sdsdsd', user);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snacbarMessage, setSnacbarMessage] = useState('');
   const [severity, setSeverity] = useState('');
   const [count, setCount] = useState(0);
-  const [expenseData, setExpenseData] = useState();
-
+  const handleCountChange = () => {
+    setCount(count + 1);
+  };
   const handleCallSnackbar = (message, severity) => {
     setOpenSnackbar(true);
     setSnacbarMessage(message);
@@ -48,11 +50,13 @@ export default function Fuel({ updateTotalExpense }) {
     if (event?.name === 'Edit') {
       setEditShowForm(true);
       setEditModalData(rowdata);
+      console.log({ rowdata });
     } else if (event?.name === 'Delete') {
       const deleteData = {
-        expensesID: rowdata?.expenseID || 0,
+        locationID: rowdata?.locationID || 0,
         companyID: rowdata?.companyID || user?.companyID ? user?.companyID : '',
         title: rowdata?.locationName || '',
+        gstInformationID: rowdata?.gstInformationID || 0,
       };
       setDeleteData(deleteData);
       setConfirmDeleteOpen(true);
@@ -75,98 +79,37 @@ export default function Fuel({ updateTotalExpense }) {
   };
   const handleDeleteApiCall = async (deleteData) => {
     try {
-      const response = await DeleteExpensesAPI(deleteData);
+      const response = await DeleteGstInformationAPI(deleteData);
       console.log('Delete Api Call', response);
-      handleCountChange();
       handleCallSnackbar(response.message, 'success');
+      handleCountChange();
     } catch (error) {
       handleCallSnackbar(error.message, 'warning');
       console.log('API request failed:', error.message);
     }
   };
-  const handleCountChange = () => {
-    setCount(count + 1);
-  };
   const [filterOptions, setFilterOptions] = useState({});
-
   const defaultPayload = {
-    count: 10,
+    count: 5,
     page: 0,
     search: '',
     companyId: user?.companyID ? user?.companyID : '',
-    externalFilters: {
-      expenseDate: {
-        fromDate: '',
-        toDate: '',
-      },
-      invoiceDate: {
-        fromDate: '',
-        toDate: '',
-      },
-      expenseType: '',
-      locationName: '',
-      invoiceNO: '',
-      paymentStatus: '',
-    },
+
     sort: {
-      orderBy: 'expenseDate',
-      order: -1,
+      key: null,
+      orderBy: "",
     },
   };
   const [TABLE_HEAD, setTableHead] = useState([
     { id: 'SNo', label: 'Sl.No', type: 'text', minWidth: '180px' },
-    { id: 'expenseType', label: 'Expense Type', type: 'text', minWidth: '180px' },
-    { id: 'locationName', label: 'Location Name', type: 'text', minWidth: '180px' },
-    { id: 'expenseDate', label: 'Expense Date', type: 'text', minWidth: '180px' },
-    { id: 'vehicleRegNO', label: 'Vehicle Number', type: 'text', minWidth: '180px' },
-    { id: 'vehicleType', label: 'Vehicle Type', type: 'text', minWidth: '180px' },
-    { id: 'totalLiter', label: 'Total Liter', type: 'text', minWidth: '180px' },
-    { id: 'fuelType', label: 'Fuel Type', type: 'text', minWidth: '180px' },
-    { id: 'invoiceNO', label: 'Invoice Number', type: 'text', minWidth: '180px' },
-    { id: 'invoiceDate', label: 'Invoice Date', type: 'text', minWidth: '180px' },
-    { id: 'totalAmount', label: 'Total Amount', type: 'text', minWidth: '180px' },
-    { id: 'paidAmount', label: 'Paid Amount', type: 'text', minWidth: '180px' },
-    { id: 'balanceAmount', label: 'Balance Amount', type: 'text', minWidth: '180px' },
-    { id: 'paymentStatus', label: 'Status', type: 'text', minWidth: '180px' },
-
+    // { id: 'bankName', label: 'Bank Name', type: 'text', minWidth: '190px' },
+    // { id: 'bankAccountNo', label: 'Bank Account Number', type: 'text', minWidth: '200px' },
+    { id: 'locationID', label: 'Location ID', type: 'text', minWidth: '180px' },
+    { id: 'GSTNo', label: 'GST no.', type: 'text', minWidth: '180px' },
+    { id: 'PanNo', label: 'Pan no.', type: 'text', minWidth: '180px' },
+    { id: 'TanNo', label: 'Tan no.', type: 'text', minWidth: '180px' },
+    // { id: 'msmeUamNo', label: 'MSME UAM Number', type: 'text', minWidth: '180px' },
   ]);
-
-  console.log(user, 'user');
-
-  const updateTotalState = (obj) => {
-    updateTotalExpense(obj);
-  };
-  const ApiHitUpdate = async () => {
-    const payload = defaultPayload;
-
-    const config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      url: baseUrl + '/listExpenses',
-      headers: {
-        Authorization: user?.accessToken,
-        'Content-Type': 'text/plain',
-      },
-      data: payload,
-    };
-    const result = await axios
-      .request(config)
-      .then((response) => {
-        if (response.status === 200) {
-          const rowsData = response?.data;
-          console.log(JSON.stringify(response.data));
-          updateTotalExpense(rowsData);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    console.log(result, 'resultsreults');
-  };
-  useEffect(() => {
-    console.log('useEffect called ');
-    ApiHitUpdate();
-  }, []);
   return (
     <>
       <SnackBarComponent
@@ -179,7 +122,7 @@ export default function Fuel({ updateTotalExpense }) {
         open={confirmDeleteOpen}
         onClose={handleCancelDelete}
         onConfirm={handleDeleteConfirmed}
-        itemName="Delete Fuel Expense"
+        itemName="Delete Settings"
         message={`Are you sure you want to delete ${deleteData?.title}?`}
       />
       {editShowForm && (
@@ -193,29 +136,29 @@ export default function Fuel({ updateTotalExpense }) {
           }}
           className="custom-dialog"
         >
-          <CreateExpenses
+          <CreateGstSettings
             currentData={editModalData}
             handleClose={handleClose}
             handleCountChange={handleCountChange}
           />
+
         </Dialog>
       )}
       <Helmet>
-        <title> Dashboard: Fuel Expenses</title>
+        <title> Dashboard: Settings</title>
       </Helmet>
-
       <BasicTable
         headerData={TABLE_HEAD}
-        endpoint="/listExpenses"
+        endpoint="/GetGstInformation"
         defaultPayload={defaultPayload}
         filterOptions={filterOptions}
         rowActions={actions}
-        filterName="FuelFilter"
+        filterName="GstSettingsHead"
         onClickActions={onClickActions}
         handleEditRowParent={() => {}}
         count={count}
-        updateTotalState={updateTotalState}
       />
     </>
   );
-}
+};
+export default GstSettingsTable;
