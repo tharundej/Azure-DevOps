@@ -5,11 +5,13 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { Icon } from '@iconify/react';
-import baseImageUrl, { baseUrl } from '../../global/BaseUrl';
+import {baseImageUrl, baseUrl } from '../../global/BaseUrl';
 import axios from 'axios';
 import { useContext } from 'react';
 import UserContext from '../../context/user/UserConext';
+import { useSnackbar } from 'notistack';
 const OrganizationChart = () => {
+  const { enqueueSnackbar } = useSnackbar();
   const [selectedManager, setSelectedManager] = useState(null);
   var [emp, setEmp] = useState();
   const [orgDatas, setOrgDatas] = useState(null);
@@ -32,9 +34,13 @@ const OrganizationChart = () => {
     axios
       .request(config)
       .then((response) => {
-        // console.log(JSON.stringify(response.data.data));
-        setOrgDatas(response?.data?.data);
-        // setSelectedManager(employeeId);
+        if (response?.data?.code === 400) {
+          // Display the error message in the UI
+          console.error(response?.data?.message);
+          enqueueSnackbar(response.data.message, { variant: 'error' });
+        } else {
+          setOrgDatas(response?.data?.data);
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -42,7 +48,7 @@ const OrganizationChart = () => {
   };
   const payload = {
     // companyId: 'COMP22',
-    companyId:(user?.companyID)?user?.companyID:''
+    companyId: user?.companyID ? user?.companyID : '',
   };
   useEffect(() => {
     ApiHit(payload);
@@ -54,7 +60,8 @@ const OrganizationChart = () => {
       fullName: details?.firstName + ' ' + details?.middleName + ' ' + details?.lastName,
       combinedDesignation: details?.designationGrade + ' ' + details?.designation,
     })) || null;
-    const firstDesignation = details?.length > 0 && details[0] ? details[0].combinedDesignation : undefined;
+  const firstDesignation =
+    details?.length > 0 && details[0] ? details[0].combinedDesignation : undefined;
   const Under =
     orgDatas?.underlings?.map((underling) => ({
       ...underling,
@@ -70,7 +77,7 @@ const OrganizationChart = () => {
     // Call the API to get manager details
     const payload = {
       employeeId: employeeId,
-      companyId:(user?.companyID)?user?.companyID:''
+      companyId: user?.companyID ? user?.companyID : '',
     };
     let config = {
       method: 'post',
@@ -87,19 +94,25 @@ const OrganizationChart = () => {
     axios
       .request(config)
       .then((response) => {
-        console.log(response.data.data);
-        emp = response?.data?.data;
-        setEmp(emp);
-        setSelectedManager(employeeId);
-        const employees =
-          emp?.underlings?.map((underling) => ({
-            ...underling,
-            fullName: `${underling.firstName} ${underling.middleName} ${underling.lastName}`,
-            combinedDesignation: `${underling.designationGrade} ${underling.designation}`,
-            employeeId: underling.employeeId,
-          })) || [];
+        if (response?.data?.code === 400) {
+          // Display the error message in the UI
+          console.error(response?.data?.message);
+          enqueueSnackbar(response.data.message, { variant: 'error' });
+        } else {
+          console.log(response.data.data);
+          emp = response?.data?.data;
+          setEmp(emp);
+          setSelectedManager(employeeId);
+          const employees =
+            emp?.underlings?.map((underling) => ({
+              ...underling,
+              fullName: `${underling.firstName} ${underling.middleName} ${underling.lastName}`,
+              combinedDesignation: `${underling.designationGrade} ${underling.designation}`,
+              employeeId: underling.employeeId,
+            })) || [];
 
-        setAllData(employees);
+          setAllData(employees);
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -112,26 +125,18 @@ const OrganizationChart = () => {
         employeeId: underling.employeeId,
       })) || [];
 
-      console.log(Employees, 'Employees');
+    console.log(Employees, 'Employees');
   };
   console.log(Under, 'final');
-console.log(Under.map((name)=>name.combinedDesignation),'abbb')
+  console.log(
+    Under.map((name) => name.combinedDesignation),
+    'abbb'
+  );
   console.log(emp, 'emp');
   return (
     <>
       <Grid container style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
         <Grid item style={{ width: '33%' }}>
-          {/* <Typography
-            variant="subtitle1"
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              color: '#3B82F6',
-            }}
-          >
-            CEO
-          </Typography> */}
           <Card
             style={{
               width: '80%',
@@ -140,10 +145,10 @@ console.log(Under.map((name)=>name.combinedDesignation),'abbb')
               display: 'flex',
               flexDirection: 'row',
               flexWrap: 'wrap',
-              height: '13%',
+              height: '100px',
               padding: '10px',
-              marginBottom:'10px',
-              cursor:'pointer'
+              marginBottom: '10px',
+              cursor: 'pointer',
             }}
             onClick={() => setSelectedManager('CEO')}
           >
@@ -179,17 +184,6 @@ console.log(Under.map((name)=>name.combinedDesignation),'abbb')
           </Card>
         </Grid>
         <Grid item style={{ width: '33%' }}>
-          {/* <Typography
-            variant="subtitle1"
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              color: '#3B82F6',
-            }}
-          >
-            Manager
-          </Typography> */}
           {Under &&
             Under.map((manager) => (
               <Card
@@ -201,10 +195,10 @@ console.log(Under.map((name)=>name.combinedDesignation),'abbb')
                   display: 'flex',
                   flexDirection: 'row',
                   flexWrap: 'wrap',
-                  height: '13%',
+                  height: '100px',
                   padding: '10px',
-                  marginBottom:'10px',
-                  cursor:'pointer',
+                  marginBottom: '10px',
+                  cursor: 'pointer',
                   backgroundColor: selectedManager === manager.employeeId ? '#3B82F6' : 'white',
                   color: selectedManager === manager.employeeId ? 'white' : '#000',
                 }}
@@ -244,24 +238,11 @@ console.log(Under.map((name)=>name.combinedDesignation),'abbb')
             ))}
         </Grid>
         <Grid item style={{ width: '33%' }}>
-          {/* <Typography
-            variant="subtitle1"
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              color: '#3B82F6',
-            }}
-          >
-            Employees
-          </Typography> */}
-          
           {!allData?.length && !selectedManager && (
-            
-    <Typography variant="subtitle1" style={{ marginLeft: '20px', padding: '10px' }}>
-      Select a {firstDesignation} to see Employees
-    </Typography>
-  )}
+            <Typography variant="subtitle1" style={{ marginLeft: '20px', padding: '10px' }}>
+              Select a {firstDesignation} to see Employees
+            </Typography>
+          )}
           {!allData?.length && selectedManager && (
             <Typography variant="subtitle1" style={{ marginLeft: '20px', padding: '10px' }}>
               No Team Members
@@ -279,7 +260,7 @@ console.log(Under.map((name)=>name.combinedDesignation),'abbb')
                   flexWrap: 'wrap',
                   height: '100px',
                   padding: '10px',
-                  marginBottom:'10px'
+                  marginBottom: '10px',
                 }}
                 onClick={() => setSelectedManager('CEO')}
               >

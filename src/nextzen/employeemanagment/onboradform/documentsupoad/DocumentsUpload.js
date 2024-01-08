@@ -99,10 +99,18 @@ const VisuallyHiddenInput = styled('input')({
         return arr.some((obj) => Object.values(obj).some((value) => value === ''));
       };
       const err=isAnyFieldEmpty(defaultValues);
+      console.log("🚀 ~ file: DocumentsUpload.js:102 ~ childFunctionDocuments ~ defaultValues:", defaultValues)
       if(!err)
       onSubmit(obj);
     else {
-      enqueueSnackbar("Please Upload AADHAAR and PAN Card",{variant:"error"});
+      if(defaultValues[0]?.fileName === ''){
+
+        enqueueSnackbar("Please Upload AADHAAR ",{variant:"error"});
+      }
+      if(defaultValues[1]?.fileName === ''){
+
+        enqueueSnackbar("Please Upload PAN",{variant:"error"});
+      }
     };
 
 
@@ -127,6 +135,7 @@ const VisuallyHiddenInput = styled('input')({
     
     axios.request(config)
     .then((response) => {
+        console.log("🚀 ~ file: DocumentsUpload.js:130 ~ childFunctionDocuments ~ defaultValues:", defaultValues)
       console.log(JSON.stringify(response.data));
       enqueueSnackbar(response?.data?.message, { variant: 'success' })
       props.nextStep()

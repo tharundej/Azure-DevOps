@@ -362,7 +362,7 @@ export default function MyShiftSearchFilter({filterSearch,filterData}){
       <Button sx={{margin:"2px"}} variant="outlined" onClick={handleCancel}>
             Reset
           </Button>
-      <Button variant='outlined' sx={{margin:"2px",backgroundColor:'#3B82F6'}}  onClick={handleApply}>apply</Button>
+      <Button variant='outlined' sx={{margin:"2px",backgroundColor:'#3B82F6'}}  onClick={handleApply}>Apply</Button>
       {/* </Badge> */}
 
       </Grid >

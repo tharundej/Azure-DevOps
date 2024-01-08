@@ -129,7 +129,8 @@ import AddRoleFilter from '../configaration/roleconfiguration/searchfilter/AddRo
 import AdditionsFilterSearch from '../MonthlyDeductions/Additions/AdditionsFilterSearch';
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
-import SettingsHead from '../settings/SettingsHeader';
+import SettingsHead from '../accountsettings/SettingsHeader';
+import GstSettingsHead from '../gstsettings/GstSettingsHeader';
 import CreatePayRunFilter from '../Payroll/CreatePayRun/CreatePayRunFilter';
 import FuelFilter from '../expenses/FuelFilter';
 import VehicleFilter from '../expenses/VehicleFilter';
@@ -166,7 +167,8 @@ const BasicTable = ({
   isShowHandle,
   componentPage,count,
   mergingRowArray,
-  updateTotalState
+  updateTotalState,
+  handleOpenOffer
 
 }) => {
   const popover = usePopover();
@@ -235,7 +237,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
       // url: `http://192.168.1.192:3001/erp/${endpoint}`,
       // url:`http://192.168.1.79:8080/appTest/GetMycompoffdetails`,
       // url: `https://898vmqzh-3001.inc1.devtunnels.ms/erp/hrapprovals`,
-   
+
       url: baseUrl + `${endpoint}`,
       // url:'https://kz7mdxrb-3001.inc1.devtunnels.ms/erp'+`${endpoint}`,
       // url:`https://xql1qfwp-3001.inc1.devtunnels.ms/erp`+`${endpoint}`,
@@ -300,7 +302,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
         //   }))
         // }
         if(updateTotalState){
-          
+
             updateTotalState(response?.data)
         }
       })
@@ -479,7 +481,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
 
   const getRowActionsBasedOnStatus = (row) => {
     let rowValues = null;
-  
+
     if (
       [
         'pending',
@@ -501,7 +503,7 @@ const token  =  (user?.accessToken)?user?.accessToken:''
     } else if (row?.status === 'Approved' || row?.status.toLowerCase() === 'approved') {
       rowValues = null;
     }
-  
+
     return rowValues;
   };
   // table expanded
@@ -687,7 +689,7 @@ const [index, setIndex]=useState(""); // index setting
             <LeaveTypeFilters filterSearch={handleFilterSearch} filterData={handleFIlterOptions}
             getTableData={getTableData} searchData={handleFilterSearch}/>
             // // <LeaveTypeForm getTableData={getTableData}
-            
+
             // />
           )}
           {filterName === 'SwapSearchFilter' && (
@@ -706,7 +708,7 @@ const [index, setIndex]=useState(""); // index setting
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
               searchData={handleFilterSearch}
-              getTableData={getTableData} 
+              getTableData={getTableData}
             />
           )}
           {filterName === 'CompoffFilterSearch' && (
@@ -714,7 +716,7 @@ const [index, setIndex]=useState(""); // index setting
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
               searchData={handleFilterSearch}
-              getTableData={getTableData} 
+              getTableData={getTableData}
             />
           )}
           {filterName === 'holidaysFilterSearch' && (
@@ -722,7 +724,7 @@ const [index, setIndex]=useState(""); // index setting
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
               searchData={handleFilterSearch}
-              getTableData={getTableData} 
+              getTableData={getTableData}
             />
           )}
 
@@ -735,6 +737,9 @@ const [index, setIndex]=useState(""); // index setting
           )}
           {filterName === 'SettingsHead' && (
             <SettingsHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} getTableData={getTableData} />
+          )}
+          {filterName === 'GstSettingsHead' && (
+            <GstSettingsHead filterSearch={handleFilterSearch} filterData={handleFIlterOptions} getTableData={getTableData} />
           )}
           {filterName === 'VendorHead' && (
             <VendorHead
@@ -883,7 +888,7 @@ const [index, setIndex]=useState(""); // index setting
 {filterName === 'CreatePayRunFilter' && (
             <CreatePayRunFilter isShowHandle={isShowHandle} filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} getTableData={getTableData} />
           )}
-          
+
 {filterName === 'EarningAndDeductionFilter' && (
             <EarningAndDeductionFilter isShowHandle={isShowHandle} filterSearch={handleFilterSearch} filterData={handleFIlterOptions}  searchData={handleFilterSearch} getTableData={getTableData} />
           )}
@@ -930,7 +935,7 @@ const [index, setIndex]=useState(""); // index setting
                       rowActions={rowActions || []}
                     />
                   )}
-                 
+
 
                   <TableBody  >
                     {console.log(tableData)}
@@ -940,19 +945,20 @@ const [index, setIndex]=useState(""); // index setting
                       tableData.map((row, index) => (
                         <>
                           <UserTableRow
-                         
+
                             key={row.id}
                             row={row}
                             rowActions={getRowActionsBasedOnStatus(row)}
-                            // onHandleEditRow={(id) => 
+                            // onHandleEditRow={(id) =>
                             //   {
                             //     if(handleEditRowParent)
-                              
+
                             //   handleEditRowParent(id)
                             //   }
                             // }
+                           
                             onHandleEditRow={(row, clickedElementId) => {
-                              
+
                               if (handleEditRowParent) {
                                 handleEditRowParent(row)
                               }
@@ -964,6 +970,9 @@ const [index, setIndex]=useState(""); // index setting
                                 setIndex(index);
                                 handleExpandClick(row.projectId, null, index)
                                 // console.log(row, "iddd");
+                              }
+                              else if(clickedElementId==="generateOfferLetter"){
+                                handleOpenOffer(row)
                               }
                              
                             }}
@@ -979,14 +988,14 @@ const [index, setIndex]=useState(""); // index setting
 
 {expandedRowId === index && (
                     <TableRow>
-                      
+
                       <TableCell colSpan={TABLE_HEAD.length + 1}>
                       {/* <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-between" margin={1}> */}
                       {Object.entries(row).map(([day, details]) => (
             (day === "monday" || day === "tuesday" || day === "wednesday" || day === "thursday" || day === "friday" || day === "saturday" || day === "sunday"  ) && ( // Exclude status from the loop
             <Box key={day} display="flex" flexDirection="row" alignItems="center" justifyContent="space-between" margin={1}>
             <div>
-              
+
               <Typography variant="h6" gutterBottom component="div">
                 {day}
               </Typography>
@@ -1001,7 +1010,7 @@ const [index, setIndex]=useState(""); // index setting
                  </Typography>
               </Box>
 
-              
+
               </Grid>
               <Grid item >
               <Typography>
@@ -1029,7 +1038,7 @@ const [index, setIndex]=useState(""); // index setting
                     <TableNoData notFound={notFound} />
                     {/* </Scrollbar>  */}
                   </TableBody>
-                  
+
                 </Table>
               </Scrollbar>
             </TableContainer>

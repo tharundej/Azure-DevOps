@@ -16,8 +16,10 @@ import VendorMaterials from 'src/nextzen/vendorMaterials/VendorMaterials';
 // import SaleInvoice from 'src/nextzen/sales/SaleInvoice/SaleInvoice';
 // import SalePayment from 'src/nextzen/sales/SalePayment/SalePayment';
 // import SalesOrder from 'src/nextzen/sales/SalesOrder/SalesOrder';
-import Settings from 'src/nextzen/settings/Settings';
+import Settings from 'src/nextzen/accountsettings/AccountSettings';
 import LoanDetails from 'src/nextzen/MonthlyDeductions/Loans/loanDetails';
+import AccountSettings from 'src/nextzen/accountsettings/AccountSettings';
+import GstSettings from 'src/nextzen/gstsettings/GstSettings';
 // ----------------------------------------------------------------------
 
 // employee Management
@@ -27,6 +29,9 @@ const EmployeeManagementHome = lazy(() =>
 );
 const EmployeeView = lazy(() =>
   import('../../nextzen/employeemanagment/employeeview/EmployeeView')
+);
+const PreonboardEmployeeView=lazy(()=>
+import('../../nextzen/employeemanagment/preonboard/employeeview/EmployeeView')
 );
 
 // OVERVIEW
@@ -107,7 +112,7 @@ const Itdeclarationv2 = lazy(()=>import('src/nextzen/ITDeclaration/ItDeclaration
 // Leave manangement------------------------
 const Leave = lazy(() => import('src/nextzen/LeaveManagement/Leave'));
 const Compoff = lazy(() => import('src/nextzen/LeaveManagement/Compoff'));
- 
+
 
 // Time Sheet manangement------------------------
 const TimeSheet = lazy(() => import('src/nextzen/TimeSheetManagement/Time'));
@@ -160,6 +165,8 @@ const TaxSectionConfiguration = lazy(() =>
   import('../../nextzen/configaration/taxSectionConfiguration/TaxSEctionTab')
 );
 const ChangePassword = lazy(()=>import('../../nextzen/signup/ChangePassword'));
+
+// const ResetPassword = lazy(()=>import('../../nextzen/signup/ResetPassword'))
 // const ShiftConfiguration = lazy(()=> import('src/nextzen/configaration/shiftconfiguration/ShiftConfiguration'));
 // factory
 const FactoryIndex = lazy(() => import('src/nextzen/factory/Factory'));
@@ -457,13 +464,22 @@ export const dashboardRoutes = [
           },
         ],
       },
+      // {
+      //   path: 'settings',
+      //   children: [
+      //     {
+      //       element: <Settings />,
+      //       index: true,
+      //     },
+      //   ],
+      // },
       {
         path: 'settings',
         children: [
-          {
-            element: <Settings />,
-            index: true,
-          },
+          { element: <AccountSettings />, index: true },
+          { path: 'accountsettings', element: <AccountSettings /> },
+          { path: 'gstsettings', element: <GstSettings /> },
+
         ],
       },
     ],
@@ -486,6 +502,8 @@ export const dashboardRoutes = [
       { path: 'onboardform', element: <OnBoardForm /> },
       {path: 'changepassword',element: <ChangePassword/>},
       { path: ':id/employeeview', element: <EmployeeView /> },
+      { path: ':id/preonboard', element: <PreonboardEmployeeView /> },
+
 
     ],
   },
@@ -502,10 +520,10 @@ export const dashboardRoutes = [
     ),
     children: [
       { element: <Leave />, index: true },
-     
+
       { path: 'leave', element: <Leave /> },
       { path: 'compoff', element: <Compoff/> },
-  
+
   ],
   },
   {
@@ -629,6 +647,7 @@ export const dashboardRoutes = [
       // { path: 'profile', element: <UserProfilePage /> },
     ],
   },
+
   {
     path:'changepassword',
     element: (
@@ -690,7 +709,8 @@ export const dashboardRoutes = [
     </AuthGuard>
   ),
   children: [
-    { element: <Organizationchart/> ,index:true },
+    { element: <Personal/> ,index:true },
+    {path:'Organizationchart', element: <Organizationchart/> },
 ],
 },
 ];

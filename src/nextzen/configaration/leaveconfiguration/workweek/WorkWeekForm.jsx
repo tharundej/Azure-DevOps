@@ -118,7 +118,7 @@ export default function WorkWeekForm({ currentUser ,getTableData}) {
     console.log('submitted data111', data);
     // handleClose()
     try {
-      const response = await axios.post(baseUrl + '/addWorkWeek', data);
+      const response = await axios.post(baseUrl + '/AddWorkWeekV2', data);
       if (response?.data?.code === 200) {
         getTableData()
         // setSnackbarSeverity('success');
@@ -246,6 +246,7 @@ export default function WorkWeekForm({ currentUser ,getTableData}) {
                   value: employeepayType.locationName,
                   ...employeepayType,
                 }))}
+                isOptionEqualToValue={(option, value) => option.label === value.label}
                 onChange={(event, newValue, selectedOption) =>
                   handleAutocompleteChange('Location', newValue, selectedOption)
                 }

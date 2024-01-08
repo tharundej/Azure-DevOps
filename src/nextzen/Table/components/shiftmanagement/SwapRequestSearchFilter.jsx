@@ -609,7 +609,7 @@ export default function SwapRequestSearchFilter({filterSearch,filterData,getTabl
       <Button sx={{margin:"2px"}} variant="outlined" onClick={handleCancel}>
             Reset
           </Button>
-      <Button variant='contained'  sx={{margin:"2px",backgroundColor:'#3B82F6'}} onClick={handleApply}>apply</Button>
+      <Button variant='contained'  sx={{margin:"2px",backgroundColor:'#3B82F6'}} onClick={handleApply}>Apply</Button>
       {/* </Badge> */}
 
       </Grid >

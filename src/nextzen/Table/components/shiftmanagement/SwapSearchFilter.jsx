@@ -388,7 +388,7 @@ export default function SwapSearchFilter({filterSearch,filterData,getTableData})
           
           <Grid>
           <Grid>
-            <Typography>Swap Date</Typography>
+            {/* <Typography>Swap Date</Typography> */}
      
             <Grid container flexDirection="row" flexWrap="nowrap" ms={12} lg={12} xs={12}>
               <Grid ms={8} lg={8} xs={8} item>
@@ -399,7 +399,7 @@ export default function SwapSearchFilter({filterSearch,filterData,getTableData})
                     <DatePicker
                     className="datepiker-ui"
                       sx={{ width: '100%'  ,paddingLeft: '3px'}}
-                      label="From Date"
+                      label="From Swap Date"
                       value={dates?.applyDatefrom ? dayjs(dates.applyDatefrom) : null}
                       defaultValue={dayjs(new Date())}
                       onChange={(newValue) => {
@@ -477,10 +477,10 @@ export default function SwapSearchFilter({filterSearch,filterData,getTableData})
                   sx={{
                     width: { xs: '100%', sm: '70%', md: '100%', lg: '100%' },
                   }}
-                  renderInput={(params) => <TextField {...params} label="Select From Shift Group Name" />}
+                  renderInput={(params) => <TextField {...params} label="Select  Shift Group Name" />}
                 />
                 </Grid>
-                <Grid marginTop='10px'>
+                {/* <Grid marginTop='10px'>
          <Autocomplete
                   disablePortal
                   id="combo-box-demff33"
@@ -498,7 +498,7 @@ export default function SwapSearchFilter({filterSearch,filterData,getTableData})
                   }}
                   renderInput={(params) => <TextField {...params} label="Select To Shift Group Name" />}
                 />
-                </Grid>
+                </Grid> */}
                 <Grid marginTop='10px'>
          <Autocomplete
                   disablePortal
@@ -515,10 +515,10 @@ export default function SwapSearchFilter({filterSearch,filterData,getTableData})
                   sx={{
                     width: { xs: '100%', sm: '70%', md: '100%', lg: '100%' },
                   }}
-                  renderInput={(params) => <TextField {...params} label="Select From Shift Name" />}
+                  renderInput={(params) => <TextField {...params} label="Select Shift Name" />}
                 />
                 </Grid>
-                <Grid marginTop='10px' marginBottom="15px">
+                {/* <Grid marginTop='10px' marginBottom="15px">
          <Autocomplete
                   disablePortal
                   id="combo-box-demff33"
@@ -536,7 +536,7 @@ export default function SwapSearchFilter({filterSearch,filterData,getTableData})
                   }}
                   renderInput={(params) => <TextField {...params} label="Select To ShiftName" />}
                 />
-                </Grid>
+                </Grid> */}
                </Grid>
                <Grid container justifyContent="flex-end"  marginBottom={3} spacing={1} >
       <Button sx={{margin:"2px"}} variant="outlined" onClick={handleCancel}>
@@ -544,7 +544,7 @@ export default function SwapSearchFilter({filterSearch,filterData,getTableData})
           </Button>
 
       <Button variant='outlined' sx={{margin:"2px",backgroundColor:'#3B82F6'
-    }} onClick={handleApply}>apply</Button>
+    }} onClick={handleApply}>Apply</Button>
 
       {/* </Badge> */}
 

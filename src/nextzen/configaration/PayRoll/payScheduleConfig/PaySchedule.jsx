@@ -46,6 +46,7 @@ import UserContext from 'src/nextzen/context/user/UserConext';
 import { useContext } from 'react';
 import { LoadingScreen } from 'src/components/loading-screen';
 import { useSnackbar } from 'notistack';
+import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
 // import { useSnackbar } from '../../../components/snackbar';
 // import useTheme from '@mui/material';
 
@@ -96,6 +97,7 @@ export default function PaySchedule({ currentUser }) {
     { id: 'employerPfPercentage', label: 'Employer PF %', type: 'text', minWidth: 140 },
     { id: 'esicPercentage', label: 'ESIC %', type: 'text', minWidth: 100 },
     { id: 'tdsPercentage', label: 'TDS %', type: 'text', minWidth: 100 },
+    { id: 'medicalAllowance', label: 'Medical Allowance', type: 'text', minWidth: 200 }
   ];
 
   const actions = [
@@ -159,6 +161,7 @@ export default function PaySchedule({ currentUser }) {
     ltaPercentage: Yup.number(),
     esicPercentage: Yup.number(),
     tdsPercentage: Yup.number(),
+      medicalAllowance: Yup.number(),
     // employementType:Yup.string(),
   });
 
@@ -171,7 +174,8 @@ export default function PaySchedule({ currentUser }) {
   const NewUserSchema3 = Yup.object().shape({
     payPcheduleType: Yup.string(),
   });
-
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [deleteData, setDeleteData] = useState(null);
   const defaultValues1 = useMemo(
     () => ({
       payPcheduleType: currentUser?.payPcheduleType,
@@ -183,6 +187,8 @@ export default function PaySchedule({ currentUser }) {
       ltaPercentage: currentUser?.ltaPercentage,
       esicPercentage: currentUser?.esicPercentage,
       tdsPercentage: currentUser?.tdsPercentage,
+      // travelAllowance: currentUser?.travelAllowance,
+      medicalAllowance: currentUser?.medicalAllowance
     }),
     [currentUser]
   );
@@ -242,8 +248,17 @@ export default function PaySchedule({ currentUser }) {
       buttonFunction(rowdata, event);
       handleOpenEdit();
     } else if (event?.name === 'Delete') {
-      deleteFunction(rowdata, event);
+      // deleteFunction(rowdata, event);
+      setDeleteData(rowdata);
+      setConfirmDeleteOpen(true);
     }
+  }; const handleCancelDelete = () => {
+    setDeleteData(null);
+    setConfirmDeleteOpen(false);
+  };
+  const handleDeleteConfirmed = async (rowdata, event) => {
+    deleteFunction(deleteData, event);
+  
   };
   const buttonFunction = (rowdata) => {
     setShowEdit(true);
@@ -270,7 +285,9 @@ export default function PaySchedule({ currentUser }) {
       const response = await axios.post(baseUrl + '/deletePaySchedule', data);
 
       if (response?.data?.code === 200) {
+        setCount(count + 1);
         handleClose();
+        setConfirmDeleteOpen(false)
         enqueueSnackbar(response.data.message, { variant: 'success' });
         // setLoading(false)
         setCount(count + 1);
@@ -339,7 +356,7 @@ export default function PaySchedule({ currentUser }) {
   const onSubmit1 = handleSubmit1(async (data) => {
     data.companyID = cmpId;
     // (data.employementType = valueSelected?.employementType?.type),
-
+console.log("called inside ", data)
     (data.payPcheduleType = valueSelected?.payPcheduleType?.type),
       (data.employee_type = valueSelected?.employementType),
       (data.basicPayPercentage = JSON.parse(valueSelected?.basicPayPercentage, 10)),
@@ -350,7 +367,11 @@ export default function PaySchedule({ currentUser }) {
       (data.hraPercentage = JSON.parse(valueSelected?.hraPercentage, 10)),
       (data.ltaPercentage = JSON.parse(valueSelected?.ltaPercentage, 10)),
       (data.tdsPercentage = JSON.parse(valueSelected?.tdsPercentage, 10)),
+      (data.medicalAllowance = JSON.parse(valueSelected?.medicalAllowance, 10)),
+      // (data.travelAllowance = JSON.parse(valueSelected?.travelAllowance, 10)),
       (data.payScheduleId = valueSelected?.payScheduleId);
+      
+    
     // (data.employementType = valueSelected?.employementType),
     data.payScheduleType = valueSelected?.payPcheduleType;
     console.log('valueSelectedaaaaaaaaaa', data);
@@ -482,8 +503,16 @@ export default function PaySchedule({ currentUser }) {
   //   useEffect(()=>{
   // console.log("calling useEffect")
   //   },[valueSelected?.employementType])
+  
   return (
     <>
+     <ConfirmationDialog
+        open={confirmDeleteOpen}
+        onClose={handleCancelDelete}
+        onConfirm={handleDeleteConfirmed}
+        itemName="Delete Assets"
+        message={`Are you sure you want to delete ?`}
+      />
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={4000}
@@ -591,10 +620,12 @@ export default function PaySchedule({ currentUser }) {
                     value={valueSelected?.ltaPercentage}
                     onChange={(e) => handleSelectChange('ltaPercentage', e.target.value)}
                   />
+                
                   <RHFTextField
                     name="esicPercentage"
                     label="ESIC %"
                     value={valueSelected?.esicPercentage}
+                    dis={true}
                     onChange={(e) => handleSelectChange('esicPercentage', e.target.value)}
                   />
                   <RHFTextField
@@ -603,6 +634,21 @@ export default function PaySchedule({ currentUser }) {
                     value={valueSelected?.tdsPercentage}
                     onChange={(e) => handleSelectChange('tdsPercentage', e.target.value)}
                   />
+                  
+                  <RHFTextField
+                    name="medicalAllowance"
+                    label="Medical Allowance"
+                    value={valueSelected?.medicalAllowance}
+                    onChange={(e) => handleSelectChange('medicalAllowance', e.target.value)}
+                  />
+                   {/* <RHFTextField
+                    name="travelAllowance"
+                    label="Travel Allowance"
+                    value={valueSelected?.travelAllowance}
+                    onChange={(e) => handleSelectChange('travelAllowance', e.target.value)}
+                  /> */}
+                {/* <RHFTextField name="medicalAllowance" label="Medical Allowance %" />
+                <RHFTextField name="travelAllowance" label="Travel Allowance %" /> */}
                 </Box>
               </DialogContent>
 

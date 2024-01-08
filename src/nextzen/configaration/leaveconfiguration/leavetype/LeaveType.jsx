@@ -32,7 +32,7 @@ import { da } from 'date-fns/locale';
 import { useSnackbar } from 'notistack';
 
 export default function LeaveType({ currentUser }) {
-  const {enqueueSnackbar} = useSnackbar()
+  const { enqueueSnackbar } = useSnackbar();
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -69,20 +69,19 @@ export default function LeaveType({ currentUser }) {
     { name: 'Edit', icon: 'solar:pen-bold', path: 'jjj' },
     // { name: 'Delete', icon: 'hh', path: 'jjj' },
   ];
-  const defaultPayload = 
-    {
-      "count": 10,
-      "page": 0,
-      "search": "",
-      //  "companyId": "COMP20",
-        companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
-      "externalFilters": {
-          "leaveTypeName": ""
-      },
-      "sort": {
-          "key":1,
-          "orderBy": ""
-      }
+  const defaultPayload = {
+    count: 10,
+    page: 0,
+    search: '',
+    //  "companyId": "COMP20",
+    companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+    externalFilters: {
+      leaveTypeName: '',
+    },
+    sort: {
+      key: 1,
+      orderBy: '',
+    },
   };
   const NewUserSchema1 = Yup.object().shape({
     LeaveName: Yup.string(),
@@ -95,7 +94,7 @@ export default function LeaveType({ currentUser }) {
   const [formData, setFormData] = useState({});
   const [locationType, setLocationType] = useState([]);
   const [selectedDates, setSelectedDates] = useState(dayjs());
-
+  const [leaveNames, setLeaveNames] = useState([]);
   const defaultValues1 = useMemo(
     () => ({
       LeaveName: currentUser?.LeaveName,
@@ -119,19 +118,31 @@ export default function LeaveType({ currentUser }) {
     reset: reset1,
   } = methods1;
   const handleSelectChange = (field, value) => {
+    console.log('hi',value)
     setValueSelected((prevData) => ({
       ...prevData,
       [field]: value,
     }));
   };
-    const handleGenderChange = (_, value) => {
-      setValueSelected((prevData) => ({
-        ...prevData,
-        gender: value,
-      }));
-    };
-    
- 
+  const handleGenderChange = (_, value) => {
+
+    setValueSelected((prevData) => ({
+      ...prevData,
+      gender: value,
+    }));
+  };
+
+  const fetchLeaveNames = async () => {
+    const response = await axios.post(baseUrl + '/GetMasterLeaveDetails');
+    if (response?.data?.statusCode === '200') {
+      console.log(response?.data?.data, 'coal');
+      setLeaveNames(response?.data?.data);
+    }
+  };
+
+  useEffect(() => {
+    fetchLeaveNames();
+  }, []);
   console.log(valueSelected, 'valueeeeeeeeeeeeeeeeeeee');
   const onSubmit1 = handleSubmit1(async (data) => {
     data.companyID = JSON.parse(localStorage.getItem('userDetails'))?.companyID;
@@ -140,7 +151,7 @@ export default function LeaveType({ currentUser }) {
     data.totalNumberLeave = JSON.parse(valueSelected.totalNumberLeave, 10);
     data.upperCapLimit = JSON.parse(valueSelected.upperCapLimit, 10);
     data.leaveTypeID = JSON.parse(valueSelected.leaveTypeID, 10);
-    data.gender = [valueSelected?.gender];
+    data.gender = valueSelected?.gender;
     // data.leavePeriodID=JSON.parse(valueSelected.leavePeriodID,10)
     // data.leavePeriodType=valueSelected.leavePeriodType
     // data.locationID = formData?.Location?.locationID;
@@ -153,7 +164,7 @@ export default function LeaveType({ currentUser }) {
         // setSnackbarMessage(response?.data?.message);
         // setSnackbarOpen(true);
         // handleClose();
-        enqueueSnackbar(response?.data?.message,{variant:'success'})
+        enqueueSnackbar(response?.data?.message, { variant: 'success' });
         handleCloseEdit();
         setCount(count + 1);
         console.log('sucess', response);
@@ -163,7 +174,7 @@ export default function LeaveType({ currentUser }) {
         // setSnackbarMessage(response?.data?.message);
         // setSnackbarOpen(true);
         // handleCloseEdit();
-        enqueueSnackbar(response?.data?.message,{variant:'error'})
+        enqueueSnackbar(response?.data?.message, { variant: 'error' });
         console.log('sucess', response);
       }
     } catch (error) {
@@ -171,12 +182,13 @@ export default function LeaveType({ currentUser }) {
       // setSnackbarMessage('Error While Adding Leave Type. Please try again.');
       // setSnackbarOpen(true);
       // handleCloseEdit();
-      enqueueSnackbar(error.response.data.message,{variant:'error'})
+      enqueueSnackbar(error.response.data.message, { variant: 'error' });
       console.log('error', error);
     }
   });
   const onClickActions = (rowdata, event) => {
     if (event?.name === 'Edit') {
+      
       setEditData(rowdata);
       setValueSelected(rowdata);
 
@@ -250,7 +262,12 @@ export default function LeaveType({ currentUser }) {
     {
       type: 'Female',
     },
+    {
+      type: 'Others',
+    },
   ];
+
+
   return (
     <>
       <Snackbar
@@ -293,12 +310,20 @@ export default function LeaveType({ currentUser }) {
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              <RHFTextField
+              <RHFAutocomplete
+                name="leaveTypeName"
+                options={leaveNames.map((name) => name?.leaveName)}
+                
+                value={valueSelected?.leaveTypeName}
+                label="Leave Name"
+                onChange={(e,value) => handleSelectChange('leaveTypeName', value)}
+              />
+              {/* <RHFTextField
                 name="LeaveName"
                 label="Leave Name"
                 value={valueSelected?.leaveTypeName}
                 onChange={(e) => handleSelectChange('leaveTypeName', e.target.value)}
-              />
+              /> */}
               <RHFTextField
                 name="totalNumberLeave"
                 label="Total Number Of Leaves Per Year"
@@ -318,13 +343,13 @@ export default function LeaveType({ currentUser }) {
                 onChange={(e) => handleSelectChange('leaveTakeRange', e.target.value)}
               />
               <Autocomplete
-                  // multiple
+                 multiple
                 name="gender"
                 label="Gender"
-                options={genders.map((name)=>name.type)}
+                options={genders.map((name) => name.type)}
                 // getOptionLabel={(option) => option.type || undefined}
                 value={valueSelected?.gender}
-                 onChange={ handleGenderChange}
+                onChange={handleGenderChange}
                 renderInput={(params) => (
                   <TextField {...params} label="Gender" variant="outlined" />
                 )}

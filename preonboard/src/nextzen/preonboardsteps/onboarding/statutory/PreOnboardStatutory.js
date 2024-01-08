@@ -16,6 +16,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import LoadingButton from '@mui/lab/LoadingButton';
+import { baseUrl } from '../../../../components/baseUrl';
  
 import { Button,Box,Autocomplete,TextField ,Grid,Stack} from '@mui/material';
  
@@ -48,8 +49,10 @@ const PreOnboardStatutory = forwardRef((props,ref) => {
         console.log(currentUser,'uyfgv');
         
         console.log(localStorage.getItem('employeeIdCreated'),'localStorage')
-        currentUser.employeeID=localStorage.getItem('employeeIdCreated');
-        currentUser.companyID=JSON.parse(localStorage.getItem('userDetails'))?.companyID
+       // currentUser.employeeID=localStorage.getItem('employeeIdCreated');
+       currentUser.applicantID=JSON.parse(localStorage.getItem("onboardDetails")).applicantID
+        //currentUser.companyID=JSON.parse(localStorage.getItem('userDetails'))?.companyID
+        currentUser.companyID=JSON.parse(localStorage.getItem("onboardDetails")).companyID
         props.handleLoader();
      
          
@@ -62,6 +65,7 @@ const PreOnboardStatutory = forwardRef((props,ref) => {
             maxBodyLength: Infinity,
            // url: `${baseUrl}/addStatutoryDetails`,
             // url:`https://vshhg43l-3001.inc1.devtunnels.ms/erp/${endpoint}`,
+            url: `https://mallard-blessed-lobster.ngrok-free.app/erp/addStatutoryDetailsA`,
             headers: {
               'Authorization': JSON.parse(localStorage.getItem('userDetails'))?.accessToken,
               'Content-Type': 'application/json'
@@ -77,6 +81,7 @@ const PreOnboardStatutory = forwardRef((props,ref) => {
             // enqueueSnackbar(response?.data?.message, { variant: 'success' });
             // callApi();
             // onHandleClose();
+            props.handleLoaderClose();
             props.nextStep();
           })
           .catch((error) => {

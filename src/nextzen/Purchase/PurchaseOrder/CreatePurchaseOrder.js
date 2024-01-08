@@ -25,7 +25,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
-import { createPurchaseOrderAPI } from 'src/api/Accounts/PurchaseOrder';
+import { createPurchaseOrderAPI, updatePurchaseOrderAPI } from 'src/api/Accounts/PurchaseOrder';
 import SnackBarComponent from 'src/nextzen/global/SnackBarComponent';
 import UserContext from 'src/nextzen/context/user/UserConext';
 import { formatDateToYYYYMMDD } from 'src/nextzen/global/GetDateFormat';
@@ -52,6 +52,8 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
       advanceAmount: currentData?.advanceAmount || 0,
       companyBillingGST: currentData?.companyBillingGST || '',
       companyBillingPAN: currentData?.companyBillingPAN || '',
+      purchaseOrderID: currentData?.purchaseOrderID || 0,
+      poNumber: currentData?.poNumber || '',
     }),
     [currentData]
   );
@@ -370,7 +372,15 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
     data.factoryShippingId = selectedShippingLocation;
     console.log('Final Payload:', data);
     try {
-      let response = await createPurchaseOrderAPI(data);
+      // let response = await createPurchaseOrderAPI(data);
+      let response = ''
+      // creategstInformationAPI(data);
+      if (currentData?.poNumber) {
+        response = await updatePurchaseOrderAPI(data);
+
+      } else {
+        response = await createPurchaseOrderAPI(data);
+      }
       console.log('Create success', response);
       handleCallSnackbar(response.message, 'success');
       reset(); // Reset the form values
@@ -388,6 +398,7 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
       }
     }
   });
+
   return (
     <div>
       <FormProvider methods={methods} onSubmit={onSubmit}>
@@ -522,8 +533,12 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
             Cancel
           </Button>
 
-          <LoadingButton type="submit" color="primary" variant="contained" loading={isSubmitting}>
+          {/* <LoadingButton type="submit" color="primary" variant="contained" loading={isSubmitting}>
             Save
+          </LoadingButton> */}
+           <LoadingButton type="submit" color="primary" variant="contained" loading={isSubmitting}>
+            {currentData?.poNumber ? 'Update' : 'Save'}
+
           </LoadingButton>
         </DialogActions>
       </FormProvider>
