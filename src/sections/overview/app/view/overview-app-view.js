@@ -189,7 +189,7 @@ axios.request(config)
           <PunchINOutCard />
         </Grid>
         <Grid xs={12} md={6} lg={4}>
-          <Alert title="Alert" list={birthdayList} />
+          <Alert title="Recommended Configurations" list={birthdayList} />
         </Grid>
         <Grid xs={12} md={6} lg={4}>
           <BirthdayReminders title="Bithday Reminders" list={birthdayList} />
