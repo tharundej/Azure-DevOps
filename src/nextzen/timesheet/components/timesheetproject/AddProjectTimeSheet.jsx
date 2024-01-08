@@ -650,9 +650,8 @@ const [options2, setOptions2] = useState([
           </Grid>
           <hr style={{ borderTop: '2px solid #ccc', margin: '30px 0', width: '100%' }} />
         </Grid>
-        
       ))}
-
+ 
       {/* Display stored data */}
       {/* <div>
         <h2>Stored Data:</h2>
