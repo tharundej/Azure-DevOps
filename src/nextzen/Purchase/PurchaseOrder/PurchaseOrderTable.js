@@ -71,6 +71,7 @@ const PurchaseOrderTable = () => {
   };
   const onClickActions = (rowdata, event) => {
     if (event?.name === 'Edit') {
+      console.log({rowdata});
       setEditShowForm(true);
       setEditModalData(rowdata);
     } else if (event?.name === 'Delete') {
@@ -161,7 +162,7 @@ const PurchaseOrderTable = () => {
     ApiHit();
   }, []);
   const defaultPayload = {
-    count: 10,
+    count: 5,
     page: 0,
     search: '',
     roleid: 1,

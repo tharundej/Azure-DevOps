@@ -45,7 +45,7 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
       companyId: currentData?.companyId || user?.companyID ? user?.companyID : '',
       expectedDeliveryDate: currentData?.expectedDeliveryDate || '',
       paymentTerm: currentData?.paymentTerm || '',
-      vendorId: currentData?.vendorId || '',
+      vendorId: currentData?.vendorID || 0,
       locationId: currentData?.locationId || '',
       factoryShippingId: currentData?.factoryShippingId || '',
       grandTotalAmount: currentData?.grandTotalAmount || '',
@@ -54,6 +54,7 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
       companyBillingPAN: currentData?.companyBillingPAN || '',
       purchaseOrderID: currentData?.purchaseOrderID || 0,
       poNumber: currentData?.poNumber || '',
+      gstAmount: currentData?.gstAmount || '',
     }),
     [currentData]
   );
@@ -93,9 +94,22 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
         handleCallSnackbar('No Vendor Found. Please Add Vendor', 'warning');
       } else {
         setVendorOptions(response);
-        setSelectedVendor(
-          defaultValues.vendorId || (response.length > 0 ? response[0].vendorId : null)
-        );
+        setVendorOptions((prevOptions) => {
+          const newOptions = response;
+          setSelectedVendor(
+            defaultValues.vendorId || (newOptions.length > 0 ? newOptions[0].vendorId : null)
+          );
+
+          if (defaultValues?.vendorId) {
+            const initialVendor = newOptions.find(
+              (option) => option.vendorID === defaultValues?.vendorId
+            );
+            console.log({ initialVendor });
+            handleVendorChange(null, initialVendor);
+          }
+
+          return newOptions;
+        });
       }
     } catch (error) {
       console.log('API request failed:', error.message);
@@ -103,6 +117,48 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
       setTimeout(() => {
         handleClose(); // Close the dialog on success
       }, 1000);
+    }
+  };
+  const loadVendorMaterial = async () => {
+    if (currentData?.purchaseMaterial) {
+      const initialContentList = currentData.purchaseMaterial.map((material, index) => {
+        console.log('anas', material);
+        setValue(
+          `addPurchaseMaterial[${index}].materialID`,
+          currentData?.purchaseMaterial[index].materialId || 0
+        );
+        setValue(
+          `addPurchaseMaterial[${index}].unitOfMeasure`,
+          currentData?.purchaseMaterial[index].unitOfMeasure || ''
+        );
+        setValue(
+          `addPurchaseMaterial[${index}].quantity`,
+          currentData?.purchaseMaterial[index].quantity || 0
+        );
+        setValue(
+          `addPurchaseMaterial[${index}].rate`,
+          currentData?.purchaseMaterial[index].rate || 0
+        );
+        setValue(
+          `addPurchaseMaterial[${index}].discount`,
+          currentData?.purchaseMaterial[index].discount || 0
+        );
+        setValue(
+          `addPurchaseMaterial[${index}].gstRate`,
+          currentData?.purchaseMaterial[index].gstRate || 0
+        );
+        setValue(
+          `addPurchaseMaterial[${index}].totalAmount`,
+          currentData?.purchaseMaterial[index].totalAmount || 0
+        );
+        setValue(
+          `addPurchaseMaterial[${index}].comments`,
+          currentData?.purchaseMaterial[index].comments || ''
+        );
+        return initialContent(index);
+      });
+      setNewIndex(currentData.purchaseMaterial.length);
+      setContentList(initialContentList);
     }
   };
   const fetchLocation = async () => {
@@ -126,7 +182,7 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
     try {
       const response = await getUnitOfMeasure();
       if (response === null) {
-        handleCallSnackbar('No Location Found. Please Add Location', 'warning');
+        handleCallSnackbar('No Units Found. Please Add Units', 'warning');
       } else {
         setUnitOptions(response);
         setSelectedUnit(response.length > 0 ? response[0] : null);
@@ -142,6 +198,7 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
     fetchVendor();
     fetchUnits();
   }, []);
+
   const [vendorMaterials, setVendorMaterials] = useState([]);
   const [selectedVendorMaterial, setSelectedVendorMaterial] = useState(null);
   const handleVendorChange = async (event, newValue) => {
@@ -155,7 +212,7 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
         const response = await getVendorMaterialAPI(data);
         console.log('Vendor Material Response:', response);
         if (response === null) {
-          handleCallSnackbar('No Location Found. Please Add Location', 'warning');
+          handleCallSnackbar('No Material Found. Please Add Material', 'warning');
         } else {
           setVendorMaterials(response);
           setSelectedVendorMaterial(response ? response[0].id : null);
@@ -166,7 +223,9 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
       handleCallSnackbar(error.message, 'warning');
     }
   };
-
+  useEffect(() => {
+    loadVendorMaterial();
+  }, [vendorMaterials]);
   const HandleInputChange = (e, index) => {
     setValue(e?.target?.name, e?.target?.value);
     updateCalculatedValues(index);
@@ -239,6 +298,13 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
             newValue?.gstRate,
             newValue?.materialPrice
           )
+        }
+        value={
+          watch(`addPurchaseMaterial[${index}].materialID`)
+            ? vendorMaterials.find(
+                (option) => option.materialID === watch(`addPurchaseMaterial[${index}].materialID`)
+              ) || null
+            : null
         }
         getOptionLabel={(option) => option.materialName}
         renderInput={(params) => (
@@ -373,11 +439,10 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
     console.log('Final Payload:', data);
     try {
       // let response = await createPurchaseOrderAPI(data);
-      let response = ''
+      let response = '';
       // creategstInformationAPI(data);
       if (currentData?.poNumber) {
         response = await updatePurchaseOrderAPI(data);
-
       } else {
         response = await createPurchaseOrderAPI(data);
       }
@@ -387,7 +452,7 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
       setTimeout(() => {
         handleClose(); // Close the dialog on success
       }, 1000);
-      getTableData();
+      currentData?.poNumber ? '' : getTableData();
     } catch (error) {
       if (error.response && error.response.data && error.response.data.code === 400) {
         handleCallSnackbar(error.response.data.message, 'warning');
@@ -468,7 +533,8 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
               id="factoryShippingId"
               options={locationsOptions || []}
               value={
-                locationsOptions.find((option) => option.locationID === selectedLocation) || null
+                locationsOptions.find((option) => option.locationID === selectedShippingLocation) ||
+                null
               }
               onChange={(event, newValue) =>
                 setSelectedShippingLocation(newValue ? newValue.locationID : null)
@@ -536,9 +602,8 @@ export default function CreatePurchaseOrder({ currentData, handleClose, getTable
           {/* <LoadingButton type="submit" color="primary" variant="contained" loading={isSubmitting}>
             Save
           </LoadingButton> */}
-           <LoadingButton type="submit" color="primary" variant="contained" loading={isSubmitting}>
+          <LoadingButton type="submit" color="primary" variant="contained" loading={isSubmitting}>
             {currentData?.poNumber ? 'Update' : 'Save'}
-
           </LoadingButton>
         </DialogActions>
       </FormProvider>
