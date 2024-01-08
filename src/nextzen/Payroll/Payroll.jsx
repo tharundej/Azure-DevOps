@@ -75,6 +75,7 @@ export default function BasicCard(currentUser) {
   const handleCreatePayrun = (value) => {
     setShow(false);
     setPayRunView(value);
+    console.log("calledwhenbackpress")
   };
 
   const handleEmpType = (data) =>{
@@ -95,7 +96,7 @@ export default function BasicCard(currentUser) {
     // </div>,
     <div>
       {payRunView === 1 && <Payrun handleCreatePayrun={() => handleCreatePayrun(2)} handleEmpType = {handleEmpType}/>}
-      {payRunView === 2 && <CreatePayRun moveToPageFunction={() => handleCreatePayrun(3)}  employmentType={employmentType}/>}
+      {payRunView === 2 && <CreatePayRun moveToPageFunction={() => handleCreatePayrun(3)}  employmentType={employmentType} backPage={() => handleCreatePayrun(1)}/>}
       {payRunView === 3 && <CalculateEarningsAndDeductions />}
       {/* <CreatePayRun/> */}
     </div>,

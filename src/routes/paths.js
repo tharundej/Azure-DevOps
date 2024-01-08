@@ -1,21 +1,21 @@
 // utils
 import { paramCase } from 'src/utils/change-case';
 import { _id, _postTitles } from 'src/_mock/assets';
- 
+
 // ----------------------------------------------------------------------
- 
+
 const MOCK_ID = _id[1];
- 
+
 const MOCK_TITLE = _postTitles[2];
- 
+
 const ROOTS = {
   AUTH: '/auth',
   AUTH_DEMO: '/auth-demo',
   DASHBOARD: '/dashboard',
 };
- 
+
 // ----------------------------------------------------------------------
- 
+
 export const paths = {
   comingSoon: '/coming-soon',
   maintenance: '/maintenance',
@@ -70,8 +70,8 @@ export const paths = {
       otpverification: `${ROOTS.AUTH}/jwt/otpverification`,
       companyregisteration:`${ROOTS.AUTH}/jwt/companyregisteration`,
       updateotp:`${ROOTS.AUTH}/jwt/updateotp`,
-      // changepassword:`${ROOTS.AUTH}/jwt/changepassword`,
-    },
+      resetpassword:`${ROOTS.AUTH}/jwt/resetpassword`,
+  },
     firebase: {
       login: `${ROOTS.AUTH}/firebase/login`,
       verify: `${ROOTS.AUTH}/firebase/verify`,
@@ -121,7 +121,7 @@ export const paths = {
     table: {
       root: `${ROOTS.DASHBOARD}/table`,
       userneweditform: `${ROOTS.DASHBOARD}/table/userneweditform`,
- 
+
       edit: (id) => `${ROOTS.DASHBOARD}/table/${id}/edit`,
       demo: {
         edit: `${ROOTS.DASHBOARD}/table/${MOCK_ID}/edit`,
@@ -132,6 +132,7 @@ export const paths = {
       userneweditform: `${ROOTS.DASHBOARD}/employeetable/userneweditform`,
        onboardform: `/employeemanagementhome/onboardform`,
        userview: (id) => `/employeemanagementhome/${id}/employeeview`,
+       userviewpreonboard: (id) => `/employeemanagementhome/${id}/preonboard`,
        changepassword:`/changepassword`,
       edit: (id) => `${ROOTS.DASHBOARD}/reusetabletwo/${id}/edit`,
       demo: {
@@ -145,13 +146,13 @@ export const paths = {
       cards: `${ROOTS.DASHBOARD}/user/cards`,
       profile: `${ROOTS.DASHBOARD}/user/profile`,
       account: `${ROOTS.DASHBOARD}/user/account`,
- 
+
       edit: (id) => `${ROOTS.DASHBOARD}/user/${id}/edit`,
       demo: {
         edit: `${ROOTS.DASHBOARD}/user/${MOCK_ID}/edit`,
       },
     },
- 
+
     itdeclaration: {
       root: `/itdeclaration`,
     },
@@ -163,20 +164,20 @@ export const paths = {
       compoff: `/leave/compoff`,
       leave: `/leave/leave`,
     },
- 
+
     timesheet: {
       root: `/timesheetmanagement`,
     },
     Shift: {
       root: `${ROOTS.DASHBOARD}/Shift`,
     },
- 
+
     claims: {
       root: `/claims`,
-      
-     
+
+
     },
- 
+
     payroll: {
       root: `/payroll`,
     },
@@ -188,11 +189,11 @@ export const paths = {
       root: `/monthlydeductions`,
       userview: (id) => `/monthlydeductions/${id}/loandetails`,
     },
- 
+
     appraisal: {
       root: `${ROOTS.DASHBOARD}/appraisal`,
     },
-   
+
       configurations:{
         root:`/configurations`,
         leaveconfiguration: `/configurations/leaveconfiguration`,
@@ -203,9 +204,9 @@ export const paths = {
       roleconfiguration: `/configurations/roleconfiguration`,
       taxsectionconfiguration: `/configurations/taxsectionconfiguration`,
       payschedule : `/configurations/payschedule`
-      
+
       },
- 
+
     product: {
       root: `${ROOTS.DASHBOARD}/product`,
       new: `${ROOTS.DASHBOARD}/product/new`,
@@ -294,7 +295,8 @@ export const paths = {
       balancesheet: `${ROOTS.DASHBOARD}/balancesheet`,
     },
     settings: {
-      settings: `${ROOTS.DASHBOARD}/settings`,
+      accountsettings: `${ROOTS.DASHBOARD}/settings/accountsettings`,
+      gstsettings: `${ROOTS.DASHBOARD}/settings/gstsettings`,
     },
   },
 };

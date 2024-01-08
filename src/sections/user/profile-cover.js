@@ -20,7 +20,7 @@ import FormProvider, {
   RHFAutocomplete,
 } from 'src/components/hook-form';
 
-import baseImageUrl from 'src/nextzen/global/BaseUrl';
+import {baseImageUrl} from 'src/nextzen/global/BaseUrl';
 
 // ----------------------------------------------------------------------
 

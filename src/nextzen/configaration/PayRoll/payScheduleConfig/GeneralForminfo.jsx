@@ -12,6 +12,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 // @mui
+import Switch from '@mui/material/Switch';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -31,6 +33,7 @@ import { useEffect } from 'react';
 
 export default function GeneralForminfo({ currentUser,getTableData }) {
   const [open, setOpen] = useState(false);
+  const esicValue =4 
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
@@ -44,6 +47,7 @@ export default function GeneralForminfo({ currentUser,getTableData }) {
     setOpen(false);
     reset3();
   };
+  const [isCessRequried ,setIsCessREquired] =useState(false)
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -58,8 +62,7 @@ export default function GeneralForminfo({ currentUser,getTableData }) {
     ltaPercentage: Yup.number(),
     esicPercentage: Yup.number(),
     tdsPercentage: Yup.number(),
-    foodAllowance: Yup.number(),
-    travelAllowance: Yup.number(),
+  
     medicalAllowance: Yup.number(),
   });
 
@@ -89,8 +92,8 @@ export default function GeneralForminfo({ currentUser,getTableData }) {
       ltaPercentage: currentUser?.ltaPercentage,
       esicPercentage: currentUser?.esicPercentage,
       tdsPercentage: currentUser?.tdsPercentage,
-      foodAllowance: currentUser?.foodAllowance,
-      travelAllowance: currentUser?.travelAllowance,
+      // foodAllowance: currentUser?.foodAllowance,
+      // travelAllowance: currentUser?.travelAllowance,
       medicalAllowance: currentUser?.medicalAllowance
     }),
     [currentUser]
@@ -179,9 +182,10 @@ const [isContract,setIsContract ] =useState(false)
 
 
   const onSubmit1 = handleSubmit1(async (data) => {
+    console.log('submitted data111', data);
     data.employee_type = selectedOption?.type;
     data.companyId = cmpId;
-    console.log('submitted data111', data);
+    data.esicPercentage =esicValue
 
     try {
       const response = await axios.post(baseUrl + '/addPaySchedule', data);
@@ -325,7 +329,22 @@ const [isContract,setIsContract ] =useState(false)
       setPayScheduleType('Once a day');
     } 
   }, [selectedOption]);
+  const handleSwitchChange = (name, checked) => {
+    // Map the boolean value to 1 or 0
 
+    console.log(checked ,"checked")
+    const mappedValue = checked ? 1 : 0;
+  setIsCessREquired(checked)
+    // setFormData((prevFormData) => ({
+    //   ...prevFormData,
+    //   [name]: mappedValue,
+    // }));
+  
+    // setFieldErrors((prevErrors) => ({
+    //   ...prevErrors,
+    //   [name]: '',
+    // }));
+  };
   return (
     <>
       <Snackbar
@@ -407,11 +426,21 @@ const [isContract,setIsContract ] =useState(false)
                 <RHFTextField name="employeePfPercentage" label="Employee PF %" />
                 <RHFTextField name="employerPfPercentage" label="Employer PF %" />
                 <RHFTextField name="ltaPercentage" label="LTA %" />
-                <RHFTextField name="esicPercentage" label="ESIC %" />
+                <RHFTextField name="esicPercentage" label="ESIC %"  value={esicValue} dis={true}/>
                 <RHFTextField name="tdsPercentage" label="TDS %" />
                 <RHFTextField name="medicalAllowance" label="Medical Allowance %" />
-                <RHFTextField name="travelAllowance" label="Travel Allowance %" />
-                <RHFTextField name="foodAllowance" label="Food Allowance %" />
+                <FormControlLabel
+  control={
+    <Switch
+      name="cessrequried"
+      checked={isCessRequried} // Assuming formData.policyCitizenshipType is a boolean
+      onChange={(event) => handleSwitchChange('cessrequried', event.target.checked)}
+    />
+  }
+  label="CESS Required"
+/>
+                {/* <RHFTextField name="travelAllowance" label="Travel Allowance %" /> */}
+                {/* <RHFTextField name="foodAllowance" label="Food Allowance %" /> */}
               </Box>
             </DialogContent>
 
@@ -598,7 +627,8 @@ const [isContract,setIsContract ] =useState(false)
                options={payPcheduleTypes3.map((name) => name.type)}
               
                sx={{ width: '100%', marginRight: '5%' }} // Adjust width and margin as needed
-             />
+             /> 
+  
            </Box>
          </DialogContent>
 

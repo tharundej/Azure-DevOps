@@ -118,7 +118,10 @@ export default function PayScheduleFilters({ filterData, filterOptions,searchDat
     async function call() {
       const arr = await payScheduleType();
       console.log(arr, 'sairam');
-      setPayscheduleTypes(arr);
+      if(arr){
+        setPayscheduleTypes(arr)
+      }
+    
     }
     call();
   }, []);
@@ -283,6 +286,7 @@ export default function PayScheduleFilters({ filterData, filterOptions,searchDat
         <TextField
             placeholder="Search...."
              fullWidth
+             size='small'
              onChange={(e) => handleSearch(e.target.value)}
           />
           
@@ -380,7 +384,8 @@ export default function PayScheduleFilters({ filterData, filterOptions,searchDat
   disablePortal
   name="payScheduleType"
   id="combo-box-demo"
-  options={payscheduleTypes?.map((type) => type.payScheduletype)}
+  options={payscheduleTypes && Array.isArray(payscheduleTypes) ? payscheduleTypes.map((type) => type?.payScheduletype) : []}
+
   value={formData?.payScheduleType}
   onChange={(_, newValue) => handleChangeDropDown('payScheduleType', newValue)}
   renderInput={(params) => <TextField {...params} label="Pay Schedule Type" />}

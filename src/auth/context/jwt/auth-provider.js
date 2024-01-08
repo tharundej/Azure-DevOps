@@ -14,7 +14,9 @@ import { isValidToken, setSession } from './utils';
 import { Alert, Snackbar } from '@mui/material';
 import UserContext from 'src/nextzen/context/user/UserConext';
 import ScrollTopButton from './scroll-top';
-
+import { useSnackbar } from 'notistack';
+import { PATH_TO_REST_PASSWORD } from 'src/config-global';
+import CircularProgress from '@mui/material/CircularProgress';
 // import { da } from 'date-fns/locale';
 
 // ----------------------------------------------------------------------
@@ -63,6 +65,7 @@ const reducer = (state, action) => {
 const STORAGE_KEY = 'accessToken';
 
 export function AuthProvider({ children }) {
+  const {enqueueSnackbar} = useSnackbar()
   const permission = {
     claims: {
       claimApprove: true,
@@ -135,7 +138,7 @@ export function AuthProvider({ children }) {
   const [OptVerify, setOptVerify] = useState(false);
   const router = useRouter();
   const [snackbarOpen, setSnackbarOpen] = useState(false); // State to control Snackbar visibility
-
+  const [loader ,setLoader] = useState(true);
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
@@ -226,7 +229,10 @@ export function AuthProvider({ children }) {
       if (response?.data?.statusCode === 200) {
         setSession(accessToken);
         //  setSession("1")
-        dispatch({
+        if(response?.data?.firstLogin===false){
+          router.push(paths.auth.jwt.resetpassword);
+        }else{
+          dispatch({
           type: 'LOGIN',
           payload: {
             user: {
@@ -235,6 +241,8 @@ export function AuthProvider({ children }) {
             },
           },
         });
+        }
+        
       } else if (response?.data?.statusCode === 400 || 401) {
         console.log(response?.data?.message, 'diapley error');
         setSnackbarSeverity('error');
@@ -261,6 +269,7 @@ export function AuthProvider({ children }) {
       companyDateOfIncorporation,
       companyCeoName,
       companyType,
+      industryType,
       emailId,
       phoneNo,
       firstName,
@@ -274,7 +283,9 @@ export function AuthProvider({ children }) {
       companyPincode,
       empIdPrefix,
       logoName,
+      modules,
       companyLogo,
+      // modules,
       
     ) => {
       console.log('hiiii');
@@ -285,10 +296,12 @@ export function AuthProvider({ children }) {
         // companyDateOfIncorporation,
         companyCeoName,
         companyType,
+        industryType,
         emailId,
         phoneNo,
         firstName,
         // middleName,
+        // selectedCheckboxNames,
         lastName,
         companyAddressLine1,
         companyAddressLine2,
@@ -298,6 +311,7 @@ export function AuthProvider({ children }) {
         companyPincode,
         empIdPrefix,
         logoName,
+        modules,
         companyLogo,
       };
       if (companyDateOfIncorporation != 'NaN-NaN-NaN') {
@@ -307,32 +321,30 @@ export function AuthProvider({ children }) {
         data.middleName = middleName;
       }
       console.log(data, 'data ......');
-     
+    //  if(modules){
+         data.modules =modules
+    //   }
+    console.log(data,'FUN')
       const response = await axios.post(baseUrl + '/signup', data);
-      // const response = await axios.post(endpoints.auth.register, data);
-
-      console.log(response);
-      // if (!response?.data?.data?.jwt) {
-      //   console.log('failed');
-      //   return;
-      // }
-      const accessToken = response?.data?.data?.jwt;
-      console.log(accessToken, 'accessssss');
-      console.log(response?.data?.data?.email)
-      localStorage.setItem('jwt_access_token', accessToken);
-      localStorage.setItem('email',response?.data?.data?.email);
-      // sessionStorage.setItem(STORAGE_KEY, accessToken);
-      // dispatch({
-      //   type: 'REGISTER',
-      //   payload: {
-      //     user: {
-      //       ...user,
-      //       accessToken,
-      //     },
-      //   },
-      // });
-
-      <AmplifyNewPasswordView emailId={data.emailId} />;
+      {loader &&
+      <CircularProgress />
+      }
+      if(response?.data.code === 200){
+        setLoader(false);
+        console.log(response);
+        enqueueSnackbar(response?.data?.message,{variant:'success'})
+        const accessToken = response?.data?.data?.jwt;
+        console.log(accessToken, 'accessssss');
+        console.log(response?.data?.data?.email)
+        localStorage.setItem('jwt_access_token', accessToken);
+        localStorage.setItem('email',response?.data?.data?.email);
+  
+        <AmplifyNewPasswordView emailId={data.emailId} />;
+      }
+      else if(response?.data.code === 400 || 409){
+        enqueueSnackbar(response?.data?.message,{variant:'error'})
+        setLoader(false);
+      }
     },
     []
   );

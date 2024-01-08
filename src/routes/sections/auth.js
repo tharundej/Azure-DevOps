@@ -33,6 +33,7 @@ const ChangePassword = lazy(()=>import('../../nextzen/signup/ChangePassword'));
 const Otpforgotpassword= lazy(()=>import('src/nextzen/signup/Otp-forgotpassword'));
 const Companyregisteration= lazy(()=>import('src/nextzen/signup/Stepper'));
 const UpdateOtpRegister = lazy(()=>import('../../nextzen/signup/UpdateOtp'))
+const ResetPassword = lazy(()=>import('../../nextzen/signup/ResetPassword'))
 // FIREBASE
 const FirebaseLoginPage = lazy(() => import('src/pages/auth/firebase/login'));
 const FirebaseRegisterPage = lazy(() => import('src/pages/auth/firebase/register'));
@@ -158,6 +159,12 @@ const authJwt = {
       path:'changepassword',
       element:(
         <ChangePassword/>
+      )
+    },
+    {
+      path:'resetpassword',
+      element:(
+        <ResetPassword/>
       )
     },
     {

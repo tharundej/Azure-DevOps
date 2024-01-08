@@ -8,6 +8,8 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import dayjs from 'dayjs';
 import axios from 'axios';
+import {baseUrl} from '../../../components/baseUrl'
+import SnackbarComponent from '../../../components/Snackbar';
 const genderOptions=[
   {label:'Male'},
   {label:'Female'},
@@ -50,7 +52,7 @@ const GenerateOfferLetter = () => {
       method: 'post',
       maxBodyLength: Infinity,
       // url: `${baseUrl}/updateOnboardingForm`,
-      url: `https://mallard-blessed-lobster.ngrok-free.app/erp/AddApplicant`,
+      url: `${baseUrl}/AddApplicant`,
       headers: { 
         'Authorization':  JSON.parse(localStorage.getItem('userDetails'))?.accessToken,
         'Content-Type': 'application/json', 
@@ -85,8 +87,8 @@ const GenerateOfferLetter = () => {
     console.log(formData,'formData')
     const obj={...formData};
     obj.gender=obj.gender.label || "";
-    obj.companyId="COMP2";
-    obj.applicantId="COMP2pre2024010315415331";
+    obj.companyId=JSON.parse(localStorage.getItem("onboardDetails")).companyID
+    obj.applicantId=JSON.parse(localStorage.getItem("onboardDetails")).applicantID
     obj.MiddleName=obj.middleName
     obj.contactNumber=parseInt(obj.contactNumber);
     ApiHit(obj);
