@@ -10,6 +10,7 @@ import UserContext from '../context/user/UserConext';
 import TimeSheetByManager from './components/timesheetbymanager/TimeSheetByManager';
 import { CalendarView } from './monthlyTimeSheet/Calendar/view';
 import TimeSheetAttendance from './components/timesheetattendance/TimeSheetAttendance';
+import TimeSheetProject from './components/timesheetproject/TimeSheetProject';
 
 
 
@@ -47,10 +48,16 @@ export default function TimeSheet() {
           label: 'My Team Time Sheet ',
           content: <TimeSheetByManager key="myTeam" />,
         },
+        {
+          id: 'monthlyTimesheet',
+          label: 'Monthly',
+          content: <CalendarView key="monthlyTimesheet" />,
+        },
+
         // {
         //   id: 'myTeamAttendance',
         //   label: 'My Team Attendence',
-        //   content: <TimeSheetAttendance key="myTeamAttendance" />,
+        //   content: <CalendarView key="myTeamAttendance" />,
         // },
         // Add other data as needed
       ];
@@ -76,17 +83,25 @@ export default function TimeSheet() {
          
            <TimeSheetByManager key="myTeam" />
         );
-        arrLabels.push('Monthly',);
-        arrContents.push( 
+        // arrLabels.push('Monthly',);
+        // arrContents.push( 
          
-           <CalendarView key="monthly" />
-        );
+        //    <CalendarView key="monthly" />
+        // );
+
+        arrLabels.push('Projectv2',);
+    arrContents.push( 
+         
+      <TimeSheetProject key="Projectv2" />
+   );
 // companyID === "COMP48" || 
     {companyID === "COMP48" && arrLabels.push('Team Attendance',);
     arrContents.push( 
       
         <TimeSheetAttendance key="myTeamAttendance" />
     );}
+
+    
         setTabLabels(arrLabels);
         setTabContents(arrContents);
       }, [user]);
