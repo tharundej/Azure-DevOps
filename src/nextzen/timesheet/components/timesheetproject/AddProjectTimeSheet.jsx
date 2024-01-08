@@ -3,7 +3,7 @@ import * as Yup from 'yup';
 import { useState,useEffect,useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Dialog,Grid,Button,TextField,useMediaQuery,Chip,Stack,Card,DialogTitle,Typography,DialogContent,FormControl,InputLabel,MenuItem,Select,OutlinedInput, Autocomplete } from '@mui/material';
+import { Dialog,Grid,Button,TextField,useMediaQuery,Chip,Stack,Box,Card,DialogTitle,Typography,DialogContent,FormControl,InputLabel,MenuItem,Select,OutlinedInput, Autocomplete } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers';
@@ -12,15 +12,15 @@ import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import axios from 'axios';
 import {formatDateToYYYYMMDD,formatDate} from 'src/nextzen/global/GetDateFormat';
-import FormProvider,{RHFAutocomplete,RHFSelect,RHFTextField} from '../../../../src/components/hook-form'
+import FormProvider,{RHFAutocomplete,RHFSelect,RHFTextField} from '../../../../../src/components/hook-form'
 import { baseUrl } from 'src/nextzen/global/BaseUrl';
 import instance from 'src/api/BaseURL';
 import { LoadingButton } from '@mui/lab';
 import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
-import {useSnackbar} from '../../../components/snackbar';
+import {useSnackbar} from '../../../../components/snackbar';
 import { useContext } from 'react';
 import UserContext from 'src/nextzen/context/user/UserConext';
-export default function AddProject({handleClose,title,rowData,getTableData}){
+export default function AddProjectTimeSheet({handleClose,title,rowData,getTableData}){
 
     console.log(rowData,"rowdataa")
     const {enqueueSnackbar} = useSnackbar();
@@ -300,6 +300,50 @@ const UpdateEmployees=()=>{
 }
 
 console.log(employeeSelectedData,"setEmployeeSelectedData", rowData, employeeData)
+// for add  new employee with 5 textFields
+const [formFields, setFormFields] = useState([
+  
+]);
+const [options1, setOptions1] = useState([
+  { name: 'suer', id: 1, value: '10' },
+  { name: 'sumr', id: 0, value: '10' },
+  { name: 'mmuer', id: 1, value: '10' },
+]);
+const [options2, setOptions2] = useState([
+  { name: 'Option A', id: 1, value: 'A' },
+  { name: 'Option B', id: 0, value: 'B' },
+  { name: 'Option C', id: 1, value: 'C' },
+]);
+
+  // useEffect(() => {
+  //   // Extract all selected values from previous Autocomplete fields
+  //   const selectedValues1 = formFields.map((field) => field.autocomplete1).filter(Boolean);
+  //   const selectedValues2 = formFields.map((field) => field.autocomplete2).filter(Boolean);
+
+  //   // Update options for Autocomplete fields by excluding selected values
+  //   setOptions1((prevOptions) => prevOptions.filter((option) => !selectedValues1.includes(option)));
+  //   setOptions2((prevOptions) => prevOptions.filter((option) => !selectedValues2.includes(option)));
+  // }, [formFields]);
+
+  const handleAddClick = () => {
+    setFormFields((prevFormFields) => [
+      ...prevFormFields,
+      { id: Date.now(), text1: '', text2: '', autocomplete1: null, autocomplete2: null },
+    ]);
+  };
+
+  const handleDeleteClick = (id) => {
+    setFormFields((prevFormFields) => prevFormFields.filter((field) => field.id !== id));
+  };
+
+  const handleInputChange = (id, fieldName, value) => {
+    setFormFields((prevFormFields) =>
+      prevFormFields.map((field) =>
+        field.id === id ? { ...field, [fieldName]: value } : field
+      )
+    );
+  };
+
     return (
         <>
           <FormProvider methods={methods} onSubmit={title=="Edit Project"?onSubmit1:onSubmit}>
@@ -313,7 +357,42 @@ console.log(employeeSelectedData,"setEmployeeSelectedData", rowData, employeeDat
                   disabled={title==="Edit Project" && user?.roleID>1}
                   />
                 </Grid>
-                 <Grid item md={6} xs={12}>
+                <Grid item md={6} xs={12}>
+     <Autocomplete
+            // name="reportingManager"
+            label="Project Type"
+            value={selectedReportingManager}
+            options={reportingManager || []}
+            getOptionLabel={(option) => option.firstName}
+            getOptionSelected={(option) => option.firstName == rowData?.reportingManagerName}
+            isOptionEqualtoValue={(option) => option.employeeId}
+            onChange={(event, selectedOption) =>
+               setSelectedReportingManager(selectedOption)
+              }
+            renderInput={(params) => (
+                <TextField {...params} label="Project Type" variant="outlined" />
+                )}
+            />
+     </Grid>
+              </Grid>
+              <Grid container spacing={2} sx={{marginTop:1}}>
+     <Grid item md={6} xs={12}>
+        <Autocomplete
+        // disabled={userManager}
+  // name="projectManager"
+  label="Currency"
+  options={projectManager || []}
+  value={selectedProjectManager}
+  getOptionLabel={(option) => option.firstName}
+  isOptionEqualToValue={(option) => option.employeeId}
+  onChange={(event, selectedOption) => 
+    setSelectedProjectManager(selectedOption)}
+  renderInput={(params) => (
+    <TextField {...params} label="Currency " variant="outlined" />
+  )}
+  />
+     </Grid>
+     <Grid item md={6} xs={12}>
                  <Autocomplete
                  disabled={title==="Edit Project"}
             name="locationId"
@@ -330,7 +409,43 @@ console.log(employeeSelectedData,"setEmployeeSelectedData", rowData, employeeDat
                 )}
             />  
                  </Grid>
-              </Grid>
+  </Grid>
+            
+  <Grid container spacing={2} sx={{marginTop:1}}>
+     <Grid item md={6} xs={12}>
+        <Autocomplete
+        // disabled={userManager}
+  // name="projectManager"
+  label="Billing Cycle"
+  options={projectManager || []}
+  value={selectedProjectManager}
+  getOptionLabel={(option) => option.firstName}
+  isOptionEqualToValue={(option) => option.employeeId}
+  onChange={(event, selectedOption) => 
+    setSelectedProjectManager(selectedOption)}
+  renderInput={(params) => (
+    <TextField {...params} label="Billing Cycle" variant="outlined" />
+  )}
+  />
+     </Grid>
+     <Grid item md={6} xs={12}>
+     <Autocomplete
+            // name="reportingManager"
+            label="Billing Time"
+            value={selectedReportingManager}
+            options={reportingManager || []}
+            getOptionLabel={(option) => option.firstName}
+            getOptionSelected={(option) => option.firstName == rowData?.reportingManagerName}
+            isOptionEqualtoValue={(option) => option.employeeId}
+            onChange={(event, selectedOption) =>
+               setSelectedReportingManager(selectedOption)
+              }
+            renderInput={(params) => (
+                <TextField {...params} label="Billing Time" variant="outlined" />
+                )}
+            />
+     </Grid>
+  </Grid>
             
   <Grid container spacing={2} sx={{marginTop:1}}>
      <Grid item md={6} xs={12}>
@@ -367,6 +482,7 @@ console.log(employeeSelectedData,"setEmployeeSelectedData", rowData, employeeDat
             />
      </Grid> */}
   </Grid>
+  
   <Grid container sx={{mt:1}}>
               <Grid md={12} xs={12} item>
                       <RHFTextField name="projectDescription" label="Project Description"/>
@@ -452,46 +568,103 @@ console.log(employeeSelectedData,"setEmployeeSelectedData", rowData, employeeDat
                   </LocalizationProvider>
                              </Grid>
   </Grid>
-  <Grid  item md={6} xs={12}>
-        {/* <FormControl fullWidth sx={{margin:0.5}}> */}
-     <Autocomplete
-  sx={{ marginTop: 2 }}
-  fullWidth
-  multiple
-  limitTags={2}
-  id="multiple-limit-tags"
-  options={employeeData && employeeData?.length ? employeeData : [] }
-  // options ={ (rowData && rowData.employees && rowData.employees.length) ? rowData.employees : (employeeData && employeeData.length) ? employeeData : []}
 
-
-  renderTags={(value, getTagProps) =>
-    value.map((option, index) => (
-      <Chip
-        label={option.employeeName}
-        {...getTagProps({ index })}
-        style={{ backgroundColor: 'white', color: 'black' }}
-      />
-    ))
-  }
-  getOptionLabel={(option) => `${option?.employeeName}    (${option.employeeID})`}
-  getOptionSelected={(option, value) => option.employeeID === value.employeeID}
-  // onChange={(event, newValue) => {
-  //   setSelectedIds(newValue.map((option) => option.employeeID));
-  // }}
-  onChange={(event, value)=>{setEditInfo(prev => {return {...prev, employees:value}}),console.log(value,"ppppppppppppp")}}
-  // value={selectedIds?.filter((option) => employesListData?.includes(option.employeeID))}\
-  // value={employeeData }
-  value={editInfo?.employees  }
-  // value={rowData?.employees ?? employeeData }
-
-  renderInput={(params) => (
-    <TextField {...params} label="Employees" placeholder="Employees" sx={{ maxHeight: 500 }} />
-  )}
-/>
-        {/* </FormControl>   */}
-      
-        </Grid>
+  <Grid container spacing={2}  flexDirection={"row"}>
+  <Grid item md={6} xs={6}>
+  <h4>Add Employee</h4>
   
+  </Grid>
+       <Grid item md={6} xs={6} flexDirection={"row"} justifyContent="flex-end">
+                             <Button variant="contained" color="primary" onClick={handleAddClick} sx={{ margin: '20px' }}> Add</Button>
+                            
+                             </Grid>
+  </Grid>
+
+ 
+
+    <div >
+      
+
+      {formFields.map((field, index) => (
+        <Grid container spacing={2} key={field.id} mt={1}>
+          
+          <Grid item xs={6}>
+            <Autocomplete
+              options={options1}
+              getOptionLabel={(option) => option.name}
+              getOptionDisabled={(option) => option.id === 0 || option.id === "0"}
+              value={field.role}
+              onChange={(_, value) => handleInputChange(field.id, 'role', value)}
+              renderInput={(params) => <TextField {...params} label="Role" fullWidth />}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <Autocomplete
+              options={options2}
+              getOptionLabel={(option) => option.name}
+              value={field.employee}
+              onChange={(_, value) => handleInputChange(field.id, 'employee', value)}
+              renderInput={(params) => <TextField {...params} label="Select Employee" fullWidth />}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="Exp"
+              value={field.exp}
+              onChange={(e) => handleInputChange(field.id, 'exp', e.target.value)}
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="Billing Rate"
+              value={field.billingRate}
+              onChange={(e) => handleInputChange(field.id, 'billingRate', e.target.value)}
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={5}>
+            <TextField
+              label="Start Time"
+              value={field.startTime}
+              onChange={(e) => handleInputChange(field.id, 'startTime', e.target.value)}
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={5}>
+            <TextField
+              label="End Time"
+              value={field.endTime}
+              onChange={(e) => handleInputChange(field.id, 'endTime', e.target.value)}
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={2}>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => handleDeleteClick(field.id)}
+            >
+              Delete
+            </Button>
+          </Grid>
+          <hr style={{ borderTop: '2px solid #ccc', margin: '30px 0', width: '100%' }} />
+        </Grid>
+        
+      ))}
+
+      {/* Display stored data */}
+      {/* <div>
+        <h2>Stored Data:</h2>
+        <ul>
+          {formFields.map((field) => (
+            <li key={field.id}>
+              {`Exp: ${field.exp}, Billing Rate: ${field.billingRate}, Start Time: ${field.startTime}, End Time: ${field.endTime}, Role: ${field.role ? field.role.name : ''}, Employee: ${field.employee ? field.employee.name : ''}`}
+            </li>
+          ))}
+        </ul>
+      </div> */}
+    </div>
                 <Stack alignItems="flex-end" sx={{ mt: 3, display:"flex", flexDirection:'row',justifyContent:"flex-end"}}>
                 
                   <Button variant="outlined" onClick={handleClose} sx={{marginRight:1}}>Cancel</Button>

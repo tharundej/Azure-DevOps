@@ -139,6 +139,8 @@ import PayScheduleHistoryFilter from '../Payroll/CalculateEarningsAndDeductions/
 import ApproveTimeSheetSearch from '../timesheet/monthlyTimeSheet/Calendar/approveTimeSheetSearch';
 // import PayScheduleFilters from '../Payroll/payschedule/PayScheduleFilters';
 import PayScheduleFilters from '../configaration/PayRoll/payScheduleConfig/PayScheduleFilters';
+// import AddProjectTimeSheet from '../timesheet/components/timesheetproject/AddProjectTimeSheet';
+import ProjectSearchTimeSheet from '../timesheet/components/timesheetproject/ProjectSearchTimeSheet';
 
 const defaultFilters = {
   name: '',
@@ -561,6 +563,20 @@ const [index, setIndex]=useState(""); // index setting
           )}
           {filterName === 'ProjectSearchFilter' && (
             <ProjectSearchFilter
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              getTableData={getTableData}
+            />
+          )}
+           {filterName === 'ProjectSearchTimeSheet' && (
+            <ProjectSearchTimeSheet
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              getTableData={getTableData}
+            />
+          )}
+           {filterName === 'AddProjectTimeSheet' && (
+            <AddProjectTimeSheet
               filterSearch={handleFilterSearch}
               filterData={handleFIlterOptions}
               getTableData={getTableData}
