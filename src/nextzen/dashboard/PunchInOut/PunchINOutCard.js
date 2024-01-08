@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 
 import {Stack, Typography ,Button} from '@mui/material'
 
@@ -14,10 +14,13 @@ import { enqueueSnackbar } from 'notistack';
 
 const PunchINOutCard = () => {
   const {user} = useContext (UserContext)
+  var [tableData,setTableData] = useState(false)
     const theme = useTheme();
 const handlePunch= async () => {
   var timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 console.log(timeZone);
+  tableData = false
+  setTableData(tableData)
     try{
   const data={
         companyId:(user?.companyID)? user?.companyID : '',
@@ -27,6 +30,8 @@ console.log(timeZone);
       }
       const response = await instance.post('/punch',data)
       if(response.data.code == 200){
+        tableData = true
+        setTableData(tableData)
         enqueueSnackbar( response?.data.message,{variant:"success"})
       }
     }catch (error){
@@ -63,7 +68,7 @@ console.log(timeZone);
     spacing={2}>
         {/* <PunchCard text=" IN " time="12:00 AM"></PunchCard>
         <PunchCard text="OUT" time="12:00 PM"></PunchCard> */}
-        <PunchINOutTable/>
+        { <PunchINOutTable tableData={tableData} />}
         
     
     

@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import instance from 'src/api/BaseURL';
 import UserContext from 'src/nextzen/context/user/UserConext';
 
-const PunchINOutTable = () => {
+const PunchINOutTable = (tableData) => {
   const{user}=useContext(UserContext)
   const [punchData , setpunchData]=useState([])
     console.log("🚀 ~ file: PunchINOutTable.jsx:8 ~ PunchINOutTable ~ punchData:", punchData)
@@ -20,8 +20,9 @@ const PunchINOutTable = () => {
     //     // Add more data as needed
     //   ];
     useEffect(() => {
+      console.log("🚀 ~ file: PunchINOutTable.jsx:25 ~ useEffect ~ getPunchDetails:")
       getPunchDetails()
-    }, [])
+    }, [tableData])
     
     const getPunchDetails= async()=>{
       var timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -47,10 +48,13 @@ const PunchINOutTable = () => {
       }
     }
       return (
-<div style={{ overflowX: 'auto', maxWidth: '100%' }}>
+<div
+ style={{ 
+  // overflowX: 'auto',
+   maxWidth: '100%' }}>
   <div
     style={{
-      overflowX: 'auto',
+      // overflowX: 'auto',
       border: '1px solid black',
       position: 'relative',
     }}
@@ -95,16 +99,24 @@ const PunchINOutTable = () => {
         </tr>
       </thead>
     </table>
-    <div
+   <div
       style={{
-        overflowY: 'auto',
-        maxHeight: '200px',
-        // Styling the WebKit scrollbar
-        WebkitOverflowScrolling: 'touch',
-        scrollbarWidth: 'thin',
-        scrollbarColor: 'darkgray lightgray',
-        // Removing the background color
+        // overflowY: 'auto',
+        // maxHeight: '200px',
+        height:'200px',
+        // WebkitOverflowScrolling: 'touch',
+        // scrollbarWidth: 'thin',
+        // scrollbarColor: 'darkgray lightgray',
         background: 'transparent',
+        // Hide the scrollbar UI
+        // scrollbarWidth: 'none',
+        // msOverflowStyle: 'none',
+        // '&::-webkit-scrollbar': {
+        //   width: '0.4em',
+        // },
+        // '&::-webkit-scrollbar-thumb': {
+        //   backgroundColor: 'transparent',
+        // },
       }}
     >
       <table
