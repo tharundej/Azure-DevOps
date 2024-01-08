@@ -129,8 +129,14 @@ const PunchINOutTable = (tableData) => {
         <tbody>
           {punchData?.records?.map((item, index) => (
             <tr key={index}>
-              <td style={{ textAlign: 'center', padding: '3px', borderRight: '1px solid black', color: 'black', fontSize: '12px' }}>{new Date(item.punchIn).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
-              <td style={{ textAlign: 'center', padding: '3px', fontSize: '12px', color: 'black', borderRight: '1px solid black' }}>{new Date(item.punchOut).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
+              <td style={{ textAlign: 'center', padding: '3px', borderRight: '1px solid black', color: 'black', fontSize: '12px' }}>
+                {/* {new Date(item.punchIn).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} */}
+                {item.punchIn}
+                </td>
+              <td style={{ textAlign: 'center', padding: '3px', fontSize: '12px', color: 'black', borderRight: '1px solid black' }}>
+                {/* {new Date(item.punchOut).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} */}
+                {item.punchOut}
+                </td>
             </tr>
           ))}
         </tbody>
