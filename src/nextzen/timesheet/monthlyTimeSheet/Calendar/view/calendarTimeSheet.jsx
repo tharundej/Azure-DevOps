@@ -197,6 +197,8 @@ console.log(date,"datedate1234",view,eventsLoading)
    const managerID = localStorage.getItem('reportingManagerID');
    const employeeID = localStorage.getItem('employeeID');
    const companyID = localStorage.getItem('companyID');
+   const userRoleID = localStorage.getItem('roleID');
+   console.log(userRoleID,"userRoleID")
 
    const [getApiCall, setGetApiCall] =  useState({
     employeeId:employeeID ,
@@ -440,6 +442,7 @@ const getProjectName = async()=>{
       
         employeeID:employeeID,
         companyID:companyID,
+      
        
       // Other data properties as needed 
     };
@@ -468,7 +471,7 @@ const getProjectName = async()=>{
 }
 const getEmployeeList = async(projectData)=>{
   try {
-  console.log(projectData?.projectID,"projectdataaaaa")
+  console.log(projectData?.projectID,"time")
     const dataPaload = {
       
       projectManager:employeeID,
@@ -597,6 +600,21 @@ const onSubmitEdit2 = async (approveData, event) => {
     enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
   }
 }
+// permissions for button
+const [buttonPermission,setButtonPermission] = useState(false)
+useEffect(()=>{
+  const permission = user?.rolePermissions.timeSheetManagement
+  if (
+    permission &&
+    permission.hasOwnProperty('mainHeading') &&
+    permission.mainHeading &&
+    permission['MonthlyTimesheetButton']
+  )
+  {
+    setButtonPermission(true)
+  }
+},[user])
+console.log(buttonPermission,"assignPermission")
 
 // model   code
 const [open, setOpen] = React.useState(false);
@@ -640,6 +658,7 @@ const customViews = {
   },
   // You can customize other views as needed
 };
+
   return (
  <>
      <Container sx={{height:"100%",width:"100%", marginBottom:2}} maxWidth={settings.themeStretch ? false : 'lg'}>
@@ -659,7 +678,7 @@ const customViews = {
         // sx={{ width: '500px' }}
       />
 </Grid>
-<Grid item xs={12} md={4} >
+{buttonPermission &&  <Grid item xs={12} md={4} >
 
       <Box>
   <Grid container alignItems="center">
@@ -711,7 +730,8 @@ const customViews = {
 </Box>
 
 
-      </Grid>
+      </Grid>}
+
       <Grid  item xs={12} md={4} >
   {showAutocomplete && (
     <Autocomplete
@@ -792,14 +812,14 @@ const customViews = {
           </StyledCalendar>}
           
         </Card>
-        {showAutocomplete&& tablePermission && 
+        {showAutocomplete&& tablePermission   &&
         <Grid container justifyContent="flex-end" marginTop={1} xs={12}>
   <Button variant="contained" color="primary" onClick={handleOpen}>
     Approve Time Sheet
   </Button>
 </Grid>
 }
-{tablePermission === false  &&  <ApproveTimeSheetTable/>}
+{tablePermission === false  && <ApproveTimeSheetTable/>}
       </Container>
       <Dialog
         fullWidth

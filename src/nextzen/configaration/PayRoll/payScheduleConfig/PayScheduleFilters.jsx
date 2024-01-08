@@ -286,6 +286,7 @@ export default function PayScheduleFilters({ filterData, filterOptions,searchDat
         <TextField
             placeholder="Search...."
              fullWidth
+             size='small'
              onChange={(e) => handleSearch(e.target.value)}
           />
           

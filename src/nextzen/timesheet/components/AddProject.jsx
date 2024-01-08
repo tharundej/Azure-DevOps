@@ -30,7 +30,8 @@ export default function AddProject({handleClose,title,rowData,getTableData}){
     const [reportingManager,setReportingManagerData]= useState([])
     const [selectedLocationID, setSelectedLocationID] = useState((rowData?.locationId)?rowData?.locationId:null); 
     const [projectManager,setProjectManagers] = useState([])
-    // const [rowData,setRowData] = useState()
+    const [editInfo, setEditInfo] = useState(rowData || {});
+    const [rowDataEmployee,setRowDataEmployee] = useState()
     const [datesUsed, setDatesUsed] = useState({
         startDate: '',
         endDate: '',
@@ -38,6 +39,16 @@ export default function AddProject({handleClose,title,rowData,getTableData}){
         actualEndDate:''
       });
       const[employeeData,setEmployeeData]=useState()
+      const[employeeSelectedData,setEmployeeSelectedData]=useState()
+      // if (rowData){
+      //   setRowDataEmployee(rowData?.employees)
+      // }
+      useEffect(()=>{
+        // setEmployeeData(rowData?.employees)
+        setEditInfo(rowData)
+        console.log("heloo")
+      },[rowData])
+
       const NewUserSchema = Yup.object().shape({
         projectName: Yup.string(),
         startDate: Yup.string(),
@@ -132,15 +143,18 @@ const onSubmit = handleSubmit(async (data) => {
       data.actualStartDate=datesUsed?.actualStartDate;
       data.actualEndDate=datesUsed?.actualEndDate;
       data.projectManager=selectedProjectManager?.employeeId,
-      data.reportingManager=selectedReportingManager?.employeeId,
+      data.reportingManager=selectedProjectManager?.employeeId,
       data.location= selectedLocationID
       data.companyId = user?.companyID
-      UpdateEmployees()
+      data.employee = employeeSelectedData
+      // UpdateEmployees()
+      console.log(data,"datadata")
       const response = await axios.post(baseUrl+'/addProject', data).then(
         (successData) => {
           enqueueSnackbar(successData.data.message,{variant:'success'})
           getTableData()
           handleClose()
+          // setEmployeeData([])
           reset()
         },
         (error) => {
@@ -191,10 +205,11 @@ const onSubmit = handleSubmit(async (data) => {
       data.endDate =(datesUsed?.endDate)?datesUsed?.endDate:rowData?.endDate
       // data.status = rowData?.status,
       data.roleId=user?.roleID,
-      data.reportingManager = selectedReportingManager?.employeeId,
+      data.reportingManager = selectedProjectManager?.employeeId,
       data.projectManager = selectedProjectManager?.employeeId
       data.locationName=rowData?.locationName
-      UpdateEmployees()
+      data.employee = employeeSelectedData
+      // UpdateEmployees()
       const response = await axios.post(baseUrl+'/updateproject', data).then(
         (successData) => {
           enqueueSnackbar(successData.data.message,{variant:'success'})
@@ -283,6 +298,8 @@ const UpdateEmployees=()=>{
     handleCloseEmployee()
    })
 }
+
+console.log(employeeSelectedData,"setEmployeeSelectedData", rowData, employeeData)
     return (
         <>
           <FormProvider methods={methods} onSubmit={title=="Edit Project"?onSubmit1:onSubmit}>
@@ -332,7 +349,7 @@ const UpdateEmployees=()=>{
   )}
   />
      </Grid>
-     <Grid item md={6} xs={12}>
+     {/* <Grid item md={6} xs={12}>
      <Autocomplete
             name="reportingManager"
             label="Reporting Manager"
@@ -348,7 +365,7 @@ const UpdateEmployees=()=>{
                 <TextField {...params} label="Reporting Manager" variant="outlined" />
                 )}
             />
-     </Grid>
+     </Grid> */}
   </Grid>
   <Grid container sx={{mt:1}}>
               <Grid md={12} xs={12} item>
@@ -443,7 +460,10 @@ const UpdateEmployees=()=>{
   multiple
   limitTags={2}
   id="multiple-limit-tags"
-  options={employeeData && employeeData?.length ? employeeData : []}
+  options={employeeData && employeeData?.length ? employeeData : [] }
+  // options ={ (rowData && rowData.employees && rowData.employees.length) ? rowData.employees : (employeeData && employeeData.length) ? employeeData : []}
+
+
   renderTags={(value, getTagProps) =>
     value.map((option, index) => (
       <Chip
@@ -458,9 +478,12 @@ const UpdateEmployees=()=>{
   // onChange={(event, newValue) => {
   //   setSelectedIds(newValue.map((option) => option.employeeID));
   // }}
-  onChange={(event, value)=>{console.log(value,"ppppppppppppp")}}
+  onChange={(event, value)=>{setEditInfo(prev => {return {...prev, employees:value}}),console.log(value,"ppppppppppppp")}}
   // value={selectedIds?.filter((option) => employesListData?.includes(option.employeeID))}\
-  value={employeeData}
+  // value={employeeData }
+  value={editInfo?.employees  }
+  // value={rowData?.employees ?? employeeData }
+
   renderInput={(params) => (
     <TextField {...params} label="Employees" placeholder="Employees" sx={{ maxHeight: 500 }} />
   )}

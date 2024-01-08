@@ -37,8 +37,8 @@ import Dialog from '@mui/material/Dialog';
 
 import DialogTitle from '@mui/material/DialogTitle';
 
-import { Today } from '@mui/icons-material';
-
+import {  Today } from '@mui/icons-material';
+import Badge from '@mui/material/Badge';
 import { useTheme } from '@mui/material/styles';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
@@ -123,7 +123,7 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
   const [dropdownShiftName, setdropdownShiftName] = useState([]);
   const [dropdownShiftTerm, setdropdownShiftTerm] = useState([]);
   const [dropdownLocation, setdropdownLocation] = useState([]);
-
+  const [badgeContent, setBadgeContent] = useState(false);
   const [datesFiledArray, setDatesFiledArray] = useState([
     {
       field: 'date_activity',
@@ -264,7 +264,7 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
     };
   const handleApply = async () => {
     setDatesData([]);
-
+    setBadgeContent(true);
     const data =await formWithDropdown();
     const comma = data.join(',');
     const obj = {
@@ -279,34 +279,50 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
 
   return (
     <>
-      <Grid
+     <Grid
         container
         spacing={2}
         alignItems="center"
-        justifyContent="flex-end"
         direction="row"
         style={{ marginBottom: '0.1rem' }}
+        lg={12}
+        md={12}
+        xs={12}
       >
-        <Grid item  md={8} xs={8}>
+        <Grid item lg={7} md={8} xs={12} sm={8}>
         <TextField
             placeholder="Search...."
              fullWidth
+             size='small'
              onChange={(e) => handleSearch(e.target.value)}
           />
           
         </Grid>
-        <Grid item  md={2} xs={2}>
+        <Grid item lg={3} md={2} xs={8} sm={2}>
        <ShiftConfigurationForm/>
         </Grid>
-        <Grid item  md={2} xs={2}>
-        <Grid>
-            <Stack sx={{ display: 'flex', alignItems: 'flex-end' }}>
-           
-              <Button onClick={handleClickOpen} sx={{ width: '80px' }}>
+        <Grid item lg={2} md={2} xs={4} sm={2}>
+          {badgeContent === true ? (
+            <Badge
+              badgeContent={''}
+              color="success"
+              variant="dot"
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+            >
+              <Button onClick={handleClickOpen} style={{ width: '80px' }}>
                 <Iconify icon="mi:filter" />
+                Filters
               </Button>
-            </Stack>
-          </Grid>
+            </Badge>
+          ) : (
+            <Button onClick={handleClickOpen} style={{ width: '80px' }}>
+              <Iconify icon="mi:filter" />
+              Filters
+            </Button>
+          )}
         </Grid>
       </Grid>
 
@@ -314,6 +330,7 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
         onClose={handleClickClose}
         aria-labelledby="customized-dialog-title"
         open={open}
+        
         // className="custom-dialog-width"
       >
         <DialogTitle sx={{ textAlign: 'center', paddingBottom: 0, paddingTop: 2 }}>
@@ -388,11 +405,12 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
                   <FormControl fullWidth>
                     <InputLabel id="locationID">Location</InputLabel>
                     <Select
-                    fullWidth
+                    fullWidth     
                       labelId="demo-multiple-name-shift_name_1"
                       id="demo-multiple-shift_name_1"
                       multiple
                       value={dropdownLocation}
+                   
                       onChange={(e) => handleChangeDropDown(e, 'locationID')}
                       input={<OutlinedInput label="Location" />}
                       MenuProps={MenuProps}
@@ -401,6 +419,7 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
                       {locationID.map((name) => (
                         <MenuItem
                           key={name}
+                          
                           value={name}
                           style={getStyles(name, personName, theme)}
                         >
@@ -417,13 +436,13 @@ export default function ShiftConfigurationFilters({ filterData, filterOptions ,s
              
           
         </DialogContent>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
 
         <Button
           onClick={() => {
             handleApply();
           }}
-          style={{ width: '80px', marginBottom:'1rem',backgroundColor:'black',color:'white'}}
+          style={{ width: '80px', marginBottom:'1rem',backgroundColor: '#3B82F6' ,color:'white',marginRight:"10px"}}
         >
           Apply
         </Button>

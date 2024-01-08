@@ -30,6 +30,9 @@ const EmployeeManagementHome = lazy(() =>
 const EmployeeView = lazy(() =>
   import('../../nextzen/employeemanagment/employeeview/EmployeeView')
 );
+const PreonboardEmployeeView=lazy(()=>
+import('../../nextzen/employeemanagment/preonboard/employeeview/EmployeeView')
+);
 
 // OVERVIEW
 const IndexPage = lazy(() => import('src/pages/dashboard/app'));
@@ -162,6 +165,8 @@ const TaxSectionConfiguration = lazy(() =>
   import('../../nextzen/configaration/taxSectionConfiguration/TaxSEctionTab')
 );
 const ChangePassword = lazy(()=>import('../../nextzen/signup/ChangePassword'));
+
+// const ResetPassword = lazy(()=>import('../../nextzen/signup/ResetPassword'))
 // const ShiftConfiguration = lazy(()=> import('src/nextzen/configaration/shiftconfiguration/ShiftConfiguration'));
 // factory
 const FactoryIndex = lazy(() => import('src/nextzen/factory/Factory'));
@@ -497,6 +502,8 @@ export const dashboardRoutes = [
       { path: 'onboardform', element: <OnBoardForm /> },
       {path: 'changepassword',element: <ChangePassword/>},
       { path: ':id/employeeview', element: <EmployeeView /> },
+      { path: ':id/preonboard', element: <PreonboardEmployeeView /> },
+
 
     ],
   },
@@ -640,6 +647,7 @@ export const dashboardRoutes = [
       // { path: 'profile', element: <UserProfilePage /> },
     ],
   },
+
   {
     path:'changepassword',
     element: (
@@ -702,7 +710,7 @@ export const dashboardRoutes = [
   ),
   children: [
     { element: <Personal/> ,index:true },
-    {path:'Organization', element:<Organizationchart/>}
+    {path:'Organizationchart', element: <Organizationchart/> },
 ],
 },
 ];

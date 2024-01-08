@@ -6,6 +6,8 @@ import { styled } from '@mui/material/styles';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 // import { useSnackbar } from '../../../../components/Snackbar';
 
+import { baseUrl } from '../../../../components/baseUrl';
+
 import dayjs, { Dayjs } from 'dayjs';
 import {
   IconButton,
@@ -66,6 +68,8 @@ const PreEducation = forwardRef((props, ref) => {
       stream: '',
       university: '',
       yearOfPassing: undefined,
+      startDate:'',
+      endDate:"",
 
       gradeType: '',
       grade: undefined,
@@ -101,17 +105,19 @@ const PreEducation = forwardRef((props, ref) => {
     props.handleLoader();
 
     const obj = {
-      companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
-      employeeId: localStorage.getItem('employeeIdCreated'),
+      // companyId: JSON.parse(localStorage.getItem('userDetails'))?.companyID,
+      companyId:JSON.parse(localStorage.getItem("onboardDetails")).companyID,
+      applicantId:JSON.parse(localStorage.getItem("onboardDetails")).applicantID,
       education: defaultValues,
     };
 
     console.log(obj);
-
+    props.handleLoader()
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
     //   url: `${baseUrl}/addEducation`,
+    url: `${baseUrl}/AddApplicantEducation`,
       headers: {
         Authorization:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTk2Nzc5NjF9.0-PrJ-_SqDImEerYFE7KBm_SAjG7sjqgHUSy4PtMMiE',
@@ -126,6 +132,8 @@ const PreEducation = forwardRef((props, ref) => {
         console.log(JSON.stringify(response.data));
         //props.onhandleClose()
         props.nextStep();
+        props.handleLoaderClose()
+        
         //  props.handleCallSnackbar(response.data.message,"success")
         console.log(response.data.message, 'response.data.message');
         // enqueueSnackbar(response?.data?.message, { variant: 'success' });

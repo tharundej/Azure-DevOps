@@ -46,6 +46,7 @@ import UserContext from 'src/nextzen/context/user/UserConext';
 import { useContext } from 'react';
 import { LoadingScreen } from 'src/components/loading-screen';
 import { useSnackbar } from 'notistack';
+import ConfirmationDialog from 'src/components/Model/ConfirmationDialog';
 // import { useSnackbar } from '../../../components/snackbar';
 // import useTheme from '@mui/material';
 
@@ -160,9 +161,6 @@ export default function PaySchedule({ currentUser }) {
     ltaPercentage: Yup.number(),
     esicPercentage: Yup.number(),
     tdsPercentage: Yup.number(),
-    
-    
-      // travelAllowance:Yup.number(),
       medicalAllowance: Yup.number(),
     // employementType:Yup.string(),
   });
@@ -176,7 +174,8 @@ export default function PaySchedule({ currentUser }) {
   const NewUserSchema3 = Yup.object().shape({
     payPcheduleType: Yup.string(),
   });
-
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [deleteData, setDeleteData] = useState(null);
   const defaultValues1 = useMemo(
     () => ({
       payPcheduleType: currentUser?.payPcheduleType,
@@ -249,8 +248,17 @@ export default function PaySchedule({ currentUser }) {
       buttonFunction(rowdata, event);
       handleOpenEdit();
     } else if (event?.name === 'Delete') {
-      deleteFunction(rowdata, event);
+      // deleteFunction(rowdata, event);
+      setDeleteData(rowdata);
+      setConfirmDeleteOpen(true);
     }
+  }; const handleCancelDelete = () => {
+    setDeleteData(null);
+    setConfirmDeleteOpen(false);
+  };
+  const handleDeleteConfirmed = async (rowdata, event) => {
+    deleteFunction(deleteData, event);
+  
   };
   const buttonFunction = (rowdata) => {
     setShowEdit(true);
@@ -277,7 +285,9 @@ export default function PaySchedule({ currentUser }) {
       const response = await axios.post(baseUrl + '/deletePaySchedule', data);
 
       if (response?.data?.code === 200) {
+        setCount(count + 1);
         handleClose();
+        setConfirmDeleteOpen(false)
         enqueueSnackbar(response.data.message, { variant: 'success' });
         // setLoading(false)
         setCount(count + 1);
@@ -346,7 +356,7 @@ export default function PaySchedule({ currentUser }) {
   const onSubmit1 = handleSubmit1(async (data) => {
     data.companyID = cmpId;
     // (data.employementType = valueSelected?.employementType?.type),
-
+console.log("called inside ", data)
     (data.payPcheduleType = valueSelected?.payPcheduleType?.type),
       (data.employee_type = valueSelected?.employementType),
       (data.basicPayPercentage = JSON.parse(valueSelected?.basicPayPercentage, 10)),
@@ -493,8 +503,16 @@ export default function PaySchedule({ currentUser }) {
   //   useEffect(()=>{
   // console.log("calling useEffect")
   //   },[valueSelected?.employementType])
+  
   return (
     <>
+     <ConfirmationDialog
+        open={confirmDeleteOpen}
+        onClose={handleCancelDelete}
+        onConfirm={handleDeleteConfirmed}
+        itemName="Delete Assets"
+        message={`Are you sure you want to delete ?`}
+      />
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={4000}
@@ -602,10 +620,12 @@ export default function PaySchedule({ currentUser }) {
                     value={valueSelected?.ltaPercentage}
                     onChange={(e) => handleSelectChange('ltaPercentage', e.target.value)}
                   />
+                
                   <RHFTextField
                     name="esicPercentage"
                     label="ESIC %"
                     value={valueSelected?.esicPercentage}
+                    dis={true}
                     onChange={(e) => handleSelectChange('esicPercentage', e.target.value)}
                   />
                   <RHFTextField

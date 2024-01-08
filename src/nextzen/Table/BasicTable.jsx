@@ -140,6 +140,8 @@ import PayScheduleHistoryFilter from '../Payroll/CalculateEarningsAndDeductions/
 import ApproveTimeSheetSearch from '../timesheet/monthlyTimeSheet/Calendar/approveTimeSheetSearch';
 // import PayScheduleFilters from '../Payroll/payschedule/PayScheduleFilters';
 import PayScheduleFilters from '../configaration/PayRoll/payScheduleConfig/PayScheduleFilters';
+// import AddProjectTimeSheet from '../timesheet/components/timesheetproject/AddProjectTimeSheet';
+import ProjectSearchTimeSheet from '../timesheet/components/timesheetproject/ProjectSearchTimeSheet';
 
 const defaultFilters = {
   name: '',
@@ -165,7 +167,8 @@ const BasicTable = ({
   isShowHandle,
   componentPage,count,
   mergingRowArray,
-  updateTotalState
+  updateTotalState,
+  handleOpenOffer
 
 }) => {
   const popover = usePopover();
@@ -567,6 +570,20 @@ const [index, setIndex]=useState(""); // index setting
               getTableData={getTableData}
             />
           )}
+           {filterName === 'ProjectSearchTimeSheet' && (
+            <ProjectSearchTimeSheet
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              getTableData={getTableData}
+            />
+          )}
+           {filterName === 'AddProjectTimeSheet' && (
+            <AddProjectTimeSheet
+              filterSearch={handleFilterSearch}
+              filterData={handleFIlterOptions}
+              getTableData={getTableData}
+            />
+          )}
 
           {filterName === 'ApprovalSearchFilter' && (
             <ApprovalSearchFilter
@@ -939,6 +956,7 @@ const [index, setIndex]=useState(""); // index setting
                             //   handleEditRowParent(id)
                             //   }
                             // }
+                           
                             onHandleEditRow={(row, clickedElementId) => {
 
                               if (handleEditRowParent) {
@@ -953,7 +971,10 @@ const [index, setIndex]=useState(""); // index setting
                                 handleExpandClick(row.projectId, null, index)
                                 // console.log(row, "iddd");
                               }
-
+                              else if(clickedElementId==="generateOfferLetter"){
+                                handleOpenOffer(row)
+                              }
+                             
                             }}
                             selected={table.selected.includes(row.id)}
                             onSelectRow={() => table.onSelectRow(row.id)}

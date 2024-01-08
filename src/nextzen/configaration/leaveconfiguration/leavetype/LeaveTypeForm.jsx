@@ -34,7 +34,7 @@ import ModalHeader from 'src/nextzen/global/modalheader/ModalHeader';
 import { useSnackbar } from 'notistack';
 
 export default function LeaveTypeForm({ currentUser, getTableData }) {
-  const {enqueueSnackbar} = useSnackbar()
+  const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -46,7 +46,7 @@ export default function LeaveTypeForm({ currentUser, getTableData }) {
   const handleOpenEdit = () => {
     setOpenEdit(true);
   };
-  const [gender, setGender] = useState(['Male','Female']);
+  const [gender, setGender] = useState(['Male', 'Female', 'Others']);
   const [count, setCount] = useState(0);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
@@ -62,7 +62,7 @@ export default function LeaveTypeForm({ currentUser, getTableData }) {
   const [formData, setFormData] = useState({});
   const [locationType, setLocationType] = useState([]);
   const [selectedDates, setSelectedDates] = useState(dayjs());
-
+  const [leaveNames, setLeaveNames] = useState([]);
   const defaultValues1 = useMemo(
     () => ({
       totalNumberLeave: currentUser?.totalNumberLeave || null,
@@ -86,19 +86,30 @@ export default function LeaveTypeForm({ currentUser, getTableData }) {
     reset: reset1,
   } = methods1;
 
+  const fetchLeaveNames = async () => {
+    const response = await axios.post(baseUrl + '/GetMasterLeaveDetails');
+    if (response?.data?.statusCode === '200') {
+      console.log(response?.data?.data, 'coal');
+      setLeaveNames(response?.data?.data);
+    }
+  };
+
+  useEffect(() => {
+    fetchLeaveNames();
+  }, []);
 
   const onSubmit1 = handleSubmit1(async (data) => {
     data.companyId = localStorage.getItem('companyID');
     // data.locationID = formData?.Location?.locationID;
     // data.leavePeriodID = console.log('submitted data111', data);
-    data.gender = gender
+    data.gender = gender;
     try {
       const response = await axios.post(baseUrl + '/addLeaveType1', data);
       if (response?.data?.code === 200) {
         // setSnackbarSeverity('success');
         // setSnackbarMessage(response?.data?.message);
         // setSnackbarOpen(true);
-        enqueueSnackbar(response?.data?.message,{variant:'success'})
+        enqueueSnackbar(response?.data?.message, { variant: 'success' });
         handleClose();
         getTableData();
         console.log('sucess', response);
@@ -108,7 +119,7 @@ export default function LeaveTypeForm({ currentUser, getTableData }) {
         // setSnackbarMessage(response?.data?.message);
         // setSnackbarOpen(true);
         // handleClose();
-        enqueueSnackbar(response?.data?.message,{variant:'error'})
+        enqueueSnackbar(response?.data?.message, { variant: 'error' });
         console.log('sucess', response);
       }
     } catch (error) {
@@ -116,7 +127,7 @@ export default function LeaveTypeForm({ currentUser, getTableData }) {
       // setSnackbarMessage('Error While Adding Leave Type. Please try again.');
       // setSnackbarOpen(true);
       // handleClose();
-      enqueueSnackbar(error?.response?.data?.message,{variant:'error'})
+      enqueueSnackbar(error?.response?.data?.message, { variant: 'error' });
       console.log('error', error);
     }
   });
@@ -147,12 +158,16 @@ export default function LeaveTypeForm({ currentUser, getTableData }) {
     {
       type: 'Female',
     },
+    {
+      type:'Others'
+    }
   ];
-  const defaultSelectedGenders = ['Male', 'Female'];
-  const handleGenderChange = (event,value) =>{
-    console.log(value,'valueeeeee');
-    setGender(value)
-  }
+  const defaultSelectedGenders = ['Male', 'Female','Others'];
+  const handleGenderChange = (event, value) => {
+    console.log(value, 'valueeeeee');
+    setGender(value);
+  };
+  console.log(leaveNames, 'apiiii');
   return (
     <>
       <Snackbar
@@ -202,7 +217,11 @@ export default function LeaveTypeForm({ currentUser, getTableData }) {
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              <RHFTextField name="leaveTypeName" label="Leave Name" />
+              <RHFAutocomplete
+                name="leaveTypeName"
+                options={leaveNames.map((name) => name?.leaveName)}
+                label="Leave Name"
+              />
               <RHFTextField name="totalNumberLeave" label="Total Number Of Leaves Per Year" />
 
               <RHFTextField name="upperCapLimit" label="Max Leaves Hold" />
@@ -214,7 +233,7 @@ export default function LeaveTypeForm({ currentUser, getTableData }) {
                 label="Gender"
                 options={genders.map((name) => name.type)}
                 defaultValue={defaultSelectedGenders}
-                onChange={(event,value) => {
+                onChange={(event, value) => {
                   handleGenderChange(event, value); // Handle state update
                 }}
                 renderInput={(params) => (

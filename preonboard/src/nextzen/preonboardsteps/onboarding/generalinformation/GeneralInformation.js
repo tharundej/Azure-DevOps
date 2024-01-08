@@ -5,6 +5,8 @@ import { Grid,Stack,Autocomplete, Typography,Switch} from '@mui/material';
 import dayjs from 'dayjs';
 import { ConnectingAirportsOutlined } from '@mui/icons-material';
 import { Country, State, City }  from 'country-state-city';
+import axios from 'axios';
+import { baseUrl } from '../../../../components/baseUrl';
 
 const employmentTypeOptions=[
     {label:"Permanent",id:'1'},
@@ -108,8 +110,8 @@ const   GeneralInformation=forwardRef((props,ref)=> {
         middleName: '',
         contactNumber: '',
         emergencyContactNumber:'',
-        email: '',
-        gender:'',
+        personalEmail: '',
+       
         dataOfBirth:dayjs(new Date()),
         
         fatherName: currentUser?.fatherName ||'',
@@ -171,8 +173,36 @@ const   GeneralInformation=forwardRef((props,ref)=> {
     //       setFormData(parsedFormData);
     //     }
     //   }, []);
+
+    const ApiHit=(obj)=>{
+      props.handleLoader()
+      const config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        // url: `${baseUrl}/updateOnboardingForm`,
+        url: `${baseUrl}/preOnboarding`,
+        headers: { 
+          'Authorization':  JSON.parse(localStorage.getItem('userDetails'))?.accessToken,
+          'Content-Type': 'application/json', 
+        },
+        data : obj
+      };
+       
+      axios.request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+        props.nextStep();
+        props.handleLoaderClose()
+       
+        
+      })
+      .catch((error) => {
+        console.log(error);
+        props.handleLoaderClose()
+      });
+    }
       const handleSubmit = () => {
-        props.handleLoader()
+       
         // event.preventDefault();
         console.log("harshaa")
         localStorage.setItem("formData",JSON.stringify(formData));
@@ -192,7 +222,8 @@ const   GeneralInformation=forwardRef((props,ref)=> {
 
         // }
         const data={...formData};
-        data.gender=data?.gender?.label|| "";
+       data.companyID=JSON.parse(localStorage.getItem("onboardDetails")).companyID
+       data.applicantID=JSON.parse(localStorage.getItem("onboardDetails")).applicantID
        data.maritalStatus=data?.maritalStatus?.label || ""
        data.religion=data?.religion?.label || "";
        data.nationality=data?.nationality?.nationality || "";
@@ -200,20 +231,28 @@ const   GeneralInformation=forwardRef((props,ref)=> {
        data.pCountry=data?.country|| {name:"",isoCode:""};
       data.pState=data?.state || {name:"",isoCode:""};
       data.pCity=data?.city || {name:"",isoCode:""}
+      data.contactNumber=parseInt(data.contactNumber);
+      data.emergencyContactNumber=parseInt(data.emergencyContactNumber);
+      data.pPincode=parseInt(data.pPincode);
       if(isSameAsResendtial){
         data.rAddressLine1=data.pAddressLine1;
         data.rAddressLine2=data.pAddressLine2
         data.rCountry=data?.country||{name:"",isoCode:""};
         data.rState=data?.state || {name:"",isoCode:""};
         data.rCity=data?.city || {name:"",isoCode:""};
-        data.rPincode=data.pPincode;
+        data.rPincode=parseInt(data.pPincode);
      
       }
       else{
         data.rCountry=data?.rCountry||{name:"",isoCode:""};
         data.rState=data?.rState || {name:"",isoCode:""};
         data.rCity=data?.rCity || {name:"",isoCode:""}
+        data.rPincode=parseInt(data.rPincode);
       }
+
+
+      ApiHit(data);
+      
         console.log(data,'formData general')
 
         
@@ -278,12 +317,25 @@ const   GeneralInformation=forwardRef((props,ref)=> {
           required
           sx={{ width: '100%', '& input': { width: '100%' } }}
         /></Grid>
+         <Grid  md={3} lg={3} item>
+         <TextField
+        fullWidth
+        
+          label="Emergency Contact Number"
+          name="emergencyContactNumber"
+          value={formData.emergencyContactNumber}
+          onChange={handleChange}
+          error={!!errors.emergencyContactNumber}
+          helperText={errors.emergencyContactNumber}
+          required
+          sx={{ width: '100%', '& input': { width: '100%' } }}
+        /></Grid>
           <Grid  md={3} lg={3} item>
          <TextField
         fullWidth
         
           label="Email"
-          name="email"
+          name="personalEmail"
           value={formData.email}
           onChange={handleChange}
           error={!!errors.email}
@@ -297,7 +349,7 @@ const   GeneralInformation=forwardRef((props,ref)=> {
         fullWidth
           type="date"
           label="Date Of Birth"
-          name="dataOfBirth"
+          name="dateOfBirth"
           value={formData?.dataOfBirth}
           onChange={handleChange}
           error={!!errors.dataOfBirth}
