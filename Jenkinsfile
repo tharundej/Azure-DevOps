@@ -15,19 +15,7 @@ pipeline {
             }
         }
 
-        // stage('Clean Workspace') {
-        //     steps {
-        //         dir('/opt/jenkins/workspace/') {
-        //             echo 'Before Cleaning workspace...'
-        //             sh 'ls -al'
-        //             sh 'rm -rf *'
-        //             deleteDir()
-        //             echo 'Workspace cleaned.'
-        //             sh 'ls -al'
-        //         }
-        //     }
-        // }
-
+       
         stage("Git clone") {
             steps {
                 checkout scmGit(branches: [[name: '*/main_dev']], extensions: [], userRemoteConfigs: [[credentialsId: 'Info_Github', url: 'https://github.com/Infobell-IT-Solutions-India/ERP_FE.git']])
