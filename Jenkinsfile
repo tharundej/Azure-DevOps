@@ -1,9 +1,10 @@
 pipeline {
-    agent {label 'DevOps'}
+    agent any 
 
     environment {
         DOCKER_REGISTRY = 'https://hub.docker.com/'
-        DOCKER_CREDENTIALS_ID = 'dockerlogin'
+        DOCKER_CREDENTIALS_ID = 'docker_login'
+        DOCKER_IMAGE_NAME = 'tharuninfo/e'
     }
 
     stages {
@@ -14,18 +15,18 @@ pipeline {
             }
         }
 
-        stage('Clean Workspace') {
-            steps {
-                dir('/opt/jenkins/workspace/') {
-                    echo 'Before Cleaning workspace...'
-                    sh 'ls -al'
-                    sh 'rm -rf *'
-                    deleteDir()
-                    echo 'Workspace cleaned.'
-                    sh 'ls -al'
-                }
-            }
-        }
+        // stage('Clean Workspace') {
+        //     steps {
+        //         dir('/opt/jenkins/workspace/') {
+        //             echo 'Before Cleaning workspace...'
+        //             sh 'ls -al'
+        //             sh 'rm -rf *'
+        //             deleteDir()
+        //             echo 'Workspace cleaned.'
+        //             sh 'ls -al'
+        //         }
+        //     }
+        // }
 
         stage("Git clone") {
             steps {
@@ -33,51 +34,38 @@ pipeline {
             }
         }
 
-       stage('Docker Hub Login') {
-    steps {
-        script {
-            // Use withCredentials to bind Docker credentials to environment variables
-            withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-
-                // Log in to Docker registry using --password-stdin
-                sh "echo ${DOCKER_PASSWORD} | docker login --username=${DOCKER_USERNAME} --password-stdin https://index.docker.io/v1/"
-            }
-        }
-    }
-}
-
-        stage('Docker Compose Stop Delete') {
+        stage('Docker Hub Login') {
             steps {
                 script {
-                    sh '''
-                         docker ps
-                         docker rm -f node_test || true
-                         echo y | docker system prune -a
-                         echo y | docker image prune -a
-                    '''
+                    // Use withCredentials to bind Docker credentials to environment variables
+                    withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        // Log in to Docker registry using --password-stdin
+                        sh "echo ${DOCKER_PASSWORD} | docker login --username=${DOCKER_USERNAME} --password-stdin https://index.docker.io/v1/"
+                    }
                 }
             }
         }
 
-        stage('List Running Containers After Docker Compose') {
+        stage('Read and Increment Version') {
             steps {
                 script {
-                    sh '''
-                         docker-compose up -d &&
-                         docker ps
-                    '''
+                    def version = readFile('version').trim()
+                    def incrementedVersion = version.toInteger() + 1
+                    writeFile(file: 'version', text: incrementedVersion.toString())
+                    env.DOCKER_IMAGE_TAG = "v${incrementedVersion}"
                 }
             }
         }
-    }
 
-    post {
-        success {
-            // This block will be executed only if the build is successful
-            script {
-                echo 'Build successful, performing cleanup...'
-                // Additional cleanup steps go here
-                sh "docker logout ${DOCKER_REGISTRY}" // Log out from Docker registry after the build
+        stage('Build and Push Docker Image') {
+            steps {
+                script {
+                    // Build Docker image with tag
+                    sh "docker build -t ${DOCKER_IMAGE_NAME}:${env.DOCKER_IMAGE_TAG}-${env.BUILD_NUMBER} ."
+                    
+                    // Push Docker image to Docker Hub
+                    sh "docker push ${DOCKER_IMAGE_NAME}:${env.DOCKER_IMAGE_TAG}-${env.BUILD_NUMBER}"
+                }
             }
         }
     }
