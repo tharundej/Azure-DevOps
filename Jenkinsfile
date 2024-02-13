@@ -4,7 +4,7 @@ pipeline {
     environment {
         DOCKER_REGISTRY = 'https://hub.docker.com/'
         DOCKER_CREDENTIALS_ID = 'docker_login'
-        DOCKER_IMAGE_NAME = 'tharuninfo/e'
+        DOCKER_IMAGE_NAME = 'tharuninfo/erpui'
     }
 
     stages {
