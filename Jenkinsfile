@@ -33,6 +33,12 @@ pipeline {
                 }
             }
         }
+        stage('Create Version File') {
+             steps {
+                       sh 'mkdir -p /var/lib/jenkins/workspace/docker_registry'
+                     sh 'echo "1" > /var/lib/jenkins/workspace/docker_registry/version'
+    }
+}
 
         stage('Read and Increment Version') {
             steps {
