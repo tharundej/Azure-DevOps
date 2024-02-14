@@ -54,16 +54,14 @@ pipeline {
         }
 
         stage('Build and Push Docker Image') {
-            steps {
+             steps {
                 script {
-                    // Build Docker image with tag
-                    sh "docker build -t ${DOCKER_IMAGE_NAME}:${env.DOCKER_IMAGE_TAG}-${env.BUILD_NUMBER} ."
-                    
-                    // Push Docker image to Docker Hub
-                    sh "docker push ${DOCKER_IMAGE_NAME}:${env.DOCKER_IMAGE_TAG}-${env.BUILD_NUMBER}"
-                }
-            }
+                  // Build Docker image with tag and push to Docker Hub
+                sh "docker build -t ${DOCKER_IMAGE_NAME}:${env.DOCKER_IMAGE_TAG}-${env.BUILD_NUMBER} . && docker push ${DOCKER_IMAGE_NAME}:${env.DOCKER_IMAGE_TAG}-${env.BUILD_NUMBER}"
         }
+    }
+}
+
 
         stage('Deploy with Helm') {
             steps {
