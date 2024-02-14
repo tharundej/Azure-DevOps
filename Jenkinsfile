@@ -1,5 +1,5 @@
 pipeline {
-    agent {label'Jenkins'}
+    agent {label'staging'}
 
     environment {
         DOCKER_REGISTRY = 'https://hub.docker.com/'
@@ -11,16 +11,16 @@ pipeline {
 
     stages {
 
-        stage("Setup") {
-            steps {
-                // Install Helm
-                script {
-                    sh "curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3"
-                    sh "chmod +x get_helm.sh"
-                    sh " ./get_helm.sh"
-                }
-            }
-        }
+        // stage("Setup") {
+        //     steps {
+        //         // Install Helm
+        //         script {
+        //             sh "curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3"
+        //             sh "chmod +x get_helm.sh"
+        //             sh "./get_helm.sh --no-sudo --no-path"
+        //         }
+        //     }
+        // }
 
         stage("Env Variables") {
             steps {
