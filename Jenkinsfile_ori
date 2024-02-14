@@ -5,8 +5,6 @@ pipeline {
         DOCKER_REGISTRY = 'https://hub.docker.com/'
         DOCKER_CREDENTIALS_ID = 'docker_login'
         DOCKER_IMAGE_NAME = 'tharuninfo/erpui'
-        HELM_RELEASE_NAME = 'erp'
-        HELM_CHART_DIRECTORY = 'https://github.com/Infobell-IT-Solutions-India/Azure-DevOps/tree/main/helm'
     }
 
     stages {
@@ -17,6 +15,7 @@ pipeline {
             }
         }
 
+       
         stage("Git clone") {
             steps {
                 checkout scmGit(branches: [[name: '*/main_dev']], extensions: [], userRemoteConfigs: [[credentialsId: 'Info_Github', url: 'https://github.com/Infobell-IT-Solutions-India/ERP_FE.git']])
@@ -34,13 +33,12 @@ pipeline {
                 }
             }
         }
-
         stage('Create Version File') {
-            steps {
-                sh 'mkdir -p /var/lib/jenkins/workspace/docker_registry'
-                sh 'echo "1" > /var/lib/jenkins/workspace/docker_registry/version'
-            }
-        }
+             steps {
+                       sh 'mkdir -p /var/lib/jenkins/workspace/docker_registry'
+                     sh 'echo "1" > /var/lib/jenkins/workspace/docker_registry/version'
+    }
+}
 
         stage('Read and Increment Version') {
             steps {
@@ -61,15 +59,6 @@ pipeline {
                     
                     // Push Docker image to Docker Hub
                     sh "docker push ${DOCKER_IMAGE_NAME}:${env.DOCKER_IMAGE_TAG}-${env.BUILD_NUMBER}"
-                }
-            }
-        }
-
-        stage('Deploy with Helm') {
-            steps {
-                script {
-                    // Deploy with Helm
-                    sh "helm upgrade --install ${HELM_RELEASE_NAME} ${HELM_CHART_DIRECTORY} --set image.repository=${DOCKER_IMAGE_NAME} --set image.tag=${env.DOCKER_IMAGE_TAG}-${env.BUILD_NUMBER}"
                 }
             }
         }

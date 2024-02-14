@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ erp}}-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ erp}}
+  template:
+    metadata:
+      labels:
+        app: {{ erp}}
+    spec:
+      containers:
+      - name: {{ erp}}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        ports:
+        - containerPort: 8080
