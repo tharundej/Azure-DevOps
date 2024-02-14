@@ -10,6 +10,18 @@ pipeline {
     }
 
     stages {
+
+        stage("Setup") {
+            steps {
+                // Install Helm
+                script {
+                    sh "curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3"
+                    sh "chmod +x get_helm.sh"
+                    sh "./get_helm.sh"
+                }
+            }
+        }
+
         stage("Env Variables") {
             steps {
                 echo "The current build number is ${env.BUILD_NUMBER}"
