@@ -17,7 +17,7 @@ pipeline {
                 script {
                     sh "curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3"
                     sh "chmod +x get_helm.sh"
-                    sh "./get_helm.sh"
+                    sh "sudo -S ./get_helm.sh"
                 }
             }
         }
